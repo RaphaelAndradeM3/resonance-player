@@ -47,10 +47,10 @@ Não implementar feature nova nesta etapa. Não refatorar código de produto.
 
 **Independent Test**: Execução dos comandos oficiais `dotnet restore Nagi.sln -p:Platform=x64`, `dotnet build Nagi.sln --configuration Release -p:Platform=x64 --no-restore` e execução da suíte de testes.
 
-- [ ] T005 [US1] Executar restauração completa dos pacotes NuGet da solution via `dotnet restore Nagi.sln -p:Platform=x64`
-- [ ] T006 [US1] Executar compilação da solution no modo Release direcionado a x64 em `Nagi.sln`
-- [ ] T007 [US1] Executar a suíte de testes automatizados (`tests/Nagi.Core.Tests/Nagi.Core.Tests.csproj`) com `$env:DOTNET_CLI_UI_LANGUAGE = "en"` e registrar a aprovação de 100% (845/845 testes) em `specs/000-nagi-baseline-audit/research.md`
-- [ ] T008 [US1] Formalizar a matriz de saída de compilação e testes em `specs/000-nagi-baseline-audit/contracts/toolchain-contract.md`
+- [x] T005 [US1] Executar restauração completa dos pacotes NuGet da solution via `dotnet restore Nagi.sln -p:Platform=x64`
+- [x] T006 [US1] Executar compilação da solution no modo Release direcionado a x64 em `Nagi.sln`
+- [x] T007 [US1] Executar a suíte de testes automatizados (`tests/Nagi.Core.Tests/Nagi.Core.Tests.csproj`) com `$env:DOTNET_CLI_UI_LANGUAGE = "en"` e registrar a aprovação de 100% (845/845 testes) em `specs/000-nagi-baseline-audit/research.md`
+- [x] T008 [US1] Formalizar a matriz de saída de compilação e testes em `specs/000-nagi-baseline-audit/contracts/toolchain-contract.md`
 
 **Checkpoint**: Ambiente e solution 100% auditados e comprovados como estáveis.
 

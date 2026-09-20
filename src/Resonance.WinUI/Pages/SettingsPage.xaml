@@ -185,6 +185,12 @@
                     HorizontalAlignment="Stretch"
                     Spacing="{StaticResource SettingsCardSpacing}">
 
+                <InfoBar
+                    IsOpen="{x:Bind ViewModel.IsOverlapInfoBarOpen, Mode=TwoWay}"
+                    Severity="Warning"
+                    Title="{x:Bind ViewModel.OverlapInfoBarTitle, Mode=OneWay}"
+                    Message="{x:Bind ViewModel.OverlapInfoBarMessage, Mode=OneWay}" />
+
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{x:Bind resources:Strings.SettingsPage_Section_Appearance, Mode=OneTime}" />
 
                 <controls:SettingsExpander
@@ -843,6 +849,17 @@
                 </controls:SettingsCard>
 
                 <controls:SettingsCard
+                    Header="Varredura de biblioteca na inicialização"
+                    Description="Executar sincronização rápida da biblioteca ao iniciar o aplicativo">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE895;" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ToggleSwitch
+                        HorizontalAlignment="Right"
+                        IsOn="{x:Bind ViewModel.IsScanOnStartupEnabled, Mode=TwoWay}" />
+                </controls:SettingsCard>
+
+                <controls:SettingsCard
                     Header="{x:Bind resources:Strings.SettingsPage_ArtistSplitting_Header, Mode=OneTime}" Description="{x:Bind resources:Strings.SettingsPage_ArtistSplitting_Description, Mode=OneTime}">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE713;" />
@@ -855,6 +872,10 @@
                         <Button
                             Command="{x:Bind ViewModel.RescanMetadataCommand}"
                             Content="{x:Bind resources:Strings.SettingsPage_RescanLibrary_Content, Mode=OneTime}" ToolTipService.ToolTip="{x:Bind resources:Strings.SettingsPage_RescanLibrary_ToolTip, Mode=OneTime}" />
+                        <Button
+                            Command="{x:Bind ViewModel.CancelRescanCommand}"
+                            Content="Cancelar"
+                            Visibility="{x:Bind ViewModel.IsScanningActive, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     </StackPanel>
                 </controls:SettingsCard>
 
@@ -871,6 +892,10 @@
                         <Button
                             Command="{x:Bind ViewModel.RescanMetadataCommand}"
                             Content="{x:Bind resources:Strings.SettingsPage_RescanLibrary_Content, Mode=OneTime}" ToolTipService.ToolTip="{x:Bind resources:Strings.SettingsPage_RescanLibrary_ToolTip, Mode=OneTime}" />
+                        <Button
+                            Command="{x:Bind ViewModel.CancelRescanCommand}"
+                            Content="Cancelar"
+                            Visibility="{x:Bind ViewModel.IsScanningActive, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     </StackPanel>
                 </controls:SettingsCard>
 

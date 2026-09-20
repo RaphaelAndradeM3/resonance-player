@@ -77,12 +77,47 @@ public class RootOverlapValidatorTests
         result.ConflictingPaths.Should().Contain(@"C:\Music\Jazz\Bebop");
     }
 
+    [Fact]
+    public void Evaluate_ComplexConsolidation_AbsorbsMultipleDescendantsAcrossBranches()
+    {
+        var existing = new[]
+        {
+            @"D:\Audio\Lossless\FLAC\Rock",
+            @"D:\Audio\Lossless\ALAC\Jazz",
+            @"D:\Audio\Lossless\MP3\Pop",
+            @"D:\Audio\Soundtracks\OST",
+            @"E:\ExternalDrive\Audio"
+        };
+
+        var result = RootOverlapValidator.Evaluate(@"D:\Audio\Lossless", existing);
+
+        result.Action.Should().Be(RootOverlapAction.ConsolidateParent);
+        result.ConflictingPaths.Should().HaveCount(3);
+        result.ConflictingPaths.Should().Contain(@"D:\Audio\Lossless\FLAC\Rock");
+        result.ConflictingPaths.Should().Contain(@"D:\Audio\Lossless\ALAC\Jazz");
+        result.ConflictingPaths.Should().Contain(@"D:\Audio\Lossless\MP3\Pop");
+        result.ConflictingPaths.Should().NotContain(@"D:\Audio\Soundtracks\OST");
+        result.ConflictingPaths.Should().NotContain(@"E:\ExternalDrive\Audio");
+    }
+
+    [Fact]
+    public void Evaluate_CaseInsensitiveMatching_CorrectlyRejectsSubfolder()
+    {
+        var existing = new[] { @"c:\music\collection" };
+        var result = RootOverlapValidator.Evaluate(@"C:\MUSIC\COLLECTION\HEAVY_METAL", existing);
+
+        result.Action.Should().Be(RootOverlapAction.RejectSubfolderAlreadyCovered);
+        result.ConflictingPaths.Should().ContainSingle();
+    }
+
     [Theory]
     [InlineData(@"C:\Music\Rock", @"C:\Music", true)]
     [InlineData(@"C:\Music\Rock\Classic", @"C:\Music", true)]
     [InlineData(@"C:\MusicExtra", @"C:\Music", false)]
     [InlineData(@"C:\Music", @"C:\Music", false)]
     [InlineData(@"D:\Music", @"C:\Music", false)]
+    [InlineData(@"C:\Music\Rock", @"c:\music", true)]
+    [InlineData(@"c:\music\rock", @"C:\MUSIC", true)]
     public void IsSubdirectoryOf_EvaluatesCorrectly(string child, string parent, bool expected)
     {
         RootOverlapValidator.IsSubdirectoryOf(child, parent).Should().Be(expected);

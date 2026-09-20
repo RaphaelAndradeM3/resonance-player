@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -198,6 +198,7 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
         IsRestorePlaybackStateEnabled = SettingsDefaults.RestorePlaybackStateEnabled;
         IsAutoLaunchEnabled = SettingsDefaults.AutoLaunchEnabled;
         IsStartMinimizedEnabled = SettingsDefaults.StartMinimizedEnabled;
+        IsScanOnStartupEnabled = SettingsDefaults.ScanOnStartupEnabled;
         IsHideToTrayEnabled = SettingsDefaults.HideToTrayEnabled;
         IsMinimizeToMiniPlayerEnabled = SettingsDefaults.MinimizeToMiniPlayerEnabled;
         IsShowCoverArtInTrayFlyoutEnabled = SettingsDefaults.ShowCoverArtInTrayFlyoutEnabled;
@@ -227,6 +228,11 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
     [ObservableProperty] public partial bool IsRestorePlaybackStateEnabled { get; set; }
     [ObservableProperty] public partial bool IsAutoLaunchEnabled { get; set; }
     [ObservableProperty] public partial bool IsStartMinimizedEnabled { get; set; }
+    [ObservableProperty] public partial bool IsScanOnStartupEnabled { get; set; }
+    [ObservableProperty] public partial bool IsScanningActive { get; set; }
+    [ObservableProperty] public partial bool IsOverlapInfoBarOpen { get; set; }
+    [ObservableProperty] public partial string OverlapInfoBarTitle { get; set; } = string.Empty;
+    [ObservableProperty] public partial string OverlapInfoBarMessage { get; set; } = string.Empty;
     [ObservableProperty] public partial bool IsHideToTrayEnabled { get; set; }
     [ObservableProperty] public partial bool IsMinimizeToMiniPlayerEnabled { get; set; }
     [ObservableProperty] public partial bool IsShowCoverArtInTrayFlyoutEnabled { get; set; }
@@ -504,6 +510,7 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
             var restorePlaybackTask = _settingsService.GetRestorePlaybackStateEnabledAsync();
             var autoLaunchTask = _settingsService.GetAutoLaunchEnabledAsync();
             var startMinimizedTask = _settingsService.GetStartMinimizedEnabledAsync();
+            var scanOnStartupTask = _settingsService.GetScanOnStartupEnabledAsync();
             var hideToTrayTask = _settingsService.GetHideToTrayEnabledAsync();
             var miniPlayerTask = _settingsService.GetMinimizeToMiniPlayerEnabledAsync();
             var trayFlyoutTask = _settingsService.GetShowCoverArtInTrayFlyoutAsync();
@@ -542,7 +549,7 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
 
             await Task.WhenAll(
                 navItemsTask, playerButtonsTask, themeTask, backdropTask, dynamicThemingTask,
-                playerAnimationTask, restorePlaybackTask, autoLaunchTask, startMinimizedTask,
+                playerAnimationTask, restorePlaybackTask, autoLaunchTask, startMinimizedTask, scanOnStartupTask,
                 hideToTrayTask, miniPlayerTask, trayFlyoutTask, onlineMetadataTask,
                 onlineLyricsTask, lyricsRomanizationTask, discordRpcTask, rememberWindowTask,
                 rememberPositionTask, rememberPaneTask, volumeNormTask, wasapiExclusiveTask, fadeTask, fadeInTask, fadeOutTask, lastFmCredsTask, lastFmAuthTokenTask,
@@ -570,6 +577,7 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
             IsRestorePlaybackStateEnabled = restorePlaybackTask.Result;
             IsAutoLaunchEnabled = autoLaunchTask.Result;
             IsStartMinimizedEnabled = startMinimizedTask.Result;
+            IsScanOnStartupEnabled = scanOnStartupTask.Result;
             IsHideToTrayEnabled = hideToTrayTask.Result;
             IsMinimizeToMiniPlayerEnabled = miniPlayerTask.Result;
             IsShowCoverArtInTrayFlyoutEnabled = trayFlyoutTask.Result;
@@ -1316,6 +1324,7 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
         var rescanCts = new CancellationTokenSource();
         _metadataRescanCts = rescanCts;
 
+        IsScanningActive = true;
         _playerViewModel.IsGlobalOperationInProgress = true;
         _playerViewModel.GlobalOperationStatusMessage = Resonance.WinUI.Resources.Strings.Settings_Status_Rescan_Preparing;
         _playerViewModel.IsGlobalOperationIndeterminate = true;
@@ -1325,11 +1334,17 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
         {
             await SaveMetadataSplitSettingsAsync();
 
+            long lastReportTick = 0;
             var progress = new Progress<ScanProgress>(p =>
             {
-                _playerViewModel.GlobalOperationStatusMessage = p.StatusText;
-                _playerViewModel.IsGlobalOperationIndeterminate = p.IsIndeterminate || p.Percentage < 5;
-                _playerViewModel.GlobalOperationProgressValue = p.Percentage;
+                var now = Environment.TickCount64;
+                if (p.Percentage >= 100 || p.IsIndeterminate || now - lastReportTick >= 100)
+                {
+                    lastReportTick = now;
+                    _playerViewModel.GlobalOperationStatusMessage = p.StatusText;
+                    _playerViewModel.IsGlobalOperationIndeterminate = p.IsIndeterminate || p.Percentage < 5;
+                    _playerViewModel.GlobalOperationProgressValue = p.Percentage;
+                }
             });
 
             await _libraryScanner.ForceRescanMetadataAsync(progress, rescanCts.Token);
@@ -1348,6 +1363,7 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
         }
         finally
         {
+            IsScanningActive = false;
             _playerViewModel.SetGlobalOperationCancellation(null);
             _playerViewModel.IsGlobalOperationInProgress = false;
             _playerViewModel.IsGlobalOperationIndeterminate = false;
@@ -1355,6 +1371,28 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
                 _metadataRescanCts = null;
             rescanCts.Dispose();
         }
+    }
+
+    [RelayCommand]
+    private void CancelRescan()
+    {
+        _metadataRescanCts?.Cancel();
+    }
+
+    public bool ValidateCandidateFolder(string candidatePath, IEnumerable<string> existingRoots)
+    {
+        var result = Resonance.Core.Helpers.RootOverlapValidator.Evaluate(candidatePath, existingRoots);
+        if (result.Action == Resonance.Core.Helpers.RootOverlapAction.RejectSubfolderAlreadyCovered)
+        {
+            var conflict = result.ConflictingPaths.FirstOrDefault() ?? candidatePath;
+            OverlapInfoBarTitle = "Pasta já coberta";
+            OverlapInfoBarMessage = $"A pasta '{candidatePath}' já está coberta pela raiz '{conflict}'.";
+            IsOverlapInfoBarOpen = true;
+            return false;
+        }
+
+        IsOverlapInfoBarOpen = false;
+        return true;
     }
 
     private async Task SaveMetadataSplitSettingsAsync()
@@ -1653,6 +1691,12 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
     {
         if (_isInitializing) return;
         _ = _settingsService.SetStartMinimizedEnabledAsync(value);
+    }
+
+    partial void OnIsScanOnStartupEnabledChanged(bool value)
+    {
+        if (_isInitializing) return;
+        _ = _settingsService.SetScanOnStartupEnabledAsync(value);
     }
 
     partial void OnIsHideToTrayEnabledChanged(bool value)

@@ -109,12 +109,12 @@ Melhorar o scanner e persistência existentes do Nagi. Não criar uma segunda bi
 **Independent Test**: Testes no `SettingsViewModel` simulando adição de raízes sobrepostas com alerta visual e emissão de telemetria `IProgress<ScanProgress>` sem congelamento da thread de UI.
 
 ### Tests for User Story 3
-- [ ] T014 [P] [US3] Escrever testes unitários em `tests/Resonance.Core.Tests/RootOverlapValidatorTests.cs` cobrindo cenários complexos de consolidação de ancestrais e rejeição de subpastas consumidos pelo SettingsViewModel
+- [x] T014 [P] [US3] Escrever testes unitários em `tests/Resonance.Core.Tests/RootOverlapValidatorTests.cs` cobrindo cenários complexos de consolidação de ancestrais e rejeição de subpastas consumidos pelo SettingsViewModel
 
 ### Implementation for User Story 3
-- [ ] T015 [US3] Integrar `RootOverlapValidator` em `src/Resonance.WinUI/ViewModels/SettingsViewModel.cs` ao adicionar novas pastas, emitindo notificação amigável na UI se a pasta já estiver coberta
-- [ ] T016 [US3] Atualizar `SettingsPage.xaml` em `src/Resonance.WinUI/Pages/SettingsPage.xaml` para exibir notificação informativa (*InfoBar*) de pasta sobreposta e botão de cancelamento ativo durante a varredura
-- [ ] T017 [US3] Conectar relato de progresso com limitação (*throttling* de 100ms) no `SettingsViewModel.cs` em `src/Resonance.WinUI/ViewModels/SettingsViewModel.cs` e adicionar toggle opcional de scan na inicialização
+- [x] T015 [US3] Integrar `RootOverlapValidator` em `src/Resonance.WinUI/ViewModels/SettingsViewModel.cs` ao adicionar novas pastas, emitindo notificação amigável na UI se a pasta já estiver coberta
+- [x] T016 [US3] Atualizar `SettingsPage.xaml` em `src/Resonance.WinUI/Pages/SettingsPage.xaml` para exibir notificação informativa (*InfoBar*) de pasta sobreposta e botão de cancelamento ativo durante a varredura
+- [x] T017 [US3] Conectar relato de progresso com limitação (*throttling* de 100ms) no `SettingsViewModel.cs` em `src/Resonance.WinUI/ViewModels/SettingsViewModel.cs` e adicionar toggle opcional de scan na inicialização
 
 **Checkpoint**: Todas as 3 User Stories integradas e testadas de ponta a ponta na UI e Core.
 

@@ -36,6 +36,7 @@ public class SettingsService : IUISettingsService, IDisposable
     private const string PlayerAnimationEnabledKey = "PlayerAnimationEnabled";
     private const string RestorePlaybackStateEnabledKey = "RestorePlaybackStateEnabled";
     private const string StartMinimizedEnabledKey = "StartMinimizedEnabled";
+    private const string ScanOnStartupEnabledKey = "ScanOnStartupEnabled";
     private const string HideToTrayEnabledKey = "HideToTrayEnabled";
     private const string MinimizeToMiniPlayerEnabledKey = "MinimizeToMiniPlayerEnabled";
     private const string ShowQueueButtonEnabledKey = "ShowQueueButtonEnabled";
@@ -844,6 +845,13 @@ public class SettingsService : IUISettingsService, IDisposable
     public Task SetStartMinimizedEnabledAsync(bool isEnabled)
     {
         return SetValueAsync(StartMinimizedEnabledKey, isEnabled);
+    }
+
+    public Task<bool> GetScanOnStartupEnabledAsync() => Task.FromResult(GetValue(ScanOnStartupEnabledKey, SettingsDefaults.ScanOnStartupEnabled));
+
+    public Task SetScanOnStartupEnabledAsync(bool isEnabled)
+    {
+        return SetValueAsync(ScanOnStartupEnabledKey, isEnabled);
     }
 
     public Task<bool> GetHideToTrayEnabledAsync() => Task.FromResult(GetValue(HideToTrayEnabledKey, SettingsDefaults.HideToTrayEnabled));

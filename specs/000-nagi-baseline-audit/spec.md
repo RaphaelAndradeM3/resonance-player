@@ -1,4 +1,4 @@
-# FEATURE SPEC: 000 — Baseline / Audit do Fork Nagi
+﻿# FEATURE SPEC: 000 — Baseline / Audit do Fork Nagi
 
 **Feature Branch**: `000-nagi-baseline-audit`  
 **Created**: 2026-09-20  
@@ -27,7 +27,7 @@
 ## 2. CONTRATOS & LIMITES DA ARQUITETURA
 
 * **Projetos Afetados na Solution (.sln):**
-  - Mapeamento de todos os projetos da solution real do Nagi (`Nagi.sln` / projetos WinUI 3, Core, Services, UI, etc.).
+  - Mapeamento de todos os projetos da solution real do Nagi (`Resonance.sln` / projetos WinUI 3, Core, Services, UI, etc.).
 * **Tipos/Serviços Existentes que DEVEM ser reutilizados e auditados:**
   - Scanner de biblioteca e persistência de tracks/pastas.
   - Pipeline de reprodução de áudio (LibVLC / MediaEngine).
@@ -74,9 +74,9 @@
 
 ```powershell
 $env:DOTNET_CLI_UI_LANGUAGE = "en"
-dotnet restore Nagi.sln -p:Platform=x64
-dotnet build Nagi.sln --configuration Release -p:Platform=x64 --warnaserror
-dotnet test tests/Nagi.Core.Tests/Nagi.Core.Tests.csproj --configuration Release --no-build
+dotnet restore Resonance.sln -p:Platform=x64
+dotnet build Resonance.sln --configuration Release -p:Platform=x64 --warnaserror
+dotnet test tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj --configuration Release --no-build
 ```
 
 Nenhuma tarefa pode ser marcada como concluída se a solution não compilar, DI estiver inconsistente ou testes falharem.

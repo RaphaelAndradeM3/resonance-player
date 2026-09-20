@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 Sync Impact Report
 Version: template -> 1.0.0
 
@@ -76,8 +76,8 @@ Minimum gates:
 
 ```powershell
 dotnet restore
-dotnet build Nagi.sln --configuration Release --no-restore
-dotnet test Nagi.sln --configuration Release --no-build
+dotnet build Resonance.sln --configuration Release --no-restore
+dotnet test Resonance.sln --configuration Release --no-build
 ```
 
 Existing analyzers, packaging validations and CI rules MUST also pass.

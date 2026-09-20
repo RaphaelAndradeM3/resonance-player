@@ -1,4 +1,4 @@
-# Research: Feature 000 — Baseline / Audit do Fork Nagi
+﻿# Research: Feature 000 — Baseline / Audit do Fork Nagi
 
 **Feature**: `000-nagi-baseline-audit`  
 **Date**: 2026-09-20  
@@ -29,18 +29,18 @@ A tag `2.3.0` representa o marco estável mais recente lançado pelo upstream, c
 - **SDK .NET**: .NET 10.0 (SDK 10.0.401 instalado localmente, com `global.json` especificando `version: 10.0.300`, `rollForward: latestFeature`, `allowPrerelease: true`).
 - **Linguagem C#**: C# 13/preview (`<LangVersion>preview</LangVersion>`).
 - **Target Frameworks**:
-  - `net10.0-windows10.0.26100` (Projeto `Nagi.WinUI` com Windows App SDK 2.4.0 e BuildTools 10.0.28000.2705).
-  - `net10.0` (Projetos `Nagi.Core`, `Nagi.Core.Tests`, `NagiAppFunctions`).
+  - `net10.0-windows10.0.26100` (Projeto `Resonance.WinUI` com Windows App SDK 2.4.0 e BuildTools 10.0.28000.2705).
+  - `net10.0` (Projetos `Resonance.Core`, `Resonance.Core.Tests`, `ResonanceAppFunctions`).
 - **Arquitetura de Plataforma Obrigatória**: `x64` (ou `ARM64`).
-  - Flags de compilação da Solution: `dotnet build Nagi.sln --configuration Release -p:Platform=x64`
-  - Restauração de pacotes: `dotnet restore Nagi.sln -p:Platform=x64`
-  - Execução de testes: `dotnet test tests\Nagi.Core.Tests\Nagi.Core.Tests.csproj --configuration Release --no-build`
+  - Flags de compilação da Solution: `dotnet build Resonance.sln --configuration Release -p:Platform=x64`
+  - Restauração de pacotes: `dotnet restore Resonance.sln -p:Platform=x64`
+  - Execução de testes: `dotnet test tests\Resonance.Core.Tests\Resonance.Core.Tests.csproj --configuration Release --no-build`
 
 ### Rationale
 Projetos WinUI 3 / Windows App SDK possuem restrições arquiteturais que impedem a compilação no modo genérico `Any CPU`. O target nativo é x64 ou ARM64 devido às dependências C++ do Windows App Runtime e do LibVLC. O parâmetro `-p:Platform=x64` é mandatório para que o MSBuild selecione a configuração correta de packaging e runtime native binaries.
 
 ### Alternatives Considered
-- *Compilar com Any CPU*: Falha imediata no projeto `Nagi.WinUI` com erro do Windows App SDK indicando que a plataforma `AnyCPU` não é suportada para projetos com packaging ou runtime nativo.
+- *Compilar com Any CPU*: Falha imediata no projeto `Resonance.WinUI` com erro do Windows App SDK indicando que a plataforma `AnyCPU` não é suportada para projetos com packaging ou runtime nativo.
 - *Usar apenas o Visual Studio IDE*: Inviável para automação e gates do Spec Kit, que requerem execução via CLI na toolchain oficial do .NET.
 
 ---
@@ -50,8 +50,8 @@ Projetos WinUI 3 / Windows App SDK possuem restrições arquiteturais que impede
 ### Decision
 Reutilizar o pipeline existente baseado em:
 - **Decodificador/Player**: `LibVLCSharp` v4.0.0-alpha (`VideoLAN.LibVLC.Windows` v4.0.0-alpha).
-- **Interface Principal**: `Nagi.Core.Services.Abstractions.IAudioPlayer` e `Nagi.Core.Services.Abstractions.IMusicPlaybackService`.
-- **Implementação WinUI**: `Nagi.WinUI.Services.Implementations.LibVlcAudioPlayerService` e `Nagi.Core.Services.Implementations.MusicPlaybackService`.
+- **Interface Principal**: `Resonance.Core.Services.Abstractions.IAudioPlayer` e `Resonance.Core.Services.Abstractions.IMusicPlaybackService`.
+- **Implementação WinUI**: `Resonance.WinUI.Services.Implementations.LibVlcAudioPlayerService` e `Resonance.Core.Services.Implementations.MusicPlaybackService`.
 - **Processamento de PCM & ReplayGain**: `IPcmExtractor` (`FFmpegPcmExtractor`) e `IReplayGainService` (`ReplayGainService` / `LoudnessMeter`).
 - **Equalizador**: Equalizador nativo do LibVLC de 10 bandas gerenciado via `LibVlcAudioPlayerService.SetEqualizer` e modelos `EqualizerPreset`, `EqualizerSettings`.
 
@@ -69,8 +69,8 @@ A Constituição do Projeto (Princípio I e VII) proíbe expressamente a criaç�
 ### Decision
 Preservar o leitor/escritor de metadados baseado na **ATL (Audio Tools Library)**:
 - **Pacote**: `z440.atl.core` v7.16.0.
-- **Interface Principal**: `Nagi.Core.Services.Abstractions.IMetadataService`.
-- **Implementação**: `Nagi.Core.Services.Implementations.AtlMetadataService`.
+- **Interface Principal**: `Resonance.Core.Services.Abstractions.IMetadataService`.
+- **Implementação**: `Resonance.Core.Services.Implementations.AtlMetadataService`.
 - **Formatos suportados**: ID3v1, ID3v2.2-2.4, Vorbis Comments (FLAC, Ogg), MP4/AAC atoms, APEv1/v2, RIFF/WAV, AIFF, WavPack.
 
 ### Rationale
@@ -85,8 +85,8 @@ A biblioteca ATL é extremamente rápida, suporta todos os formatos exigidos pel
 
 ### Decision
 - **Persistência**: SQLite via Entity Framework Core 10.0.11 (`Microsoft.EntityFrameworkCore.Sqlite`).
-- **DbContext**: `Nagi.Core.Data.MusicDbContext` com factory `DesignTimeDbContextFactory`.
-- **Scanner**: `Nagi.Core.Services.Abstractions.ILibraryScanner`, `ILibraryReader`, `ILibraryWriter` implementados em `Nagi.Core.Services.Implementations.LibraryService`.
+- **DbContext**: `Resonance.Core.Data.MusicDbContext` com factory `DesignTimeDbContextFactory`.
+- **Scanner**: `Resonance.Core.Services.Abstractions.ILibraryScanner`, `ILibraryReader`, `ILibraryWriter` implementados em `Resonance.Core.Services.Implementations.LibraryService`.
 - **Transações & Concorrência**: SQLite com WAL (Write-Ahead Logging) habilitado via interceptors de conexão.
 
 ### Rationale
@@ -102,7 +102,7 @@ O `LibraryService` já centraliza leitura, escrita, indexação e busca de faixa
 
 ### Decision
 - **Parser de Letras Sincronizadas**: `ModernLrc` v1.2.0.
-- **Serviço de Letras**: `Nagi.Core.Services.Abstractions.ILrcService` / `LrcService`.
+- **Serviço de Letras**: `Resonance.Core.Services.Abstractions.ILrcService` / `LrcService`.
 - **Provedores Remotos Existentes**:
   - `LrcLibService` (implementa `IOnlineLyricsService` consumindo a API LRCLIB).
   - `NetEaseLyricsService` (implementa `INetEaseLyricsService`).
@@ -121,7 +121,7 @@ Atende perfeitamente ao Princípio IV da Constituição (Local-First). A Feature
 - **Asserções**: `FluentAssertions` v8.10.0.
 - **Mocks**: `NSubstitute` v6.2.0 com `NSubstitute.Analyzers.CSharp`.
 - **Cobertura**: `coverlet.MTP` v10.0.1.
-- **Projeto de Testes**: `tests\Nagi.Core.Tests\Nagi.Core.Tests.csproj`.
+- **Projeto de Testes**: `tests\Resonance.Core.Tests\Resonance.Core.Tests.csproj`.
 
 ### Rationale
 A base upstream adotou o moderno runner MTP (Microsoft.Testing.Platform) com xUnit v3, proporcionando execução ultrarrápida de testes de unidade sem sobrecarga de adaptadores VSTest legados.

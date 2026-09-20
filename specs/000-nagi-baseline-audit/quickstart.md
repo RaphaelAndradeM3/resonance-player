@@ -1,4 +1,4 @@
-# Quickstart & Validation Guide: Feature 000 — Baseline / Audit do Fork Nagi
+﻿# Quickstart & Validation Guide: Feature 000 — Baseline / Audit do Fork Nagi
 
 **Feature**: `000-nagi-baseline-audit`  
 **Date**: 2026-09-20  
@@ -49,11 +49,11 @@ Restaura todas as dependências de pacotes NuGet gerenciadas centralmente.
 
 **Comando:**
 ```powershell
-dotnet restore Nagi.sln -p:Platform=x64
+dotnet restore Resonance.sln -p:Platform=x64
 ```
 
 **Resultado Esperado:**
-- Saída exibindo restauração concluída com sucesso para `Nagi.Core`, `Nagi.WinUI`, `NagiAppFunctions` e `Nagi.Core.Tests`.
+- Saída exibindo restauração concluída com sucesso para `Resonance.Core`, `Resonance.WinUI`, `ResonanceAppFunctions` e `Resonance.Core.Tests`.
 - Código de saída: `0`.
 
 ---
@@ -63,23 +63,23 @@ Compila todos os projetos da solution no modo Release direcionado para x64.
 
 **Comando:**
 ```powershell
-dotnet build Nagi.sln --configuration Release -p:Platform=x64 --no-restore
+dotnet build Resonance.sln --configuration Release -p:Platform=x64 --no-restore
 ```
 
 **Resultado Esperado:**
-- Compilação limpa de todos os 4 projetos da solution (`Nagi.Core.dll`, `Nagi.WinUI.dll`, `NagiAppFunctions.dll`, `Nagi.Core.Tests.dll`).
+- Compilação limpa de todos os 4 projetos da solution (`Resonance.Core.dll`, `Resonance.WinUI.dll`, `ResonanceAppFunctions.dll`, `Resonance.Core.Tests.dll`).
 - Código de saída: `0`.
 - *Nota de Baseline*: O pacote `SixLabors.ImageSharp` 4.1.1 emite validação de licença no MSBuild. No modo `Debug`, o build continua normalmente (`ContinueOnError=true`). No modo `Release`, é necessário que a chave de licença de código aberto esteja configurada (`SixLaborsLicenseKey`) ou seja fornecido o stub de validação no targets.
 
 ---
 
 ### Scenario 4: Automated Test Suite Execution
-Executa a suíte de testes de unidade e integração do núcleo de áudio e dados (`Nagi.Core.Tests`).
+Executa a suíte de testes de unidade e integração do núcleo de áudio e dados (`Resonance.Core.Tests`).
 
 **Comando:**
 ```powershell
 $env:DOTNET_CLI_UI_LANGUAGE = "en"
-dotnet test tests\Nagi.Core.Tests\Nagi.Core.Tests.csproj --configuration Debug
+dotnet test tests\Resonance.Core.Tests\Resonance.Core.Tests.csproj --configuration Debug
 ```
 
 **Resultado Esperado:**
@@ -93,7 +93,7 @@ dotnet test tests\Nagi.Core.Tests\Nagi.Core.Tests.csproj --configuration Debug
 Confronta os tipos reais do repositório com o catálogo registrado em `audit-matrix-contract.md`.
 
 **Verificação Manual / Automatizada:**
-- Confirmar existência de `IAudioPlayer` e `LibVlcAudioPlayerService` em `Nagi.Core`/`Nagi.WinUI`.
+- Confirmar existência de `IAudioPlayer` e `LibVlcAudioPlayerService` em `Resonance.Core`/`Resonance.WinUI`.
 - Confirmar injeção de dependência única no `App.xaml.cs`.
 - Confirmar que nenhuma classe paralela de scanner ou reprodução foi adicionada.
 

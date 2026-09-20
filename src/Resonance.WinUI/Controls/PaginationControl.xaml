@@ -1,0 +1,51 @@
+﻿<UserControl
+    x:Class="Resonance.WinUI.Controls.PaginationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:resources="using:Resonance.WinUI.Resources"
+    xmlns:converters="using:Resonance.WinUI.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:PageSizeLabelConverter x:Key="PageSizeLabelConverter" />
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center"
+                Visibility="{x:Bind VisibleIfPaginates(ViewModel.TotalItemCount), Mode=OneWay}">
+        <TextBlock Text="{x:Bind resources:Strings.PaginationControl_ItemsPerPage, Mode=OneTime}" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+
+        <ComboBox x:Name="PageSizeComboBox" ItemsSource="{x:Bind PageSizeOptions}"
+                  SelectedItem="{x:Bind ViewModel.SongsPerPage, Mode=OneWay}"
+                  MinWidth="80" Margin="0,0,16,0" FontSize="12">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="x:Int32">
+                    <TextBlock Text="{x:Bind Converter={StaticResource PageSizeLabelConverter}}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <Button Command="{x:Bind ViewModel.PreviousPageCommand, Mode=OneWay}"
+                IsEnabled="{x:Bind ViewModel.HasPreviousPage, Mode=OneWay}"
+                Style="{ThemeResource SubtleButtonStyle}"
+                ToolTipService.ToolTip="{x:Bind resources:Strings.PaginationControl_PreviousPage_ToolTip, Mode=OneTime}"
+                Width="32" Height="32" Padding="0">
+            <FontIcon Glyph="&#xE76B;" FontSize="12" />
+        </Button>
+
+        <TextBlock VerticalAlignment="Center" Margin="4,0" FontSize="12">
+            <Run Text="{x:Bind ViewModel.CurrentPage, Mode=OneWay}" FontWeight="SemiBold"/>
+            <Run Text=" / " Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+            <Run Text="{x:Bind ViewModel.TotalPages, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+        </TextBlock>
+
+        <Button Command="{x:Bind ViewModel.NextPageCommand, Mode=OneWay}"
+                IsEnabled="{x:Bind ViewModel.HasNextPage, Mode=OneWay}"
+                Style="{ThemeResource SubtleButtonStyle}"
+                ToolTipService.ToolTip="{x:Bind resources:Strings.PaginationControl_NextPage_ToolTip, Mode=OneTime}"
+                Width="32" Height="32" Padding="0">
+            <FontIcon Glyph="&#xE76C;" FontSize="12" />
+        </Button>
+    </StackPanel>
+</UserControl>

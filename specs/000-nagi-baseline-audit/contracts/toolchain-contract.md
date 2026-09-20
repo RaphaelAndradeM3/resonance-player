@@ -1,4 +1,4 @@
-# Toolchain & Execution Contract
+﻿# Toolchain & Execution Contract
 
 **Feature**: `000-nagi-baseline-audit`  
 **Contract Version**: 1.0.0  
@@ -24,7 +24,7 @@
 Restaura todas as dependências centrais gerenciadas em `Directory.Packages.props`.
 
 ```powershell
-dotnet restore Nagi.sln -p:Platform=x64
+dotnet restore Resonance.sln -p:Platform=x64
 ```
 
 - **Exit Code**: 0
@@ -34,10 +34,10 @@ dotnet restore Nagi.sln -p:Platform=x64
 ---
 
 ### 2.2 Solution Build Contract
-Compila todos os projetos da solution (`Nagi.Core`, `Nagi.WinUI`, `NagiAppFunctions`, `Nagi.Core.Tests`).
+Compila todos os projetos da solution (`Resonance.Core`, `Resonance.WinUI`, `ResonanceAppFunctions`, `Resonance.Core.Tests`).
 
 ```powershell
-dotnet build Nagi.sln --configuration Release -p:Platform=x64 --no-restore
+dotnet build Resonance.sln --configuration Release -p:Platform=x64 --no-restore
 ```
 
 - **Exit Code**: 0
@@ -51,7 +51,7 @@ Executa a suíte de testes de unidade e integração sobre o runner MTP (`Micros
 
 ```powershell
 $env:DOTNET_CLI_UI_LANGUAGE = "en"
-dotnet test tests\Nagi.Core.Tests\Nagi.Core.Tests.csproj --configuration Release --no-build
+dotnet test tests\Resonance.Core.Tests\Resonance.Core.Tests.csproj --configuration Release --no-build
 ```
 
 - **Exit Code**: 0

@@ -1,4 +1,4 @@
-# Data Model: Feature 000 — Baseline / Audit do Fork Nagi
+﻿# Data Model: Feature 000 — Baseline / Audit do Fork Nagi
 
 **Feature**: `000-nagi-baseline-audit`  
 **Date**: 2026-09-20  
@@ -39,9 +39,9 @@ Cataloga cada serviço e subsistema existente no Nagi para impor as regras da Co
 | Campo | Tipo | Obrigatório | Descrição / Exemplo |
 | :--- | :--- | :--- | :--- |
 | `CapabilityArea` | `Enum` | Sim | `Playback`, `Scanner`, `Metadata`, `Lyrics`, `Equalizer`, `Persistence`, `UI`, `Telemetry` |
-| `PrimaryInterface`| `string` | Sim | Nome totalmente qualificado da interface (ex.: `Nagi.Core.Services.Abstractions.IAudioPlayer`) |
-| `ConcreteClass` | `string` | Sim | Classe de implementação padrão (ex.: `Nagi.WinUI.Services.Implementations.LibVlcAudioPlayerService`) |
-| `Assembly` | `string` | Sim | `Nagi.Core` ou `Nagi.WinUI` |
+| `PrimaryInterface`| `string` | Sim | Nome totalmente qualificado da interface (ex.: `Resonance.Core.Services.Abstractions.IAudioPlayer`) |
+| `ConcreteClass` | `string` | Sim | Classe de implementação padrão (ex.: `Resonance.WinUI.Services.Implementations.LibVlcAudioPlayerService`) |
+| `Assembly` | `string` | Sim | `Resonance.Core` ou `Resonance.WinUI` |
 | `Lifetime` | `Enum` | Sim | `Singleton`, `Scoped`, `Transient` |
 | `ReuseObligation` | `Enum` | Sim | `Mandatory` (proibido criar classe paralela), `Extensible` (permitido estender), `Internal` |
 | `RelatedFeature` | `string` | Sim | Feature do roadmap que reutilizará o componente (ex.: `001`, `002`, `008`) |
@@ -93,7 +93,7 @@ Mapeia a correspondência entre cada requisito funcional do `PRD.md` e a capacid
 [Toolchain Verified (dotnet restore / build -p:Platform=x64)]
        │
        ▼
-[Test Suite Executed (dotnet test Nagi.Core.Tests)]
+[Test Suite Executed (dotnet test Resonance.Core.Tests)]
        │
        ▼
 [Architecture & DI Cataloged]

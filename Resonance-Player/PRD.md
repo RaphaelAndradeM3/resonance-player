@@ -1,4 +1,4 @@
-# PRD.md — Resonance
+﻿# PRD.md — Resonance
 
 ## 1. Product Statement
 
@@ -453,9 +453,9 @@ Definition of Success:
 
 ## Gate
 
-dotnet build Nagi.sln --configuration Release
+dotnet build Resonance.sln --configuration Release
 
-dotnet test Nagi.sln --configuration Release --no-build
+dotnet test Resonance.sln --configuration Release --no-build
 
 [feature-specific integration test]
 ```

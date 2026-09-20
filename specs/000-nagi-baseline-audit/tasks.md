@@ -1,4 +1,4 @@
-# Tasks: Feature 000 — Baseline / Audit do Fork Nagi
+﻿# Tasks: Feature 000 — Baseline / Audit do Fork Nagi
 
 **Branch**: `000-nagi-baseline-audit` | **Spec**: [spec.md](file:///h:/tmp/RSA/Loterias/JogosMaster/GitHub/resonance-player/specs/000-nagi-baseline-audit/spec.md) | **Plan**: [plan.md](file:///h:/tmp/RSA/Loterias/JogosMaster/GitHub/resonance-player/specs/000-nagi-baseline-audit/plan.md)
 
@@ -43,13 +43,13 @@ Regra de Ouro:
 Não implementar feature nova nesta etapa. Não refatorar código de produto.
 ```
 
-**Goal**: Comprovar e documentar o estado de compilação e teste dos 4 projetos da solution (`Nagi.Core`, `Nagi.WinUI`, `NagiAppFunctions`, `Nagi.Core.Tests`) sem alterar código de produto.
+**Goal**: Comprovar e documentar o estado de compilação e teste dos 4 projetos da solution (`Resonance.Core`, `Resonance.WinUI`, `ResonanceAppFunctions`, `Resonance.Core.Tests`) sem alterar código de produto.
 
-**Independent Test**: Execução dos comandos oficiais `dotnet restore Nagi.sln -p:Platform=x64`, `dotnet build Nagi.sln --configuration Release -p:Platform=x64 --no-restore` e execução da suíte de testes.
+**Independent Test**: Execução dos comandos oficiais `dotnet restore Resonance.sln -p:Platform=x64`, `dotnet build Resonance.sln --configuration Release -p:Platform=x64 --no-restore` e execução da suíte de testes.
 
-- [x] T005 [US1] Executar restauração completa dos pacotes NuGet da solution via `dotnet restore Nagi.sln -p:Platform=x64`
-- [x] T006 [US1] Executar compilação da solution no modo Release direcionado a x64 em `Nagi.sln`
-- [x] T007 [US1] Executar a suíte de testes automatizados (`tests/Nagi.Core.Tests/Nagi.Core.Tests.csproj`) com `$env:DOTNET_CLI_UI_LANGUAGE = "en"` e registrar a aprovação de 100% (845/845 testes) em `specs/000-nagi-baseline-audit/research.md`
+- [x] T005 [US1] Executar restauração completa dos pacotes NuGet da solution via `dotnet restore Resonance.sln -p:Platform=x64`
+- [x] T006 [US1] Executar compilação da solution no modo Release direcionado a x64 em `Resonance.sln`
+- [x] T007 [US1] Executar a suíte de testes automatizados (`tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj`) com `$env:DOTNET_CLI_UI_LANGUAGE = "en"` e registrar a aprovação de 100% (845/845 testes) em `specs/000-nagi-baseline-audit/research.md`
 - [x] T008 [US1] Formalizar a matriz de saída de compilação e testes em `specs/000-nagi-baseline-audit/contracts/toolchain-contract.md`
 
 **Checkpoint**: Ambiente e solution 100% auditados e comprovados como estáveis.
@@ -79,10 +79,10 @@ Não implementar feature nova nesta etapa. Não refatorar código de produto.
 
 **Independent Test**: Inspeção cruzada do catálogo gerado em `audit-matrix-contract.md` contra o grafo de injeção de dependências em `App.xaml.cs`.
 
-- [x] T009 [P] [US2] Catalogar o motor de reprodução LibVLC 4.0 (`IAudioPlayer` e `IMusicPlaybackService`) em `src/Nagi.WinUI/Services/Implementations/LibVlcAudioPlayerService.cs` e `src/Nagi.Core/Services/Implementations/MusicPlaybackService.cs`
-- [x] T010 [P] [US2] Catalogar o serviço de scanner de biblioteca (`ILibraryScanner`, `ILibraryReader`, `ILibraryWriter`) e persistência SQLite (`MusicDbContext`) em `src/Nagi.Core/Services/Implementations/LibraryService.cs` e `src/Nagi.Core/Data/MusicDbContext.cs`
-- [x] T011 [P] [US2] Catalogar o motor de metadados ATL (`IMetadataService`) e serviço de letras (`ILrcService`, `IOnlineLyricsService`) em `src/Nagi.Core/Services/Implementations/AtlMetadataService.cs` e `src/Nagi.Core/Services/Implementations/LrcService.cs`
-- [x] T012 [US2] Mapear o container de Injeção de Dependência de `src/Nagi.WinUI/App.xaml.cs` e consolidar as regras de reutilização obrigatória em `specs/000-nagi-baseline-audit/contracts/audit-matrix-contract.md`
+- [x] T009 [P] [US2] Catalogar o motor de reprodução LibVLC 4.0 (`IAudioPlayer` e `IMusicPlaybackService`) em `src/Resonance.WinUI/Services/Implementations/LibVlcAudioPlayerService.cs` e `src/Resonance.Core/Services/Implementations/MusicPlaybackService.cs`
+- [x] T010 [P] [US2] Catalogar o serviço de scanner de biblioteca (`ILibraryScanner`, `ILibraryReader`, `ILibraryWriter`) e persistência SQLite (`MusicDbContext`) em `src/Resonance.Core/Services/Implementations/LibraryService.cs` e `src/Resonance.Core/Data/MusicDbContext.cs`
+- [x] T011 [P] [US2] Catalogar o motor de metadados ATL (`IMetadataService`) e serviço de letras (`ILrcService`, `IOnlineLyricsService`) em `src/Resonance.Core/Services/Implementations/AtlMetadataService.cs` e `src/Resonance.Core/Services/Implementations/LrcService.cs`
+- [x] T012 [US2] Mapear o container de Injeção de Dependência de `src/Resonance.WinUI/App.xaml.cs` e consolidar as regras de reutilização obrigatória em `specs/000-nagi-baseline-audit/contracts/audit-matrix-contract.md`
 
 **Checkpoint**: Toda a arquitetura do Nagi mapeada; agentes proibidos de recriar serviços concorrentes.
 

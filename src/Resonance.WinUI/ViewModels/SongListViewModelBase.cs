@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -575,10 +575,12 @@ public abstract partial class SongListViewModelBase : PagedListViewModelBase<Son
         return !IsLoading;
     }
 
-    private bool CanExecutePlayAllCommands()
+    protected virtual bool CanExecutePlayAll()
     {
         return !IsLoading && Songs.Any();
     }
+
+    private bool CanExecutePlayAllCommands() => CanExecutePlayAll();
 
     private bool CanExecuteSelectedSongsCommands()
     {

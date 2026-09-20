@@ -560,8 +560,11 @@ public class LibraryService : ILibraryService, ILibraryReader, IDisposable
 
         await using var context = await _contextFactory.CreateDbContextAsync().ConfigureAwait(false);
 
+        var normalized = NormalizeDirectoryPath(directoryPath);
+        var alt = normalized.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
         var folder = await context.Folders.AsNoTracking()
-            .FirstOrDefaultAsync(f => f.Path == directoryPath).ConfigureAwait(false);
+            .FirstOrDefaultAsync(f => f.Path == directoryPath || f.Path == normalized || f.Path == alt).ConfigureAwait(false);
 
         if (folder != null) return folder;
 
@@ -2649,7 +2652,32 @@ public class LibraryService : ILibraryService, ILibraryReader, IDisposable
     public async Task<List<Guid>> GetAllSongIdsByFolderIdAsync(Guid folderId, SongSortOrder sortOrder, CancellationToken token = default)
     {
         await using var context = await _contextFactory.CreateDbContextAsync().ConfigureAwait(false);
-        var query = context.Songs.AsNoTracking().Where(s => s.FolderId == folderId);
+
+        var folder = await context.Folders.AsNoTracking().FirstOrDefaultAsync(f => f.Id == folderId, token).ConfigureAwait(false);
+        IQueryable<Song> query;
+
+        if (folder != null)
+        {
+            if (folder.ParentFolderId == null)
+            {
+                // Root folder: all descendant songs have FolderId == root folder ID
+                query = context.Songs.AsNoTracking().Where(s => s.FolderId == folderId);
+            }
+            else
+            {
+                // Subfolder: songs have FolderId == root, but DirectoryPath matches the subfolder
+                var normalizedPath = folder.Path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                query = context.Songs.AsNoTracking()
+                    .Where(s => s.DirectoryPath == normalizedPath ||
+                                s.DirectoryPath.StartsWith(normalizedPath + "\\") ||
+                                s.DirectoryPath.StartsWith(normalizedPath + "/"));
+            }
+        }
+        else
+        {
+            query = context.Songs.AsNoTracking().Where(s => s.FolderId == folderId);
+        }
+
         return await ApplySongSortOrder(query, sortOrder).Select(s => s.Id).ToListAsync(token).ConfigureAwait(false);
     }
 
@@ -2660,15 +2688,19 @@ public class LibraryService : ILibraryService, ILibraryReader, IDisposable
         await using var context = await _contextFactory.CreateDbContextAsync().ConfigureAwait(false);
 
         // Normalize the directory path for comparison
-        var normalizedPath = directoryPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        var normalizedPath = NormalizeDirectoryPath(directoryPath);
+        var altPath = normalizedPath.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
         // Get all song IDs where DirectoryPath equals normalizedPath or starts with normalizedPath followed by a separator
         // This prevents false positives (e.g., "C:\\Music\\Rock" matching "C:\\Music\\Rockabilly")
         var query = context.Songs.AsNoTracking()
             .Where(s => s.FolderId == folderId &&
                         (s.DirectoryPath == normalizedPath ||
+                         s.DirectoryPath == altPath ||
                          s.DirectoryPath.StartsWith(normalizedPath + "\\") ||
-                         s.DirectoryPath.StartsWith(normalizedPath + "/")));
+                         s.DirectoryPath.StartsWith(normalizedPath + "/") ||
+                         s.DirectoryPath.StartsWith(altPath + "\\") ||
+                         s.DirectoryPath.StartsWith(altPath + "/")));
 
         return await ApplySongSortOrder(query, sortOrder).Select(s => s.Id).ToListAsync(token).ConfigureAwait(false);
     }
@@ -3072,7 +3104,22 @@ public class LibraryService : ILibraryService, ILibraryReader, IDisposable
         SongSortOrder sortOrder, CancellationToken token = default)
     {
         await using var context = await _contextFactory.CreateDbContextAsync().ConfigureAwait(false);
-        var query = context.Songs.AsNoTracking().Where(s => s.FolderId == folderId);
+
+        var folder = await context.Folders.AsNoTracking().FirstOrDefaultAsync(f => f.Id == folderId, token).ConfigureAwait(false);
+        IQueryable<Song> query;
+
+        if (folder != null && folder.ParentFolderId != null)
+        {
+            var normalizedPath = folder.Path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            query = context.Songs.AsNoTracking()
+                .Where(s => s.DirectoryPath == normalizedPath ||
+                            s.DirectoryPath.StartsWith(normalizedPath + "\\") ||
+                            s.DirectoryPath.StartsWith(normalizedPath + "/"));
+        }
+        else
+        {
+            query = context.Songs.AsNoTracking().Where(s => s.FolderId == folderId);
+        }
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {

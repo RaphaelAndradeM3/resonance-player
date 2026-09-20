@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Resonance.WinUI.Pages.FolderSongViewPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -39,11 +39,18 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Border Grid.Column="0" Width="42" Height="42" Margin="12,0,0,0" CornerRadius="12"
-                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                            <FontIcon FontSize="20" Glyph="&#xE8B7;" HorizontalAlignment="Center"
-                                      VerticalAlignment="Center" />
-                        </Border>
+                        <Button
+                            Grid.Column="0"
+                            ToolTipService.ToolTip="{x:Bind resources:Strings.FolderSongViewPage_FolderMenu_Play, Mode=OneTime}"
+                            Command="{Binding DataContext.PlaySubfolderCommand, ElementName=pageRoot}"
+                            CommandParameter="{x:Bind Folder}"
+                            Style="{StaticResource SongListViewPageSongPlayButtonStyle}">
+                            <Border Width="42" Height="42" CornerRadius="12"
+                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                <FontIcon FontSize="20" Glyph="&#xE8B7;" HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                            </Border>
+                        </Button>
 
                         <TextBlock Grid.Column="1"
                                    Style="{StaticResource SongListViewPageBodyStrongTextBlockStyle}"

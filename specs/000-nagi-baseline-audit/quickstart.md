@@ -78,12 +78,13 @@ Executa a suíte de testes de unidade e integração do núcleo de áudio e dado
 
 **Comando:**
 ```powershell
+$env:DOTNET_CLI_UI_LANGUAGE = "en"
 dotnet test tests\Nagi.Core.Tests\Nagi.Core.Tests.csproj --configuration Debug
 ```
 
 **Resultado Esperado:**
 - Execução dos testes via runner `Microsoft.Testing.Platform` / `xunit.v3`.
-- 100% dos testes aprovados (aproximadamente 40+ arquivos de teste cobrindo `LibraryService`, `AtlMetadataService`, `LrcService`, `SmartPlaylist`, `MusicPlaybackService`, etc.).
+- 100% dos testes aprovados (845/845 testes aprovados sob cultura neutra/inglês).
 - Código de saída: `0`.
 
 ---

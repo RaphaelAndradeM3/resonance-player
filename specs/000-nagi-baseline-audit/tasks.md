@@ -19,8 +19,8 @@
 
 **CRITICAL**: Nenhuma tarefa de auditoria ou caracterização pode ser concluída sem a validação do runtime e SDK instalados.
 
-- [ ] T003 Validar SDK .NET 10.0 e cargas de trabalho x64 do WinUI 3 via `dotnet --info` conforme `specs/000-nagi-baseline-audit/quickstart.md`
-- [ ] T004 [P] Documentar parâmetros mandatórios de compilação x64 e tratamento de licença SixLabors ImageSharp em `specs/000-nagi-baseline-audit/contracts/toolchain-contract.md`
+- [x] T003 Validar SDK .NET 10.0 e cargas de trabalho x64 do WinUI 3 via `dotnet --info` conforme `specs/000-nagi-baseline-audit/quickstart.md`
+- [x] T004 [P] Documentar parâmetros mandatórios de compilação x64 e tratamento de licença SixLabors ImageSharp em `specs/000-nagi-baseline-audit/contracts/toolchain-contract.md`
 
 ---
 

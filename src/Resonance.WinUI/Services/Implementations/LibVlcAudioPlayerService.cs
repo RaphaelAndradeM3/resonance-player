@@ -6,6 +6,7 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using LibVLCSharp;
 using Microsoft.Extensions.Logging;
+using Resonance.Core.Helpers;
 using Resonance.Core.Models;
 using Resonance.Core.Services.Abstractions;
 using System.Threading;
@@ -237,31 +238,14 @@ public sealed class LibVlcAudioPlayerService : IAudioPlayer, IDisposable
         }
     }
 
-    private static bool UsesNativeDemuxer(string extension)
+    internal static bool UsesNativeDemuxer(string extension)
     {
-        return extension is ".opus" or ".ogg" or ".oga" or ".webm";
+        return AudioFormatRegistry.UsesNativeDemuxer(extension);
     }
 
-    private static string? GetAvFormatHint(string extension)
+    internal static string? GetAvFormatHint(string extension)
     {
-        return extension switch
-        {
-            ".mp3" => "mp3",
-            ".flac" => "flac",
-            ".wav" => "wav",
-            ".aac" => "aac",
-            ".m4a" or ".m4b" or ".mp4" or ".m4v" => "mp4",
-            ".wma" or ".asf" => "asf",
-            ".aiff" => "aiff",
-            ".ape" => "ape",
-            ".dsf" => "dsf",
-            // Musepack SV7 and SV8 use separate FFmpeg demuxers. Content probing is
-            // required so an SV8 file is not forced through the SV7-only "mpc" demuxer.
-            ".mpc" or ".mpp" => null,
-            ".wv" => "wv",
-            ".mpeg" or ".mpg" or ".mpe" => "mpeg",
-            _ => null
-        };
+        return AudioFormatRegistry.GetLibVlcHint(extension);
     }
 
     public event Action? PlaybackEnded, PositionChanged, StateChanged, VolumeChanged, MediaOpened, DurationChanged;

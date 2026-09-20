@@ -108,11 +108,11 @@ Não manter listas duplicadas de extensões se a codebase já possui fonte de ca
 **Independent Test**: Execução dos testes de paridade em `LibVlcFormatMappingTests` cobrindo todas as extensões do `MusicFileExtensions` contra `LibVlcAudioPlayerService.GetAvFormatHint` e `UsesNativeDemuxer`.
 
 ### Tests for User Story 3
-- [ ] T013 [P] [US3] Escrever testes em `tests/Resonance.Core.Tests/LibVlcFormatMappingTests.cs` validando que toda extensão em `MusicFileExtensions` possui hint de formato adequado ou demuxer nativo mapeado
+- [x] T013 [P] [US3] Escrever testes em `tests/Resonance.Core.Tests/LibVlcFormatMappingTests.cs` validando que toda extensão em `MusicFileExtensions` possui hint de formato adequado ou demuxer nativo mapeado
 
 ### Implementation for User Story 3
-- [ ] T014 [US3] Atualizar `GetAvFormatHint` em `src/Resonance.WinUI/Services/Implementations/LibVlcAudioPlayerService.cs` mapeando `.dff` para demuxer DSD e verificando paridade com `MusicFileExtensions`
-- [ ] T015 [US3] Executar e validar testes de paridade de reprodução via `dotnet test tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj --filter "FullyQualifiedName~LibVlcFormatMapping" --no-build`
+- [x] T014 [US3] Atualizar `GetAvFormatHint` em `src/Resonance.WinUI/Services/Implementations/LibVlcAudioPlayerService.cs` mapeando `.dff` para demuxer DSD e verificando paridade com `MusicFileExtensions`
+- [x] T015 [US3] Executar e validar testes de paridade de reprodução via `dotnet test tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj --filter "FullyQualifiedName~LibVlcFormatMapping" --no-build`
 
 **Checkpoint**: Paridade total de reprodução comprovada entre Scanner, Tags e Player LibVLC.
 

@@ -8,8 +8,8 @@
 
 **Purpose**: Inicialização do ambiente da feature e criação de utilitários de teste para arquivos multi-formato sintéticos.
 
-- [ ] T001 Validar integridade da solution no branch `002-multi-format-audio-library` executando compilação em `Resonance.sln`
-- [ ] T002 [P] Implementar fixture auxiliar para criação de arquivos sintéticos multi-formato e arquivos truncados/vazios em `tests/Resonance.Core.Tests/Utils/AudioFormatTestFixture.cs`
+- [x] T001 Validar integridade da solution no branch `002-multi-format-audio-library` executando compilação em `Resonance.sln`
+- [x] T002 [P] Implementar fixture auxiliar para criação de arquivos sintéticos multi-formato e arquivos truncados/vazios em `tests/Resonance.Core.Tests/Utils/AudioFormatTestFixture.cs`
 
 ---
 

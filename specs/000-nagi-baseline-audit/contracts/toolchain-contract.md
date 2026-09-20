@@ -50,11 +50,13 @@ dotnet build Nagi.sln --configuration Release -p:Platform=x64 --no-restore
 Executa a suíte de testes de unidade e integração sobre o runner MTP (`Microsoft.Testing.Platform`) e xUnit v3.
 
 ```powershell
+$env:DOTNET_CLI_UI_LANGUAGE = "en"
 dotnet test tests\Nagi.Core.Tests\Nagi.Core.Tests.csproj --configuration Release --no-build
 ```
 
 - **Exit Code**: 0
-- **Success Rate**: 100% dos testes suportados da baseline devem passar sem regressão.
+- **Success Rate**: 100% dos testes suportados da baseline (845 testes) devem passar sem regressão.
+- **Culture / Locale**: A variável `$env:DOTNET_CLI_UI_LANGUAGE = "en"` é mandatória para evitar falhas de asserção causadas por localização de recursos em ambientes não-ingleses (ex.: `pt-BR`).
 
 ---
 

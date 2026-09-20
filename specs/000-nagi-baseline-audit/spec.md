@@ -17,6 +17,13 @@
 
 ---
 
+## Clarifications
+
+### Session 2026-09-20
+- Q: Como a especificação da baseline deve tratar a cultura/localização na execução da suíte de testes existente para cumprir o critério de 100% de aprovação? (SC-002) → A: Exigir execução da toolchain com cultura neutra/inglês (`DOTNET_CLI_UI_LANGUAGE=en` / `en-US`), alcançando 100% de aprovação (845/845) sem alterar código de produto na baseline.
+
+---
+
 ## 2. CONTRATOS & LIMITES DA ARQUITETURA
 
 * **Projetos Afetados na Solution (.sln):**
@@ -66,9 +73,10 @@
 ## 4. GATES DE VALIDAÇÃO (.NET Toolchain)
 
 ```powershell
-dotnet restore
-dotnet build --configuration Release --warnaserror
-dotnet test --configuration Release --no-build
+$env:DOTNET_CLI_UI_LANGUAGE = "en"
+dotnet restore Nagi.sln -p:Platform=x64
+dotnet build Nagi.sln --configuration Release -p:Platform=x64 --warnaserror
+dotnet test tests/Nagi.Core.Tests/Nagi.Core.Tests.csproj --configuration Release --no-build
 ```
 
 Nenhuma tarefa pode ser marcada como concluída se a solution não compilar, DI estiver inconsistente ou testes falharem.
@@ -128,6 +136,8 @@ Como stakeholder do projeto, quero um relatório claro comparando o que o Nagi j
 ### Edge Cases
 - Falhas pré-existentes ou avisos de compilação no upstream do Nagi devem ser documentados como baseline, e não mascarados.
 - Diferenças de ambiente ou dependências nativas (como runtimes WinUI 3 ou LibVLC) devem ser explicitamente registradas nos pré-requisitos da solution.
+- Execução de testes em máquinas com cultura diferente de inglês (como `pt-BR`) traduz strings de fallback (ex.: "Desconhecido Artista"), o que causa divergência com asserções que esperam o literal em inglês; portanto, os comandos de validação devem definir `$env:DOTNET_CLI_UI_LANGUAGE = 'en'` ou executar em cultura neutra.
+- O pacote `SixLabors.ImageSharp` 4.1.1 requer compilação em `Debug` para execução local irrestrita ou injeção da variável de licença de código aberto `SixLaborsLicenseKey` no modo `Release`.
 
 ---
 
@@ -154,7 +164,7 @@ Como stakeholder do projeto, quero um relatório claro comparando o que o Nagi j
 ### Measurable Outcomes
 
 - **SC-001**: 100% dos projetos da solution compilam com sucesso no modo Release sem novos erros.
-- **SC-002**: Suíte de testes existente executa com taxa de aprovação de 100% dos testes suportados.
+- **SC-002**: Suíte de testes existente executa com taxa de aprovação de 100% dos testes suportados (845 testes) com cultura neutra/inglês (`DOTNET_CLI_UI_LANGUAGE=en`).
 - **SC-003**: 100% das capabilities do catálogo (001 a 010) possuem status mapeado (existente, parcial ou ausente na baseline).
 - **SC-004**: Tempo de build e execução de testes registrado e reprodutível na máquina local.
 
@@ -162,6 +172,6 @@ Como stakeholder do projeto, quero um relatório claro comparando o que o Nagi j
 
 ## Assumptions
 
-- A baseline usa .NET 8/9 com WinUI 3 conforme o projeto Nagi original.
+- A baseline usa .NET 10.0 com WinUI 3 conforme a versão 2.3.0 do Nagi original.
 - Nenhuma funcionalidade de usuário final ou refatoração será introduzida nesta feature.
 - O código da codebase real do Nagi é a única fonte da verdade arquitetural.

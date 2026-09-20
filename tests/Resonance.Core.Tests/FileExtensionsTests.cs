@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Resonance.Core.Constants;
 using Xunit;
 
@@ -11,7 +11,18 @@ public class FileExtensionsTests
     [InlineData(".webm")]
     [InlineData(".mpc")]
     [InlineData(".mpp")]
-    [InlineData(".AA")]
+    [InlineData(".aa")]
+    [InlineData(".dsf")]
+    [InlineData(".dff")]
+    [InlineData(".flac")]
+    [InlineData(".wav")]
+    [InlineData(".mp3")]
+    [InlineData(".aac")]
+    [InlineData(".m4a")]
+    [InlineData(".wma")]
+    [InlineData(".aiff")]
+    [InlineData(".ape")]
+    [InlineData(".wv")]
     public void MusicFileExtensions_ContainsVerifiedPlaybackFormats(string extension)
     {
         FileExtensions.MusicFileExtensions.Should().Contain(extension);

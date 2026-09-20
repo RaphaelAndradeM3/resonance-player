@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Package
         xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
         xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
@@ -64,6 +64,7 @@
                             <uap:FileType>.aiff</uap:FileType>
                             <uap:FileType>.ape</uap:FileType>
                             <uap:FileType>.dsf</uap:FileType>
+                            <uap:FileType>.dff</uap:FileType>
                             <uap:FileType>.flac</uap:FileType>
                             <uap:FileType>.m4a</uap:FileType>
                             <uap:FileType>.m4b</uap:FileType>

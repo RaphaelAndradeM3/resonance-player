@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using ATL;
@@ -62,6 +62,13 @@ public class AtlMetadataService : IMetadataService, IDisposable
             metadata.FileModifiedDate = fileInfo.LastWriteTimeUtc;
             metadata.Title = ArtistNameHelper.NormalizeStringCore(_fileSystem.GetFileNameWithoutExtension(filePath)) ?? _fileSystem.GetFileNameWithoutExtension(filePath);
 
+            if (fileInfo.Exists && fileInfo.Length == 0)
+            {
+                metadata.ExtractionFailed = true;
+                metadata.ErrorMessage = "EmptyFile";
+                return metadata;
+            }
+
             // ATL parsing is synchronous, so enforce the timeout while awaiting it.
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
             var track = await Task.Run(() => new Track(filePath)).WaitAsync(cts.Token).ConfigureAwait(false);
@@ -121,6 +128,12 @@ public class AtlMetadataService : IMetadataService, IDisposable
             metadata.ExtractionFailed = true;
             metadata.ErrorMessage = "ExtractionTimeout";
         }
+        catch (TimeoutException)
+        {
+            _logger.LogWarning("Metadata extraction timed out for file: {FilePath}", filePath);
+            metadata.ExtractionFailed = true;
+            metadata.ErrorMessage = "ExtractionTimeout";
+        }
         catch (IOException ex)
         {
             _logger.LogWarning(ex, "File access error during metadata extraction for '{FilePath}'.", filePath);
@@ -131,14 +144,14 @@ public class AtlMetadataService : IMetadataService, IDisposable
         {
             _logger.LogWarning(ex, "Access denied during metadata extraction for '{FilePath}'.", filePath);
             metadata.ExtractionFailed = true;
-            metadata.ErrorMessage = "AccessDenied";
+            metadata.ErrorMessage = "FileAccessError";
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An unexpected error occurred during metadata extraction for '{FilePath}'.",
                 filePath);
             metadata.ExtractionFailed = true;
-            metadata.ErrorMessage = ex.GetType().Name;
+            metadata.ErrorMessage = "CorruptFile";
         }
 
         return metadata;

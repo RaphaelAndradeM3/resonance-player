@@ -19,9 +19,9 @@
 
 **⚠️ CRITICAL**: Nenhuma User Story pode avançar sem a autoridade única de extensões atualizada e o helper de formatos disponível.
 
-- [ ] T003 [P] Atualizar a autoridade canônica `FileExtensions.MusicFileExtensions` em `src/Resonance.Core/Constants/FileExtensions.cs` incluindo a extensão DSD `.dff` conforme especificação
-- [ ] T004 [P] Implementar o helper estático `AudioFormatRegistry` e enum `AudioCodecCategory` em `src/Resonance.Core/Helpers/AudioFormatRegistry.cs` para consulta O(1) de formatos, categorias e nomes de exibição
-- [ ] T005 [P] Escrever testes unitários para a lista canônica e para o helper de formatos em `tests/Resonance.Core.Tests/FileExtensionsTests.cs` e `tests/Resonance.Core.Tests/AudioFormatRegistryTests.cs`
+- [x] T003 [P] Atualizar a autoridade canônica `FileExtensions.MusicFileExtensions` em `src/Resonance.Core/Constants/FileExtensions.cs` incluindo a extensão DSD `.dff` conforme especificação
+- [x] T004 [P] Implementar o helper estático `AudioFormatRegistry` e enum `AudioCodecCategory` em `src/Resonance.Core/Helpers/AudioFormatRegistry.cs` para consulta O(1) de formatos, categorias e nomes de exibição
+- [x] T005 [P] Escrever testes unitários para a lista canônica e para o helper de formatos em `tests/Resonance.Core.Tests/FileExtensionsTests.cs` e `tests/Resonance.Core.Tests/AudioFormatRegistryTests.cs`
 
 **Checkpoint**: Fundação canônica pronta e testada de forma isolada.
 

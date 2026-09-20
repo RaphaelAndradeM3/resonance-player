@@ -1,4 +1,4 @@
-﻿namespace Resonance.Core.Constants;
+namespace Resonance.Core.Constants;
 
 /// <summary>
 ///     Provides centralized file extension constants for music files and cover art images.
@@ -10,7 +10,7 @@ public static class FileExtensions
     /// </summary>
     public static readonly HashSet<string> MusicFileExtensions = new(new[]
     {
-        ".aa", ".aac", ".aiff", ".ape", ".dsf", ".flac",
+        ".aa", ".aac", ".aiff", ".ape", ".dsf", ".dff", ".flac",
         ".m4a", ".m4b", ".mp3", ".mpc", ".mpp", ".ogg",
         ".oga", ".opus", ".wav", ".wma", ".wv", ".webm",
         ".asf", ".mp4", ".m4v",

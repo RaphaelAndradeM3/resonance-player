@@ -55,6 +55,10 @@ specs/001-recursive-root-library/
 ├── research.md          # Decisões de arquitetura, trade-offs e racional técnico
 ├── data-model.md        # Mapeamento de entidades Folder/Song e ciclo de vida
 ├── quickstart.md        # Roteiro executável de testes e validação ponta a ponta
+├── tasks.md             # Tarefas de implementação decompostas por fases
+├── checklists/          # Checklists de requisitos e quality-gate
+│   ├── requirements.md
+│   └── quality-gate.md
 └── contracts/           # Contratos formais da engine e de gestão de raízes
     ├── scanner-engine-contract.md
     └── root-management-contract.md

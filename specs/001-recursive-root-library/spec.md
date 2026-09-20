@@ -2,7 +2,8 @@
 
 **Feature Branch**: `001-recursive-root-library`  
 **Created**: 2026-09-20  
-**Status**: Draft  
+**Status**: Completed  
+**Plan**: [plan.md](plan.md) | **Tasks**: [tasks.md](tasks.md) | **Quickstart**: [quickstart.md](quickstart.md)  
 **Input**: Baseado em `FEATURES_SUGERIDAS_SPEC_KIT.md` (Feature 001)
 
 ---

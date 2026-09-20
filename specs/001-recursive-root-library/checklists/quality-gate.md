@@ -12,57 +12,57 @@
 
 ## 1. Requirement Completeness
 
-- [ ] CHK001 - Are recursive traversal requirements defined across all directory depths without arbitrary nesting limits? [Completeness, Spec §FR-001]
-- [ ] CHK002 - Are cycle prevention requirements explicitly specified for NTFS Junctions and Symbolic Links? [Completeness, Spec §FR-002]
-- [ ] CHK003 - Are the rules for consolidating overlapping root directories defined for both parent and child addition scenarios? [Completeness, Spec §FR-003]
-- [ ] CHK004 - Are scan trigger events (manual on-demand, root configuration changes, startup toggle) explicitly documented? [Completeness, Spec §FR-005]
-- [ ] CHK005 - Are hard delete requirements for missing files under accessible roots documented with data-preservation rules? [Completeness, Spec §FR-007]
+- [x] CHK001 - Are recursive traversal requirements defined across all directory depths without arbitrary nesting limits? [Completeness, Spec §FR-001]
+- [x] CHK002 - Are cycle prevention requirements explicitly specified for NTFS Junctions and Symbolic Links? [Completeness, Spec §FR-002]
+- [x] CHK003 - Are the rules for consolidating overlapping root directories defined for both parent and child addition scenarios? [Completeness, Spec §FR-003]
+- [x] CHK004 - Are scan trigger events (manual on-demand, root configuration changes, startup toggle) explicitly documented? [Completeness, Spec §FR-005]
+- [x] CHK005 - Are hard delete requirements for missing files under accessible roots documented with data-preservation rules? [Completeness, Spec §FR-007]
 
 ---
 
 ## 2. Requirement Clarity & Ambiguity
 
-- [ ] CHK006 - Is the behavior when an entire configured root directory is disconnected or offline clearly specified without ambiguity? [Clarity, Spec §FR-001]
-- [ ] CHK007 - Is the distinction between a missing file under an accessible root versus a missing/unplugged root directory unambiguous? [Clarity, Spec §FR-001, §FR-007]
-- [ ] CHK008 - Is "canonical path resolution" defined with specific normalization rules to prevent duplicate representations? [Clarity, Spec §FR-003]
-- [ ] CHK009 - Are non-recoverable versus recoverable file system errors clearly categorized for corrupt or unreadable files? [Clarity, Spec §FR-006]
+- [x] CHK006 - Is the behavior when an entire configured root directory is disconnected or offline clearly specified without ambiguity? [Clarity, Spec §FR-001]
+- [x] CHK007 - Is the distinction between a missing file under an accessible root versus a missing/unplugged root directory unambiguous? [Clarity, Spec §FR-001, §FR-007]
+- [x] CHK008 - Is "canonical path resolution" defined with specific normalization rules to prevent duplicate representations? [Clarity, Spec §FR-003]
+- [x] CHK009 - Are non-recoverable versus recoverable file system errors clearly categorized for corrupt or unreadable files? [Clarity, Spec §FR-006]
 
 ---
 
 ## 3. Requirement Consistency & Architectural Alignment
 
-- [ ] CHK010 - Do the requirements align strictly with the "Existing Code Is Truth" principle by evolving `SafeFileEnumerator` and `LibraryService` without parallel services? [Consistency, Plan §Constitution Check]
-- [ ] CHK011 - Are data model entities in `data-model.md` fully consistent with existing SQLite `Folder` and `Song` schemas without conflicting properties? [Consistency, Data Model §1]
-- [ ] CHK012 - Are the 3 vertical implementation slices strictly aligned end-to-end without isolated horizontal tasks? [Consistency, Plan §Fatias Verticais]
-- [ ] CHK013 - Do the requirements for overlapping roots in `RootOverlapValidator` match the behavior specified in the UI and scanner engine? [Consistency, Contract CTR-ROOT-002]
+- [x] CHK010 - Do the requirements align strictly with the "Existing Code Is Truth" principle by evolving `SafeFileEnumerator` and `LibraryService` without parallel services? [Consistency, Plan §Constitution Check]
+- [x] CHK011 - Are data model entities in `data-model.md` fully consistent with existing SQLite `Folder` and `Song` schemas without conflicting properties? [Consistency, Data Model §1]
+- [x] CHK012 - Are the 3 vertical implementation slices strictly aligned end-to-end without isolated horizontal tasks? [Consistency, Plan §Fatias Verticais]
+- [x] CHK013 - Do the requirements for overlapping roots in `RootOverlapValidator` match the behavior specified in the UI and scanner engine? [Consistency, Contract CTR-ROOT-002]
 
 ---
 
 ## 4. Acceptance Criteria & Measurability
 
-- [ ] CHK014 - Can the deep recursive traversal target (10,000 tracks across 10 depth levels) be objectively and automatically measured? [Measurability, Spec §SC-001]
-- [ ] CHK015 - Is the zero-duplicate outcome for overlapping roots verifiable through automated test assertions? [Measurability, Spec §SC-002]
-- [ ] CHK016 - Is the cooperative cancellation response threshold (< 1000ms) specified with measurable timing criteria? [Measurability, Spec §SC-003]
-- [ ] CHK017 - Is the UI responsiveness criterion (no UI freezing / consistent frame rate) objectively testable without vague adjectives? [Measurability, Spec §SC-004]
+- [x] CHK014 - Can the deep recursive traversal target (10,000 tracks across 10 depth levels) be objectively and automatically measured? [Measurability, Spec §SC-001]
+- [x] CHK015 - Is the zero-duplicate outcome for overlapping roots verifiable through automated test assertions? [Measurability, Spec §SC-002]
+- [x] CHK016 - Is the cooperative cancellation response threshold (< 1000ms) specified with measurable timing criteria? [Measurability, Spec §SC-003]
+- [x] CHK017 - Is the UI responsiveness criterion (no UI freezing / consistent frame rate) objectively testable without vague adjectives? [Measurability, Spec §SC-004]
 
 ---
 
 ## 5. Scenario & Edge Case Coverage
 
-- [ ] CHK018 - Are circular junction paths (reparse point loops pointing to ancestor directories) explicitly covered by testable scenarios? [Edge Case, Spec §Edge Cases]
-- [ ] CHK019 - Are paths exceeding Windows MAX_PATH limitations addressed in the file system enumeration requirements? [Edge Case, Spec §Edge Cases]
-- [ ] CHK020 - Is the scenario of unplugging a USB drive or network share mid-scan addressed with defined recovery behavior? [Edge Case, Spec §Edge Cases]
-- [ ] CHK021 - Are zero-state scenarios (scanning an empty directory or a folder with non-audio files only) fully specified? [Coverage, User Story 1]
-- [ ] CHK022 - Are partial progress recovery scenarios defined when a scan is cancelled halfway through? [Coverage, User Story 3]
+- [x] CHK018 - Are circular junction paths (reparse point loops pointing to ancestor directories) explicitly covered by testable scenarios? [Edge Case, Spec §Edge Cases]
+- [x] CHK019 - Are paths exceeding Windows MAX_PATH limitations addressed in the file system enumeration requirements? [Edge Case, Spec §Edge Cases]
+- [x] CHK020 - Is the scenario of unplugging a USB drive or network share mid-scan addressed with defined recovery behavior? [Edge Case, Spec §Edge Cases]
+- [x] CHK021 - Are zero-state scenarios (scanning an empty directory or a folder with non-audio files only) fully specified? [Coverage, User Story 1]
+- [x] CHK022 - Are partial progress recovery scenarios defined when a scan is cancelled halfway through? [Coverage, User Story 3]
 
 ---
 
 ## 6. Non-Functional & Operational Readiness
 
-- [ ] CHK023 - Are bounded concurrency limits (2 to 4 workers) specified to prevent I/O starvation and audio playback buffer underruns? [Non-Functional, Plan §Technical Context]
-- [ ] CHK024 - Are SQLite transaction batch sizes (100 tracks per commit) documented to avoid prolonged database lock contention? [Non-Functional, Research §Decision 4]
-- [ ] CHK025 - Are progress event emission throttling requirements (100ms) specified to prevent WinUI DispatcherQueue flooding? [Non-Functional, Research §Decision 5]
-- [ ] CHK026 - Are Whole-Solution Validation commands (`dotnet restore`, `dotnet build`, `dotnet test`) defined as mandatory merge gates? [Quality Gate, Plan §Constitution Check]
+- [x] CHK023 - Are bounded concurrency limits (2 to 4 workers) specified to prevent I/O starvation and audio playback buffer underruns? [Non-Functional, Plan §Technical Context]
+- [x] CHK024 - Are SQLite transaction batch sizes (100 tracks per commit) documented to avoid prolonged database lock contention? [Non-Functional, Research §Decision 4]
+- [x] CHK025 - Are progress event emission throttling requirements (100ms) specified to prevent WinUI DispatcherQueue flooding? [Non-Functional, Research §Decision 5]
+- [x] CHK026 - Are Whole-Solution Validation commands (`dotnet restore`, `dotnet build`, `dotnet test`) defined as mandatory merge gates? [Quality Gate, Plan §Constitution Check]
 
 ---
 

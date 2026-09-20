@@ -124,9 +124,9 @@ Melhorar o scanner e persistência existentes do Nagi. Não criar uma segunda bi
 
 **Purpose**: Verificação de consistência, testes de regressão de ponta a ponta e gate constitucional.
 
-- [ ] T018 [P] Atualizar links cruzados entre `spec.md`, `plan.md`, `research.md`, `data-model.md`, `quickstart.md` e contratos em `specs/001-recursive-root-library/`
-- [ ] T019 Executar Whole-Solution Validation completa via `dotnet build Resonance.sln -p:Platform=x64` e `dotnet test Resonance.sln` comprovando 0 erros e 100% de testes aprovados
-- [ ] T020 Executar auditoria de qualidade do checklist `specs/001-recursive-root-library/checklists/quality-gate.md` garantindo conformidade constitucional
+- [x] T018 [P] Atualizar links cruzados entre `spec.md`, `plan.md`, `research.md`, `data-model.md`, `quickstart.md` e contratos em `specs/001-recursive-root-library/`
+- [x] T019 Executar Whole-Solution Validation completa via `dotnet build Resonance.sln -p:Platform=x64` e `dotnet test Resonance.sln` comprovando 0 erros e 100% de testes aprovados
+- [x] T020 Executar auditoria de qualidade do checklist `specs/001-recursive-root-library/checklists/quality-gate.md` garantindo conformidade constitucional
 
 ---
 

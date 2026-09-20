@@ -111,10 +111,10 @@ Não implementar feature nova nesta etapa. Não refatorar código de produto.
 
 **Independent Test**: Verificação da matriz de gaps contra as 10 features funcionais e execução do roteiro de quickstart.
 
-- [ ] T013 [US3] Mapear gaps de grandes bibliotecas recursivas (`FR-LIB-001` a `008`) vinculando à Feature 001 em `specs/000-nagi-baseline-audit/contracts/gap-report-contract.md`
-- [ ] T014 [P] [US3] Mapear gaps de formatos, inspector, fingerprint, metadados, letras, equalizador e FFT (`FR-FMT`, `FR-TRK`, `FR-FNG`, `FR-META`, `FR-TAG`, `FR-LYR`, `FR-EQ`, `FR-FFT`, `FR-UI`) vinculando às Features 002 a 010 em `specs/000-nagi-baseline-audit/contracts/gap-report-contract.md`
-- [ ] T015 [US3] Consolidar o roteiro executável de validação ponta a ponta e testes de caracterização em `specs/000-nagi-baseline-audit/quickstart.md`
-- [ ] T016 [US3] Executar o gate final de whole-solution validation comprovando conformidade constitucional em `specs/000-nagi-baseline-audit/plan.md`
+- [x] T013 [US3] Mapear gaps de grandes bibliotecas recursivas (`FR-LIB-001` a `008`) vinculando à Feature 001 em `specs/000-nagi-baseline-audit/contracts/gap-report-contract.md`
+- [x] T014 [P] [US3] Mapear gaps de formatos, inspector, fingerprint, metadados, letras, equalizador e FFT (`FR-FMT`, `FR-TRK`, `FR-FNG`, `FR-META`, `FR-TAG`, `FR-LYR`, `FR-EQ`, `FR-FFT`, `FR-UI`) vinculando às Features 002 a 010 em `specs/000-nagi-baseline-audit/contracts/gap-report-contract.md`
+- [x] T015 [US3] Consolidar o roteiro executável de validação ponta a ponta e testes de caracterização em `specs/000-nagi-baseline-audit/quickstart.md`
+- [x] T016 [US3] Executar o gate final de whole-solution validation comprovando conformidade constitucional em `specs/000-nagi-baseline-audit/plan.md`
 
 **Checkpoint**: Matriz de gaps completa e roadmap das Features 001 a 010 blindado contra suposições incorretas.
 

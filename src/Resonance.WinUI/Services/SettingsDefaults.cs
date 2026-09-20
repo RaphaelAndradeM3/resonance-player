@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Resonance.Core.Models;
 using Resonance.Core.Services.Data;
 using Resonance.WinUI.Models;
@@ -32,6 +32,7 @@ public static class SettingsDefaults
     public const bool ShuffleState = false;
     public const RepeatMode DefaultRepeatMode = RepeatMode.Off;
     public const bool LastFmScrobblingEnabled = false;
+    public const bool ScanOnStartupEnabled = false;
 
     public const string DefaultArtistSplitCharacters = ""; // No splitting by default
     public const string DefaultGenreSplitCharacters = ""; // No splitting by default

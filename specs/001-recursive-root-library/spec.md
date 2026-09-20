@@ -2,7 +2,8 @@
 
 **Feature Branch**: `001-recursive-root-library`  
 **Created**: 2026-09-20  
-**Status**: Draft  
+**Status**: Completed  
+**Plan**: [plan.md](plan.md) | **Tasks**: [tasks.md](tasks.md) | **Quickstart**: [quickstart.md](quickstart.md)  
 **Input**: Baseado em `FEATURES_SUGERIDAS_SPEC_KIT.md` (Feature 001)
 
 ---
@@ -14,6 +15,17 @@
 > **Definição de Sucesso:** Uma árvore com múltiplos níveis, raízes sobrepostas, arquivos inválidos e caminhos problemáticos é processada sem duplicatas, sem travar a UI e sem abortar o scan inteiro.
 >
 > **Regra de Ouro:** Melhorar o scanner e persistência existentes do Nagi. Não criar uma segunda biblioteca paralela.
+
+---
+
+## Clarifications
+
+### Session 2026-09-20
+- Q: Como o scanner deve tratar as faixas cadastradas na biblioteca quando seus arquivos físicos forem removidos ou movidos do disco durante uma varredura incremental? (FR-007) → A: Remoção automática (hard delete) do banco para arquivos ausentes, desde que sua pasta raiz esteja acessível.
+- Q: O que o sistema deve fazer quando uma pasta raiz configurada estiver totalmente inacessível ou desconectada (por exemplo, HD externo, pendrive desplugado ou compartilhamento de rede offline) durante a varredura? (FR-001) → A: Pular a raiz inacessível com aviso não-bloqueante no progresso e preservar integralmente suas faixas no catálogo local.
+- Q: Como o scanner deve tratar junções de diretório (NTFS Junctions) e links simbólicos encontrados dentro das pastas raiz durante a varredura? (FR-002) → A: Seguir junções e links simbólicos resolvendo o destino canônico real e desconsiderando apenas nós que gerem ciclos ou já tenham sido visitados.
+- Q: Como o sistema deve lidar quando o usuário cadastrar pastas raiz que se sobrepõem (por exemplo, cadastrar D:\Musicas e também D:\Musicas\Rock)? (FR-003) → A: Consolidar na configuração: impedir a adição de subpastas de uma raiz já cadastrada e, caso uma pasta ancestral seja adicionada, absorver/remover as subpastas filhas da lista de raízes.
+- Q: Quais eventos devem disparar a varredura das pastas raiz da biblioteca? (FR-005) → A: Manual sob demanda e ao alterar raízes: o scan é disparado quando o usuário clica em "Atualizar Biblioteca" ou adiciona/remove pastas nas configurações, disponibilizando opção configurável para varredura na inicialização do app.
 
 ---
 
@@ -125,7 +137,7 @@ Como usuário com dezenas de milhares de músicas, quero ver o progresso do scan
 ### Edge Cases
 - Links simbólicos e junções que apontam para diretórios pais (evitar loop infinito via detecção de reparse point).
 - Caminhos que excedem o limite MAX_PATH do Windows (utilizar suporte a caminhos longos).
-- Remoção de um disco externo ou pasta de rede no meio da varredura.
+- Remoção de um disco externo ou pasta de rede: a raiz correspondente é pulada com aviso de log/progresso e suas faixas permanecem inalteradas no banco de dados local.
 
 ---
 
@@ -133,13 +145,13 @@ Como usuário com dezenas de milhares de músicas, quero ver o progresso do scan
 
 ### Functional Requirements
 
-- **FR-001**: O sistema DEVE percorrer recursivamente todas as subpastas a partir de cada pasta raiz cadastrada.
-- **FR-002**: O sistema DEVE detectar e desconsiderar links simbólicos cíclicos para evitar recursão infinita.
-- **FR-003**: O sistema DEVE identificar raízes sobrepostas e desduplicar arquivos com base em caminho canônico.
+- **FR-001**: O sistema DEVE percorrer recursivamente todas as subpastas a partir de cada pasta raiz cadastrada. Caso uma pasta raiz esteja inacessível ou desconectada, o sistema DEVE pular essa raiz emitindo aviso não-bloqueante e preservar integralmente suas faixas já cadastradas no banco de dados.
+- **FR-002**: O sistema DEVE seguir junções de diretório (NTFS Junctions) e links simbólicos válidos resolvendo seu caminho canônico real, desconsiderando apenas links cíclicos ou nós cujo caminho físico de destino já tenha sido visitado.
+- **FR-003**: O sistema DEVE detectar raízes sobrepostas na configuração de pastas da biblioteca, impedindo a inclusão de subpastas de raízes já existentes e consolidando subpastas filhas quando uma pasta ancestral for adicionada, além de desduplicar arquivos pelo caminho canônico durante o processamento.
 - **FR-004**: O sistema DEVE suportar cancelamento imediato e seguro em qualquer momento da varredura.
-- **FR-005**: O sistema DEVE emitir eventos de progresso com número de faixas encontradas e pasta atual sem travar a interface.
+- **FR-005**: O sistema DEVE disparar a varredura sob demanda (acionamento manual pelo usuário) ou ao adicionar/remover pastas raiz, disponibilizando opção configurável para varredura na inicialização do app, e emitir eventos de progresso em tempo real (faixas encontradas e pasta atual) sem travar a interface.
 - **FR-006**: O sistema DEVE registrar falhas individuais de arquivos corrompidos sem interromper o processo global de scan.
-- **FR-007**: O sistema DEVE persistir as alterações na base de dados de forma transacional e eficiente.
+- **FR-007**: O sistema DEVE persistir as alterações na base de dados de forma transacional e eficiente, realizando remoção automática (*hard delete*) de faixas ausentes do disco durante a varredura incremental, desde que a pasta raiz correspondente esteja montada e acessível.
 
 ### Key Entities
 

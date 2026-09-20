@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading.Channels;
 using Microsoft.EntityFrameworkCore;
@@ -665,7 +665,7 @@ public class LibraryService : ILibraryService, ILibraryReader, IDisposable
         CancellationToken cancellationToken = default)
     {
         CancelActiveScan("manual folder rescan");
-        return RescanFolderForMusicAsync(folderId, forceFullScan, allowFolderRemovalOnMissing: true, progress, cancellationToken);
+        return RescanFolderForMusicAsync(folderId, forceFullScan, allowFolderRemovalOnMissing: false, progress, cancellationToken);
     }
 
     private async Task<bool> RescanFolderForMusicAsync(Guid folderId, bool forceFullScan, bool allowFolderRemovalOnMissing,
@@ -719,27 +719,16 @@ public class LibraryService : ILibraryService, ILibraryReader, IDisposable
 
                     if (!_fileSystem.DirectoryExists(folder.Path))
                     {
-                        if (!allowFolderRemovalOnMissing)
-                        {
-                            // Auto-refresh/batch path: folder being unreachable (e.g., NAS not mounted
-                            // at app launch, removable drive not inserted) must NOT permanently remove
-                            // the user's folder from the library. Just warn and skip.
-                            _logger.LogWarning(
-                                "Folder path '{FolderPath}' not reachable during auto-refresh. Skipping folder {FolderId}; no changes will be made.",
-                                folder.Path, folder.Id);
-                            progress?.Report(new ScanProgress
-                            { StatusText = Resources.Strings.Status_ScanFailed, Percentage = 100 });
-                            if (throwOnFailure)
-                                throw new DirectoryNotFoundException($"Library folder was not found: {folder.Path}");
-                            return false;
-                        }
-
+                        // FR-001: Inaccessible/offline folder (e.g. disconnected USB drive or offline NAS share).
+                        // Skip the folder with warning and preserve 100% of existing catalog records.
                         _logger.LogWarning(
-                            "Folder path '{FolderPath}' no longer exists. Removing folder {FolderId} from library.",
+                            "Folder path '{FolderPath}' is offline or inaccessible. Skipping folder {FolderId}; preserving existing catalog.",
                             folder.Path, folder.Id);
                         progress?.Report(new ScanProgress
                         { StatusText = Resources.Strings.Status_ScanFailed, Percentage = 100 });
-                        return await RemoveFolderCoreAsync(folderId, operationToken).ConfigureAwait(false);
+                        if (throwOnFailure)
+                            throw new DirectoryNotFoundException($"Library folder was not found: {folder.Path}");
+                        return false;
                     }
 
                     progress?.Report(new ScanProgress
@@ -3366,9 +3355,16 @@ public class LibraryService : ILibraryService, ILibraryReader, IDisposable
             .Select(s => new { s.FilePath, s.FileModifiedDate })
             .ToListAsync(cancellationToken);
 
-        var diskFileMap = _fileSystem.EnumerateFilesWithLastWriteTime(folderPath, "*.*", SearchOption.AllDirectories)
-            .Where(x => FileExtensions.MusicFileExtensions.Contains(_fileSystem.GetExtension(x.Path)))
-            .ToDictionary(x => x.Path, x => x.LastWriteTimeUtc, StringComparer.OrdinalIgnoreCase);
+        var diskFileMap = new Dictionary<string, DateTime>(StringComparer.OrdinalIgnoreCase);
+        foreach (var entry in _fileSystem.EnumerateFilesWithLastWriteTime(folderPath, "*.*", SearchOption.AllDirectories))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var ext = _fileSystem.GetExtension(entry.Path);
+            if (FileExtensions.MusicFileExtensions.Contains(ext))
+            {
+                diskFileMap[entry.Path] = entry.LastWriteTimeUtc;
+            }
+        }
 
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -4178,6 +4174,7 @@ public class LibraryService : ILibraryService, ILibraryReader, IDisposable
 
                     if (batch.Count >= 50)
                     {
+                        pipelineToken.ThrowIfCancellationRequested();
                         batchNumber++;
                         progress?.Report(new ScanProgress
                         {
@@ -4193,12 +4190,14 @@ public class LibraryService : ILibraryService, ILibraryReader, IDisposable
                         _logger.LogInformation("Consumer finished batch {BatchNumber}. Saved {Count} items.", batchNumber, saved);
                         totalSaved += saved;
                         batch.Clear();
+                        pipelineToken.ThrowIfCancellationRequested();
                     }
                 }
 
                 // Process remaining items
                 if (batch.Count > 0)
                 {
+                    pipelineToken.ThrowIfCancellationRequested();
                     batchNumber++;
                     _logger.LogInformation("Consumer processing FINAL batch {BatchNumber} with {Count} items.", batchNumber, batch.Count);
                     progress?.Report(new ScanProgress
@@ -4212,6 +4211,7 @@ public class LibraryService : ILibraryService, ILibraryReader, IDisposable
                         albumIdCache, genreIdCache, filePathsBeingUpdated, skipMediaAssetsForUpdates,
                         pipelineToken).ConfigureAwait(false);
                     totalSaved += saved;
+                    pipelineToken.ThrowIfCancellationRequested();
                 }
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
@@ -4315,6 +4315,7 @@ public class LibraryService : ILibraryService, ILibraryReader, IDisposable
                 preserveMediaAssetsForUpdates && existingSong != null);
         }
 
+        cancellationToken.ThrowIfCancellationRequested();
         _logger.LogInformation("Saving changes for batch...");
         // With AutoDetectChangesEnabled=false, collection operations (Clear/Add on navigation properties)
         // may not be reflected in entity states until DetectChanges is called explicitly.

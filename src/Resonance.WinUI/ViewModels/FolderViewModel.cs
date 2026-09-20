@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -270,17 +270,28 @@ public partial class FolderViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(folderPath) || IsAnyOperationInProgress) return;
 
-        // Pre-flight textual dedup using the shared canonicalizer. This won't collapse
-        // mapped-drive vs UNC (that requires platform resolution in LibraryService), but it
-        // catches case, separator, and Unicode variations so the user gets an immediate
-        // "already added" message instead of a silent no-op.
-        var canonicalNew = Resonance.Core.Helpers.PathCanonicalizer.Normalize(folderPath);
-        if (!string.IsNullOrEmpty(canonicalNew) &&
-            Folders.Any(f => Resonance.Core.Helpers.PathCanonicalizer.Normalize(f.Path)
-                .Equals(canonicalNew, StringComparison.OrdinalIgnoreCase)))
+        // Check directory overlap using RootOverlapValidator
+        var existingRoots = Folders.Select(f => f.Path).ToList();
+        var overlap = Resonance.Core.Helpers.RootOverlapValidator.Evaluate(folderPath, existingRoots);
+
+        if (overlap.Action == Resonance.Core.Helpers.RootOverlapAction.RejectSubfolderAlreadyCovered)
         {
-            _playerViewModel.GlobalOperationStatusMessage = Resonance.WinUI.Resources.Strings.Folders_AddFolder_Exists;
+            var conflict = overlap.ConflictingPaths.FirstOrDefault() ?? folderPath;
+            _playerViewModel.GlobalOperationStatusMessage = $"A pasta '{folderPath}' já está coberta pela raiz '{conflict}'.";
             return;
+        }
+
+        if (overlap.Action == Resonance.Core.Helpers.RootOverlapAction.ConsolidateParent)
+        {
+            // Remove existing subfolder roots from the list as the parent absorbs them
+            foreach (var childPath in overlap.ConflictingPaths)
+            {
+                var existingChild = Folders.FirstOrDefault(f => string.Equals(f.Path, childPath, StringComparison.OrdinalIgnoreCase));
+                if (existingChild != null)
+                {
+                    await _libraryService.RemoveFolderAsync(existingChild.Id);
+                }
+            }
         }
 
         IsAddingFolder = true;
@@ -300,11 +311,17 @@ public partial class FolderViewModel : ObservableObject
 
             IsScanning = true;
 
+            long lastReportTicks = 0;
             var progress = new Progress<ScanProgress>(p =>
             {
-                _playerViewModel.GlobalOperationStatusMessage = p.StatusText;
-                _playerViewModel.IsGlobalOperationIndeterminate = p.IsIndeterminate || p.Percentage < 5;
-                _playerViewModel.GlobalOperationProgressValue = p.Percentage;
+                var now = Environment.TickCount64;
+                if (p.Percentage >= 100 || p.IsIndeterminate || now - lastReportTicks >= 100)
+                {
+                    lastReportTicks = now;
+                    _playerViewModel.GlobalOperationStatusMessage = p.StatusText;
+                    _playerViewModel.IsGlobalOperationIndeterminate = p.IsIndeterminate || p.Percentage < 5;
+                    _playerViewModel.GlobalOperationProgressValue = p.Percentage;
+                }
             });
 
             await _libraryService.ScanFolderForMusicAsync(folder.Path, progress);

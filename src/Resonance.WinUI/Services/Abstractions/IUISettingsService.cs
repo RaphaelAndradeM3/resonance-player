@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
@@ -173,6 +173,16 @@ public interface IUISettingsService : ISettingsService
     /// </summary>
     /// <param name="isEnabled">The start minimized preference to save.</param>
     Task SetStartMinimizedEnabledAsync(bool isEnabled);
+
+    /// <summary>
+    ///     Gets whether the library should automatically scan/refresh folders on application startup.
+    /// </summary>
+    Task<bool> GetScanOnStartupEnabledAsync();
+
+    /// <summary>
+    ///     Sets the scan on startup preference.
+    /// </summary>
+    Task SetScanOnStartupEnabledAsync(bool isEnabled);
 
     /// <summary>
     ///     Gets whether the application should hide to the system tray when closed.

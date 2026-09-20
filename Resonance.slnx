@@ -1,0 +1,42 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="DebugUnpackaged" />
+    <BuildType Name="Release" />
+    <BuildType Name="ReleaseUnpackaged" />
+    <Platform Name="Any CPU" />
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Folder Name="/api/">
+    <Project Path="api/ResonanceAppFunctions/ResonanceAppFunctions.csproj">
+      <BuildType Solution="DebugUnpackaged|*" Project="Debug" />
+      <BuildType Solution="ReleaseUnpackaged|*" Project="Release" />
+    </Project>
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="NuGet.config" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Resonance.Core/Resonance.Core.csproj">
+      <BuildType Solution="DebugUnpackaged|*" Project="Debug" />
+      <BuildType Solution="ReleaseUnpackaged|*" Project="Release" />
+    </Project>
+    <Project Path="src/Resonance.WinUI/Resonance.WinUI.csproj">
+      <Platform Solution="*|Any CPU" Project="x64" />
+      <Platform Solution="*|ARM64" Project="ARM64" />
+      <Platform Solution="*|x64" Project="x64" />
+      <Deploy />
+    </Project>
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj">
+      <BuildType Solution="DebugUnpackaged|*" Project="Debug" />
+      <BuildType Solution="ReleaseUnpackaged|*" Project="Release" />
+    </Project>
+  </Folder>
+</Solution>

@@ -77,12 +77,12 @@ Não manter listas duplicadas de extensões se a codebase já possui fonte de ca
 **Independent Test**: Execução dos testes em `FormatResilienceTests` comprovando que o scanner reporta falha graciosa e continua processando os arquivos válidos.
 
 ### Tests for User Story 2
-- [ ] T009 [P] [US2] Escrever testes unitários em `tests/Resonance.Core.Tests/FormatResilienceTests.cs` simulando arquivos vazios (0 bytes), cabeçalhos truncados e extensões falsas
+- [x] T009 [P] [US2] Escrever testes unitários em `tests/Resonance.Core.Tests/FormatResilienceTests.cs` simulando arquivos vazios (0 bytes), cabeçalhos truncados e extensões falsas
 
 ### Implementation for User Story 2
-- [ ] T010 [US2] Atualizar `AtlMetadataService.cs` em `src/Resonance.Core/Services/Implementations/AtlMetadataService.cs` com validação antecipada de arquivos 0 bytes (`EmptyFile`) e isolamento estrito de falhas de leitura do formato (`AudioFormat.Readable == false`)
-- [ ] T011 [US2] Assegurar em `LibraryService.cs` em `src/Resonance.Core/Services/Implementations/LibraryService.cs` que arquivos com falha de extração permanente não sejam salvos no SQLite e alimentem o resumo de auditoria
-- [ ] T012 [US2] Executar e validar aprovação dos testes de resiliência via `dotnet test tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj --filter "FullyQualifiedName~FormatResilience" --no-build`
+- [x] T010 [US2] Atualizar `AtlMetadataService.cs` em `src/Resonance.Core/Services/Implementations/AtlMetadataService.cs` com validação antecipada de arquivos 0 bytes (`EmptyFile`) e isolamento estrito de falhas de leitura do formato (`AudioFormat.Readable == false`)
+- [x] T011 [US2] Assegurar em `LibraryService.cs` em `src/Resonance.Core/Services/Implementations/LibraryService.cs` que arquivos com falha de extração permanente não sejam salvos no SQLite e alimentem o resumo de auditoria
+- [x] T012 [US2] Executar e validar aprovação dos testes de resiliência via `dotnet test tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj --filter "FullyQualifiedName~FormatResilience" --no-build`
 
 **Checkpoint**: Varredura resiliente, isolamento de arquivos vazios/corrompidos e proteção do banco de dados SQLite validados.
 

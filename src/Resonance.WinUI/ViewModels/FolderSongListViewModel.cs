@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -537,6 +537,11 @@ public partial class FolderSongListViewModel : SongListViewModelBase
 
     protected override PlaybackContext GetPlaybackContext() =>
         _rootFolderId.HasValue ? new(PlaybackContextType.Folder, _rootFolderId.Value) : base.GetPlaybackContext();
+
+    protected override bool CanExecutePlayAll()
+    {
+        return !IsLoading && (Songs.Any() || FolderContents.Any() || TotalItemCount > 0);
+    }
 
     [RelayCommand]
     private async Task PlaySubfolderAsync(Folder? folder)

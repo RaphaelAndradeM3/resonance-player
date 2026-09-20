@@ -79,10 +79,10 @@ Não implementar feature nova nesta etapa. Não refatorar código de produto.
 
 **Independent Test**: Inspeção cruzada do catálogo gerado em `audit-matrix-contract.md` contra o grafo de injeção de dependências em `App.xaml.cs`.
 
-- [ ] T009 [P] [US2] Catalogar o motor de reprodução LibVLC 4.0 (`IAudioPlayer` e `IMusicPlaybackService`) em `src/Nagi.WinUI/Services/Implementations/LibVlcAudioPlayerService.cs` e `src/Nagi.Core/Services/Implementations/MusicPlaybackService.cs`
-- [ ] T010 [P] [US2] Catalogar o serviço de scanner de biblioteca (`ILibraryScanner`, `ILibraryReader`, `ILibraryWriter`) e persistência SQLite (`MusicDbContext`) em `src/Nagi.Core/Services/Implementations/LibraryService.cs` e `src/Nagi.Core/Data/MusicDbContext.cs`
-- [ ] T011 [P] [US2] Catalogar o motor de metadados ATL (`IMetadataService`) e serviço de letras (`ILrcService`, `IOnlineLyricsService`) em `src/Nagi.Core/Services/Implementations/AtlMetadataService.cs` e `src/Nagi.Core/Services/Implementations/LrcService.cs`
-- [ ] T012 [US2] Mapear o container de Injeção de Dependência de `src/Nagi.WinUI/App.xaml.cs` e consolidar as regras de reutilização obrigatória em `specs/000-nagi-baseline-audit/contracts/audit-matrix-contract.md`
+- [x] T009 [P] [US2] Catalogar o motor de reprodução LibVLC 4.0 (`IAudioPlayer` e `IMusicPlaybackService`) em `src/Nagi.WinUI/Services/Implementations/LibVlcAudioPlayerService.cs` e `src/Nagi.Core/Services/Implementations/MusicPlaybackService.cs`
+- [x] T010 [P] [US2] Catalogar o serviço de scanner de biblioteca (`ILibraryScanner`, `ILibraryReader`, `ILibraryWriter`) e persistência SQLite (`MusicDbContext`) em `src/Nagi.Core/Services/Implementations/LibraryService.cs` e `src/Nagi.Core/Data/MusicDbContext.cs`
+- [x] T011 [P] [US2] Catalogar o motor de metadados ATL (`IMetadataService`) e serviço de letras (`ILrcService`, `IOnlineLyricsService`) em `src/Nagi.Core/Services/Implementations/AtlMetadataService.cs` e `src/Nagi.Core/Services/Implementations/LrcService.cs`
+- [x] T012 [US2] Mapear o container de Injeção de Dependência de `src/Nagi.WinUI/App.xaml.cs` e consolidar as regras de reutilização obrigatória em `specs/000-nagi-baseline-audit/contracts/audit-matrix-contract.md`
 
 **Checkpoint**: Toda a arquitetura do Nagi mapeada; agentes proibidos de recriar serviços concorrentes.
 

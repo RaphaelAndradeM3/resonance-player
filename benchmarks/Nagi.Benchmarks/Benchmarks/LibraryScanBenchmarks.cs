@@ -1,14 +1,14 @@
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Nagi.Benchmarks.Helpers;
-using Nagi.Core.Data;
-using Nagi.Core.Helpers;
-using Nagi.Core.Http.Pipelines;
-using Nagi.Core.Services.Abstractions;
-using Nagi.Core.Services.Implementations;
+using Resonance.Core.Data;
+using Resonance.Core.Helpers;
+using Resonance.Core.Http.Pipelines;
+using Resonance.Core.Services.Abstractions;
+using Resonance.Core.Services.Implementations;
 using NSubstitute;
 using System.IO;
 using Microsoft.Data.Sqlite;
@@ -163,7 +163,7 @@ public class LibraryScanBenchmarks
             var attributes = File.GetAttributes(path);
             return (attributes & (FileAttributes.Hidden | FileAttributes.System)) != 0;
         }
-        public string NormalizePath(string path) => Nagi.Core.Helpers.PathCanonicalizer.Normalize(path ?? string.Empty);
+        public string NormalizePath(string path) => Resonance.Core.Helpers.PathCanonicalizer.Normalize(path ?? string.Empty);
         public bool IsNetworkPath(string path) => false;
     }
 }

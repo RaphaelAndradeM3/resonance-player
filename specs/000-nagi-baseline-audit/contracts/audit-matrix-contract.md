@@ -1,4 +1,4 @@
-# Architecture & Capability Inventory Contract
+﻿# Architecture & Capability Inventory Contract
 
 **Feature**: `000-nagi-baseline-audit`  
 **Contract Version**: 1.0.0  
@@ -12,25 +12,25 @@ A tabela abaixo lista os subsistemas oficiais do Nagi. Conforme o Princípio I e
 
 | Subsistema / Capability | Interface Primária (Abstração) | Implementação Concreta | Projeto / Camada | Ciclo de Vida DI | Reutilização Obrigatória |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Playback Engine** | `IAudioPlayer` | `LibVlcAudioPlayerService` | `Nagi.WinUI` | `Singleton` | **MANDATÓRIO**: Motor de áudio LibVLC 4.0. Não substituir por NAudio/MediaEngine. |
-| **Playback Coordinator** | `IMusicPlaybackService` | `MusicPlaybackService` | `Nagi.Core` | `Singleton` | **MANDATÓRIO**: Orquestra fila, estado, histórico e eventos de reprodução. |
-| **Library Scanner** | `ILibraryScanner` | `LibraryService` | `Nagi.Core` | `Singleton` | **MANDATÓRIO**: Ponto de entrada da Feature 001. Não criar segundo scanner. |
-| **Library Reader** | `ILibraryReader` | `LibraryService` | `Nagi.Core` | `Singleton` | **MANDATÓRIO**: Consultas de faixas, álbuns, artistas e pastas. |
-| **Library Writer** | `ILibraryWriter` | `LibraryService` | `Nagi.Core` | `Singleton` | **MANDATÓRIO**: Mutação e persistência de dados de biblioteca. |
-| **Database Context** | `MusicDbContext` | `MusicDbContext` | `Nagi.Core` | `Pooled / Factory` | **MANDATÓRIO**: Único banco de dados SQLite / EF Core da aplicação. |
-| **Metadata Engine** | `IMetadataService` | `AtlMetadataService` | `Nagi.Core` | `Singleton` | **MANDATÓRIO**: Leitura/escrita de tags via ATL. Não usar TagLibSharp. |
-| **Lyrics Parser/Service**| `ILrcService` | `LrcService` | `Nagi.Core` | `Singleton` | **MANDATÓRIO**: Manipulação de letras locais (.lrc, tags embutidas). |
-| **Online Lyrics Provider**| `IOnlineLyricsService` | `LrcLibService` | `Nagi.Core` | `Singleton` | **MANDATÓRIO**: Provider de letras LRCLIB. Manter opcional e offline-first. |
-| **Equalizer / DSP** | `LibVlcAudioPlayerService` | `LibVlcAudioPlayerService` | `Nagi.WinUI` | `Singleton` | **MANDATÓRIO**: 10 bandas de EQ com pregain e presets. |
-| **ReplayGain Engine** | `IReplayGainService` | `ReplayGainService` | `Nagi.WinUI` | `Singleton` | **MANDATÓRIO**: Cálculo e aplicação de ganho de volume ReplayGain. |
-| **PCM Extractor** | `IPcmExtractor` | `FFmpegPcmExtractor` | `Nagi.WinUI` | `Singleton` | **REUTILIZÁVEL**: Extração de PCM via FFmpeg para análise e ReplayGain. |
-| **Settings / Config** | `ISettingsService` | `SettingsService` | `Nagi.WinUI` | `Singleton` | **MANDATÓRIO**: Repositório central de configurações tipadas. |
-| **Navigation** | `INavigationService` | `NavigationService` | `Nagi.WinUI` | `Singleton` | **MANDATÓRIO**: Navegação Fluent entre páginas WinUI 3. |
+| **Playback Engine** | `IAudioPlayer` | `LibVlcAudioPlayerService` | `Resonance.WinUI` | `Singleton` | **MANDATÓRIO**: Motor de áudio LibVLC 4.0. Não substituir por NAudio/MediaEngine. |
+| **Playback Coordinator** | `IMusicPlaybackService` | `MusicPlaybackService` | `Resonance.Core` | `Singleton` | **MANDATÓRIO**: Orquestra fila, estado, histórico e eventos de reprodução. |
+| **Library Scanner** | `ILibraryScanner` | `LibraryService` | `Resonance.Core` | `Singleton` | **MANDATÓRIO**: Ponto de entrada da Feature 001. Não criar segundo scanner. |
+| **Library Reader** | `ILibraryReader` | `LibraryService` | `Resonance.Core` | `Singleton` | **MANDATÓRIO**: Consultas de faixas, álbuns, artistas e pastas. |
+| **Library Writer** | `ILibraryWriter` | `LibraryService` | `Resonance.Core` | `Singleton` | **MANDATÓRIO**: Mutação e persistência de dados de biblioteca. |
+| **Database Context** | `MusicDbContext` | `MusicDbContext` | `Resonance.Core` | `Pooled / Factory` | **MANDATÓRIO**: Único banco de dados SQLite / EF Core da aplicação. |
+| **Metadata Engine** | `IMetadataService` | `AtlMetadataService` | `Resonance.Core` | `Singleton` | **MANDATÓRIO**: Leitura/escrita de tags via ATL. Não usar TagLibSharp. |
+| **Lyrics Parser/Service**| `ILrcService` | `LrcService` | `Resonance.Core` | `Singleton` | **MANDATÓRIO**: Manipulação de letras locais (.lrc, tags embutidas). |
+| **Online Lyrics Provider**| `IOnlineLyricsService` | `LrcLibService` | `Resonance.Core` | `Singleton` | **MANDATÓRIO**: Provider de letras LRCLIB. Manter opcional e offline-first. |
+| **Equalizer / DSP** | `LibVlcAudioPlayerService` | `LibVlcAudioPlayerService` | `Resonance.WinUI` | `Singleton` | **MANDATÓRIO**: 10 bandas de EQ com pregain e presets. |
+| **ReplayGain Engine** | `IReplayGainService` | `ReplayGainService` | `Resonance.WinUI` | `Singleton` | **MANDATÓRIO**: Cálculo e aplicação de ganho de volume ReplayGain. |
+| **PCM Extractor** | `IPcmExtractor` | `FFmpegPcmExtractor` | `Resonance.WinUI` | `Singleton` | **REUTILIZÁVEL**: Extração de PCM via FFmpeg para análise e ReplayGain. |
+| **Settings / Config** | `ISettingsService` | `SettingsService` | `Resonance.WinUI` | `Singleton` | **MANDATÓRIO**: Repositório central de configurações tipadas. |
+| **Navigation** | `INavigationService` | `NavigationService` | `Resonance.WinUI` | `Singleton` | **MANDATÓRIO**: Navegação Fluent entre páginas WinUI 3. |
 
 ---
 
 ## 2. Injeção de Dependência (DI) Rules
 
-1. Todo novo recurso ou extensão deve ser registrado no método `ConfigureServices` em `src\Nagi.WinUI\App.xaml.cs`.
+1. Todo novo recurso ou extensão deve ser registrado no método `ConfigureServices` em `src\Resonance.WinUI\App.xaml.cs`.
 2. Se uma nova interface for estendida (ex.: `IAudioFingerprintService` para a Feature 004), ela deve se integrar ao container existente sem criar um segundo container ou service locator paralelo.
 3. Ciclos de vida devem respeitar `Singleton` para serviços de infraestrutura e gerenciamento de estado de reprodução.

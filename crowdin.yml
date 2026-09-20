@@ -1,4 +1,4 @@
-project_id_env: CROWDIN_PROJECT_ID
+﻿project_id_env: CROWDIN_PROJECT_ID
 api_token_env: CROWDIN_PERSONAL_TOKEN
 base_path: .
 
@@ -6,10 +6,10 @@ preserve_hierarchy: true
 
 
 files:
-  # Nagi.Core Shared Resources (.resx)
-  - source: /src/Nagi.Core/Resources/Strings.resx
-    translation: /src/Nagi.Core/Resources/Strings.%locale%.resx
+  # Resonance.Core Shared Resources (.resx)
+  - source: /src/Resonance.Core/Resources/Strings.resx
+    translation: /src/Resonance.Core/Resources/Strings.%locale%.resx
 
-  # Nagi.WinUI C# Resources (.resx)
-  - source: /src/Nagi.WinUI/Resources/Strings.resx
-    translation: /src/Nagi.WinUI/Resources/Strings.%locale%.resx
+  # Resonance.WinUI C# Resources (.resx)
+  - source: /src/Resonance.WinUI/Resources/Strings.resx
+    translation: /src/Resonance.WinUI/Resources/Strings.%locale%.resx

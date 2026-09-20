@@ -1,4 +1,4 @@
-# SPEC_KIT_HANDOFF.md
+﻿# SPEC_KIT_HANDOFF.md
 
 ## Objetivo
 
@@ -84,8 +84,8 @@ Modificar o scanner/persistência/UI existentes. Não criar segundo scanner/bibl
 
 ```powershell
 dotnet restore
-dotnet build Nagi.sln --configuration Release --no-restore
-dotnet test Nagi.sln --configuration Release --no-build
+dotnet build Resonance.sln --configuration Release --no-restore
+dotnet test Resonance.sln --configuration Release --no-build
 ```
 
 A Feature 000 deve substituir esses comandos pelos oficiais do repositório se houver

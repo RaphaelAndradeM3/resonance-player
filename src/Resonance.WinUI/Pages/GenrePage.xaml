@@ -1,0 +1,240 @@
+﻿<!-- Nagi/Pages/GenrePage.xaml -->
+<Page
+    x:Class="Resonance.WinUI.Pages.GenrePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:Resonance.WinUI.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:resources="using:Resonance.WinUI.Resources"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Resonance.WinUI.ViewModels"
+    xmlns:helpers="using:Resonance.Core.Helpers"
+    x:Name="GenrePageRoot"
+    Background="Transparent"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+
+    </Page.Resources>
+
+    <Grid Padding="{StaticResource PageContainerPaddingVertical}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="SearchStates">
+                <VisualState x:Name="SearchCollapsed">
+                    <Storyboard>
+                        <DoubleAnimation
+                            Storyboard.TargetName="SearchTextBox"
+                            Storyboard.TargetProperty="Width"
+                            To="0"
+                            Duration="0:0:0.3"
+                            EnableDependentAnimation="True">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseInOut" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <DoubleAnimation
+                            Storyboard.TargetName="SearchTextBox"
+                            Storyboard.TargetProperty="Opacity"
+                            To="0"
+                            Duration="0:0:0.15" />
+                        <ObjectAnimationUsingKeyFrames
+                            Storyboard.TargetName="SearchTextBox"
+                            Storyboard.TargetProperty="IsHitTestVisible">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="False" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames
+                            Storyboard.TargetName="SearchIcon"
+                            Storyboard.TargetProperty="Glyph">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="&#xE721;" />
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0.3" Value="&#xE721;" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="SearchExpanded">
+                    <Storyboard>
+                        <DoubleAnimation
+                            Storyboard.TargetName="SearchTextBox"
+                            Storyboard.TargetProperty="Width"
+                            To="300"
+                            Duration="0:0:0.3"
+                            EnableDependentAnimation="True">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseInOut" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <DoubleAnimation
+                            Storyboard.TargetName="SearchTextBox"
+                            Storyboard.TargetProperty="Opacity"
+                            To="1"
+                            BeginTime="0:0:0.15"
+                            Duration="0:0:0.15" />
+                        <ObjectAnimationUsingKeyFrames
+                            Storyboard.TargetName="SearchTextBox"
+                            Storyboard.TargetProperty="IsHitTestVisible">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="True" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames
+                            Storyboard.TargetName="SearchIcon"
+                            Storyboard.TargetProperty="Glyph">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="&#xE711;" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Page Header -->
+        <Grid Grid.Row="0" Margin="{StaticResource PageHeaderMarginIndented}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="{x:Bind resources:Strings.GenrePage_Title, Mode=OneTime}" Style="{StaticResource PageTitleTextStyle}" />
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                <!-- Search functionality -->
+                <Grid>
+                    <TextBox x:Name="SearchTextBox"
+                             PlaceholderText="{x:Bind resources:Strings.GenrePage_SearchBox_Placeholder, Mode=OneTime}"
+                             Style="{StaticResource SearchTextBoxStyle}"
+                             Width="0"
+                             Opacity="0"
+                             IsHitTestVisible="False"
+                             HorizontalAlignment="Right"
+                             KeyDown="OnSearchTextBoxKeyDown"
+                             Text="{x:Bind ViewModel.SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Canvas.ZIndex="0">
+                        </TextBox>
+                    <Button x:Name="SearchToggleButton"
+                            ToolTipService.ToolTip="{x:Bind resources:Strings.GenrePage_SearchButton_ToolTip, Mode=OneTime}"
+                            Click="OnSearchToggleButtonClick"
+                            Style="{StaticResource SongListViewPageIconButton}"
+                            HorizontalAlignment="Right"
+                            Margin="0,0,1,0"
+                            Canvas.ZIndex="1">
+                        <FontIcon x:Name="SearchIcon" FontSize="16" Glyph="&#xE721;" />
+                    </Button>
+                </Grid>
+
+                <Button x:Name="RandomGenreButton"
+                        ToolTipService.ToolTip="{x:Bind resources:Strings.GenrePage_RandomButton_ToolTip, Mode=OneTime}"
+                        Style="{StaticResource SongListViewPageIconButton}"
+                        Command="{x:Bind ViewModel.PlayRandomGenreCommand}"
+                        Margin="0,0,1,0">
+                    <ContentControl Style="{StaticResource DiceIconStyle}" />
+                </Button>
+
+                <Button Style="{StaticResource SongListViewPageIconButton}"
+                        ToolTipService.ToolTip="{x:Bind ViewModel.CurrentSortOrderText, Mode=OneWay}">
+                    <Button.Flyout>
+                        <MenuFlyout Placement="Bottom">
+                            <RadioMenuFlyoutItem GroupName="GenreSort" Command="{x:Bind ViewModel.ChangeSortOrderCommand}"
+                                            CommandParameter="NameAsc" Text="{x:Bind helpers:SortOrderHelper.TitleAscLabel}"
+                                            IsChecked="{x:Bind ViewModel.CurrentSortOrder, Mode=OneWay, Converter={StaticResource SortOrderEqualsConverter}, ConverterParameter=NameAsc}" />
+                            <RadioMenuFlyoutItem GroupName="GenreSort" Command="{x:Bind ViewModel.ChangeSortOrderCommand}"
+                                            CommandParameter="NameDesc" Text="{x:Bind helpers:SortOrderHelper.TitleDescLabel}"
+                                            IsChecked="{x:Bind ViewModel.CurrentSortOrder, Mode=OneWay, Converter={StaticResource SortOrderEqualsConverter}, ConverterParameter=NameDesc}" />
+                             <RadioMenuFlyoutItem GroupName="GenreSort" Command="{x:Bind ViewModel.ChangeSortOrderCommand}"
+                                             CommandParameter="SongCountAsc" Text="{x:Bind helpers:SortOrderHelper.LeastSongsLabel}"
+                                             IsChecked="{x:Bind ViewModel.CurrentSortOrder, Mode=OneWay, Converter={StaticResource SortOrderEqualsConverter}, ConverterParameter=SongCountAsc}" />
+                            <RadioMenuFlyoutItem GroupName="GenreSort" Command="{x:Bind ViewModel.ChangeSortOrderCommand}"
+                                            CommandParameter="SongCountDesc" Text="{x:Bind helpers:SortOrderHelper.MostSongsLabel}"
+                                            IsChecked="{x:Bind ViewModel.CurrentSortOrder, Mode=OneWay, Converter={StaticResource SortOrderEqualsConverter}, ConverterParameter=SongCountDesc}" />
+                        </MenuFlyout>
+                    </Button.Flyout>
+                    <FontIcon FontSize="16" Glyph="&#xE8CB;" />
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <ProgressRing
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+            Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+        <Grid Grid.Row="1"
+              Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+            <GridView
+                IsItemClickEnabled="True"
+                ItemClick="GenresGridView_ItemClick"
+                ItemsSource="{x:Bind ViewModel.Genres, Mode=OneWay}"
+                SelectionMode="None"
+                Visibility="{x:Bind ViewModel.HasGenres, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
+                Padding="{StaticResource SongListViewPadding}"
+                Margin="{StaticResource SongListViewMargin}"
+                ItemContainerStyle="{StaticResource GenrePageGridViewItemStyle}">
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid ItemHeight="120" ItemWidth="240" Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:GenreViewModelItem">
+                        <!-- The background is bound to the genre name, producing a unique gradient for each. -->
+                        <Grid Padding="16"
+                              Background="{x:Bind Name, Converter={StaticResource GenreToGradientConverter}, Mode=OneWay}">
+                            <Grid.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem
+                                        Text="{x:Bind resources:Strings.GenrePage_Menu_Play, Mode=OneTime}"
+                                        Command="{Binding ViewModel.PlayGenreCommand, ElementName=GenrePageRoot}"
+                                        CommandParameter="{x:Bind Id}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </Grid.ContextFlyout>
+
+                            <StackPanel VerticalAlignment="Bottom">
+                                <TextBlock
+                                    FontSize="22"
+                                    FontWeight="Bold"
+                                    Foreground="White"
+                                    Text="{x:Bind Name, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+
+            <!-- This panel is shown when the genre list is empty after loading. -->
+            <StackPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Spacing="16"
+                Visibility="{x:Bind ViewModel.HasGenres, Converter={StaticResource InverseBooleanToVisibilityConverter}, Mode=OneWay}">
+                <StackPanel.ChildrenTransitions>
+                    <TransitionCollection>
+                        <EntranceThemeTransition FromVerticalOffset="20" />
+                    </TransitionCollection>
+                </StackPanel.ChildrenTransitions>
+                <FontIcon
+                    Glyph="&#xE8EC;"
+                    FontSize="48"
+                    Margin="0,0,0,12"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    HorizontalAlignment="Center" />
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    Text="{x:Bind resources:Strings.GenrePage_Empty_Title, Mode=OneTime}"
+                    Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    Text="{x:Bind resources:Strings.GenrePage_Empty_Subtitle, Mode=OneTime}"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

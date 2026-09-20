@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Nagi.Core\Nagi.Core.csproj" />
+        <ProjectReference Include="..\..\src\Resonance.Core\Resonance.Core.csproj" />
     </ItemGroup>
 
 </Project>

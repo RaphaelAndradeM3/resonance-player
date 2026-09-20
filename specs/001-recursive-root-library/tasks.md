@@ -46,12 +46,12 @@ Melhorar o scanner e persistência existentes do Nagi. Não criar uma segunda bi
 **Independent Test**: Execução dos testes automatizados de `SafeFileEnumerator` em uma árvore sintética com 10 níveis de profundidade, links cíclicos propositais e arquivos com permissão negada.
 
 ### Tests for User Story 1
-- [ ] T005 [P] [US1] Criar testes unitários em `tests/Resonance.Core.Tests/SafeFileEnumeratorTests.cs` simulando reparse points cíclicos, caminhos longos (>260 caracteres) e arquivos corrompidos
-
+- [x] T005 [P] [US1] Criar testes unitários em `tests/Resonance.Core.Tests/SafeFileEnumeratorTests.cs` simulando reparse points cíclicos, caminhos longos (>260 caracteres) e arquivos corrompidos
+ 
 ### Implementation for User Story 1
-- [ ] T006 [US1] Atualizar `SafeFileEnumerator.cs` em `src/Resonance.Core/Helpers/SafeFileEnumerator.cs` para resolver destinos físicos canônicos de junções/symlinks (`ResolveLinkTarget`) rastreando nós visitados para impedir loops infinitos
-- [ ] T007 [US1] Implementar isolamento e captura segura de exceções de I/O por arquivo (ex: `UnauthorizedAccessException`, caminhos inválidos) em `src/Resonance.Core/Helpers/SafeFileEnumerator.cs`
-- [ ] T008 [US1] Executar e validar 100% de aprovação dos testes de enumeração segura via `dotnet test tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj --filter "FullyQualifiedName~SafeFileEnumerator" --no-build`
+- [x] T006 [US1] Atualizar `SafeFileEnumerator.cs` em `src/Resonance.Core/Helpers/SafeFileEnumerator.cs` para resolver destinos físicos canônicos de junções/symlinks (`ResolveLinkTarget`) rastreando nós visitados para impedir loops infinitos
+- [x] T007 [US1] Implementar isolamento e captura segura de exceções de I/O por arquivo (ex: `UnauthorizedAccessException`, caminhos inválidos) em `src/Resonance.Core/Helpers/SafeFileEnumerator.cs`
+- [x] T008 [US1] Executar e validar 100% de aprovação dos testes de enumeração segura via `dotnet test tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj --filter "FullyQualifiedName~SafeFileEnumerator" --no-build`
 
 **Checkpoint**: Travessia recursiva protegida contra ciclos e erros de I/O totalmente funcional de forma independente.
 

@@ -42,6 +42,8 @@ public sealed class SyntheticDirectoryFixture : IDisposable
         return fullPath;
     }
 
+    private readonly List<string> _createdLinks = new();
+
     /// <summary>
     ///     Attempts to create a directory symbolic link or junction on Windows.
     ///     Returns true if successfully created; false if insufficient privileges or unsupported.
@@ -52,13 +54,40 @@ public sealed class SyntheticDirectoryFixture : IDisposable
         {
             if (Directory.Exists(linkPath))
             {
-                Directory.Delete(linkPath, true);
+                Directory.Delete(linkPath, false);
             }
             Directory.CreateSymbolicLink(linkPath, targetPath);
+            _createdLinks.Add(linkPath);
             return true;
         }
         catch
         {
+            try
+            {
+                if (OperatingSystem.IsWindows())
+                {
+                    var psi = new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = "cmd.exe",
+                        Arguments = $"/c mklink /J \"{linkPath}\" \"{targetPath}\"",
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true
+                    };
+                    using var proc = System.Diagnostics.Process.Start(psi);
+                    proc?.WaitForExit(5000);
+                    if (Directory.Exists(linkPath))
+                    {
+                        _createdLinks.Add(linkPath);
+                        return true;
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore fallback creation errors
+            }
             return false;
         }
     }
@@ -67,20 +96,24 @@ public sealed class SyntheticDirectoryFixture : IDisposable
     {
         try
         {
-            if (Directory.Exists(RootPath))
+            // First unlink all created reparse points so Directory.Delete does not traverse or loop
+            foreach (var link in _createdLinks)
             {
-                // Remove readonly attributes if any before deleting
-                foreach (var file in Directory.EnumerateFiles(RootPath, "*", SearchOption.AllDirectories))
+                try
                 {
-                    try
+                    if (Directory.Exists(link))
                     {
-                        File.SetAttributes(file, FileAttributes.Normal);
-                    }
-                    catch
-                    {
-                        // Ignore individual cleanup errors
+                        Directory.Delete(link, false);
                     }
                 }
+                catch
+                {
+                    // Ignore link cleanup errors
+                }
+            }
+
+            if (Directory.Exists(RootPath))
+            {
                 Directory.Delete(RootPath, true);
             }
         }

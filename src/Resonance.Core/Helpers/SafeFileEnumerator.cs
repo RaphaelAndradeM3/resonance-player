@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 
 namespace Resonance.Core.Helpers;
 
@@ -34,13 +34,45 @@ public static class SafeFileEnumerator
 
         var pending = new Stack<DirectoryInfo>();
         var visited = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        pending.Push(new DirectoryInfo(rootPath));
+
+        DirectoryInfo rootDir;
+        try
+        {
+            rootDir = new DirectoryInfo(rootPath);
+            if (!rootDir.Exists) yield break;
+        }
+        catch (Exception ex) when (IsRecoverableFileSystemException(ex))
+        {
+            yield break;
+        }
+
+        pending.Push(rootDir);
 
         while (pending.Count > 0)
         {
             var directory = pending.Pop();
-            var identity = TryGetDirectoryIdentity(directory);
-            if (identity is null || !visited.Add(identity)) continue;
+
+            var canonicalPath = TryResolveCanonicalPath(directory);
+            if (canonicalPath is null) continue;
+
+            string traversalPath;
+            try
+            {
+                traversalPath = Path.GetFullPath(directory.FullName)
+                    .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            }
+            catch (Exception ex) when (IsRecoverableFileSystemException(ex))
+            {
+                continue;
+            }
+
+            // Guard against cycles: verify both traversal path and canonical target path
+            if (!visited.Add(traversalPath)) continue;
+
+            if (!string.Equals(canonicalPath, traversalPath, StringComparison.OrdinalIgnoreCase))
+            {
+                if (!visited.Add(canonicalPath)) continue;
+            }
 
             foreach (var file in EnumerateFilesSafely(directory, searchPattern))
             {
@@ -80,31 +112,45 @@ public static class SafeFileEnumerator
         }
         catch (Exception ex) when (IsRecoverableFileSystemException(ex))
         {
-            // If a child cannot be classified safely, skip it for this scan. Treating an
-            // unreadable reparse point as ordinary could reintroduce a traversal cycle.
+            // If a child cannot be classified safely, skip it for this scan.
             return true;
         }
     }
 
     internal static bool IsExcludedAttributes(FileAttributes attributes)
     {
-        // Following junctions/symbolic links makes ancestor cycles possible. The selected root may
-        // itself be a link, but nested links are deliberately skipped during traversal.
-        if ((attributes & FileAttributes.ReparsePoint) != 0) return true;
-
+        // Following junctions/symbolic links is supported with cycle protection via canonical path tracking.
         // Hidden alone is allowed for user-hidden music. Hidden + System is a strong OS-directory signal.
         return (attributes & (FileAttributes.Hidden | FileAttributes.System))
                == (FileAttributes.Hidden | FileAttributes.System);
     }
 
-    private static string? TryGetDirectoryIdentity(DirectoryInfo directory)
+    /// <summary>
+    ///     Resolves the real canonical physical target of a directory, following junctions
+    ///     or symbolic links if applicable. Returns null if invalid or inaccessible.
+    /// </summary>
+    public static string? TryResolveCanonicalPath(DirectoryInfo directory)
     {
         try
         {
-            return Path.GetFullPath(directory.FullName)
+            if (!directory.Exists) return null;
+
+            FileSystemInfo target = directory;
+            if ((directory.Attributes & FileAttributes.ReparsePoint) != 0)
+            {
+                var resolved = directory.ResolveLinkTarget(returnFinalTarget: true);
+                if (resolved is not null)
+                {
+                    target = resolved;
+                }
+            }
+
+            if (!Directory.Exists(target.FullName)) return null;
+
+            return Path.GetFullPath(target.FullName)
                 .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         }
-        catch (Exception ex) when (IsRecoverableFileSystemException(ex) || ex is ArgumentException)
+        catch (Exception ex) when (IsRecoverableFileSystemException(ex))
         {
             return null;
         }
@@ -182,9 +228,13 @@ public static class SafeFileEnumerator
         }
     }
 
-    private static bool IsRecoverableFileSystemException(Exception exception) =>
+    internal static bool IsRecoverableFileSystemException(Exception exception) =>
         exception is UnauthorizedAccessException
             or DirectoryNotFoundException
+            or FileNotFoundException
+            or PathTooLongException
             or IOException
-            or System.Security.SecurityException;
+            or System.Security.SecurityException
+            or ArgumentException
+            or NotSupportedException;
 }

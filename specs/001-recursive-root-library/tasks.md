@@ -77,13 +77,13 @@ Melhorar o scanner e persistência existentes do Nagi. Não criar uma segunda bi
 **Independent Test**: Execução dos testes de integração em `LibraryServiceTests` validando expurgo de faixas ausentes, proteção de raízes offline e resposta de cancelamento < 1s.
 
 ### Tests for User Story 2
-- [ ] T009 [P] [US2] Escrever testes de integração em `tests/Resonance.Core.Tests/LibraryServiceTests.cs` para expurgo de faixas ausentes sob raiz acessível, preservação de faixas sob raiz offline e cancelamento cooperativo
-
+- [x] T009 [P] [US2] Escrever testes de integração em `tests/Resonance.Core.Tests/LibraryServiceTests.cs` para expurgo de faixas ausentes sob raiz acessível, preservação de faixas sob raiz offline e cancelamento cooperativo
+ 
 ### Implementation for User Story 2
-- [ ] T010 [US2] Atualizar `LibraryService.cs` em `src/Resonance.Core/Services/Implementations/LibraryService.cs` para validar acessibilidade de cada pasta raiz antes do scan, pulando raízes desconectadas com aviso e preservando seus registros
-- [ ] T011 [US2] Implementar sincronização incremental com expurgo (*hard delete*) de faixas ausentes no disco em `src/Resonance.Core/Services/Implementations/LibraryService.cs` apenas quando a raiz correspondente estiver acessível
-- [ ] T012 [US2] Implementar checagem de `CancellationToken` cooperativo a cada lote de arquivos persistidos no SQLite em `src/Resonance.Core/Services/Implementations/LibraryService.cs` garantindo cancelamento em < 1s
-- [ ] T013 [US2] Executar e validar aprovação de testes em `tests/Resonance.Core.Tests/LibraryServiceTests.cs` via `dotnet test tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj --filter "FullyQualifiedName~LibraryService" --no-build`
+- [x] T010 [US2] Atualizar `LibraryService.cs` em `src/Resonance.Core/Services/Implementations/LibraryService.cs` para validar acessibilidade de cada pasta raiz antes do scan, pulando raízes desconectadas com aviso e preservando seus registros
+- [x] T011 [US2] Implementar sincronização incremental com expurgo (*hard delete*) de faixas ausentes no disco em `src/Resonance.Core/Services/Implementations/LibraryService.cs` apenas quando a raiz correspondente estiver acessível
+- [x] T012 [US2] Implementar checagem de `CancellationToken` cooperativo a cada lote de arquivos persistidos no SQLite em `src/Resonance.Core/Services/Implementations/LibraryService.cs` garantindo cancelamento em < 1s
+- [x] T013 [US2] Executar e validar aprovação de testes em `tests/Resonance.Core.Tests/LibraryServiceTests.cs` via `dotnet test tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj --filter "FullyQualifiedName~LibraryService" --no-build`
 
 **Checkpoint**: Sincronização incremental, hard delete seguro, tolerância a discos desconectados e cancelamento cooperativo validados.
 

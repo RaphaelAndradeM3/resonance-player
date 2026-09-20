@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -612,12 +612,15 @@ public class LibraryServiceTests : IDisposable
     ///     Verifies that if a folder's path no longer exists on the file system,
     ///     <see cref="LibraryService.RescanFolderForMusicAsync" /> correctly removes the folder
     ///     and all its associated contents from the library database.
+    /// <summary>
+    ///     Verifies that under FR-001, when a folder path is unreachable/offline during rescan,
+    ///     the folder is preserved in the library rather than deleted.
     /// </summary>
     [Fact]
-    public async Task RescanFolderForMusicAsync_WhenFolderPathNoLongerExists_RemovesFolderFromLibrary()
+    public async Task RescanFolderForMusicAsync_WhenFolderPathNoLongerExists_PreservesFolderInLibrary()
     {
-        // Arrange: Add a folder to the database that will be simulated as deleted from disk.
-        var folder = new Folder { Id = Guid.NewGuid(), Path = "C:\\Music\\DeletedFolder", Name = "Deleted" };
+        // Arrange: Add a folder to the database that will be simulated as offline/disconnected.
+        var folder = new Folder { Id = Guid.NewGuid(), Path = "C:\\Music\\OfflineFolder", Name = "Offline" };
         await using (var context = _dbHelper.ContextFactory.CreateDbContext())
         {
             context.Folders.Add(folder);
@@ -629,10 +632,10 @@ public class LibraryServiceTests : IDisposable
         // Act
         var result = await _libraryService.RescanFolderForMusicAsync(folder.Id);
 
-        // Assert: The operation should succeed and the folder should be removed from the database.
-        result.Should().BeTrue();
+        // Assert: Under FR-001, the scan returns false (skipped) and the folder is preserved.
+        result.Should().BeFalse();
         await using var assertContext = _dbHelper.ContextFactory.CreateDbContext();
-        (await assertContext.Folders.CountAsync()).Should().Be(0);
+        (await assertContext.Folders.CountAsync()).Should().Be(1);
     }
 
     /// <summary>
@@ -2084,6 +2087,144 @@ public class LibraryServiceTests : IDisposable
         var count = await _libraryService.GetListenCountForSongAsync(song.Id);
 
         count.Should().Be(3, "all listen history rows should be counted, not just eligible ones");
+    }
+
+    #endregion
+
+    #region Feature 001 - Recursive Root Hardening & Incremental Scan Tests
+
+    [Fact]
+    public async Task RescanFolderForMusicAsync_WhenRootFolderIsOffline_SkipsWithWarningAndPreservesCatalog()
+    {
+        // Arrange
+        var folder = new Folder { Name = "External", Path = "E:\\ExternalMusic" };
+        var song = new Song { Title = "Preserved Song", Folder = folder, FilePath = "E:\\ExternalMusic\\track.mp3" };
+
+        await using (var ctx = _dbHelper.ContextFactory.CreateDbContext())
+        {
+            ctx.Folders.Add(folder);
+            ctx.Songs.Add(song);
+            await ctx.SaveChangesAsync();
+        }
+
+        // Simulate disconnected/offline drive
+        _fileSystem.DirectoryExists("E:\\ExternalMusic").Returns(false);
+
+        // Act
+        var result = await _libraryService.RescanFolderForMusicAsync(folder.Id);
+
+        // Assert
+        result.Should().BeFalse();
+
+        await using (var verifyCtx = _dbHelper.ContextFactory.CreateDbContext())
+        {
+            var dbFolder = await verifyCtx.Folders.FindAsync(folder.Id);
+            dbFolder.Should().NotBeNull("offline folder must not be deleted from library");
+
+            var dbSong = await verifyCtx.Songs.FirstOrDefaultAsync(s => s.FilePath == "E:\\ExternalMusic\\track.mp3");
+            dbSong.Should().NotBeNull("songs of offline folder must be 100% preserved");
+        }
+    }
+
+    [Fact]
+    public async Task RefreshAllFoldersAsync_WhenOneFolderIsOffline_PreservesOfflineCatalogAndCompletes()
+    {
+        // Arrange
+        var localFolder = new Folder { Name = "Local", Path = "C:\\LocalMusic" };
+        var usbFolder = new Folder { Name = "USB", Path = "D:\\UsbMusic" };
+
+        var localSong = new Song { Title = "Local Song", Folder = localFolder, FilePath = "C:\\LocalMusic\\local.mp3" };
+        var usbSong = new Song { Title = "USB Song", Folder = usbFolder, FilePath = "D:\\UsbMusic\\usb.mp3" };
+
+        await using (var ctx = _dbHelper.ContextFactory.CreateDbContext())
+        {
+            ctx.Folders.AddRange(localFolder, usbFolder);
+            ctx.Songs.AddRange(localSong, usbSong);
+            await ctx.SaveChangesAsync();
+        }
+
+        // Local is accessible; USB is offline
+        _fileSystem.DirectoryExists("C:\\LocalMusic").Returns(true);
+        _fileSystem.DirectoryExists("D:\\UsbMusic").Returns(false);
+
+        _fileSystem.EnumerateFilesWithLastWriteTime("C:\\LocalMusic", "*.*", SearchOption.AllDirectories)
+            .Returns(new List<(string Path, DateTime LastWriteTimeUtc)>
+            {
+                ("C:\\LocalMusic\\local.mp3", DateTime.UtcNow)
+            });
+        _fileSystem.GetExtension("C:\\LocalMusic\\local.mp3").Returns(".mp3");
+
+        // Act
+        var result = await _libraryService.RefreshAllFoldersAsync();
+
+        // Assert
+        await using (var verifyCtx = _dbHelper.ContextFactory.CreateDbContext())
+        {
+            var dbUsbFolder = await verifyCtx.Folders.FindAsync(usbFolder.Id);
+            dbUsbFolder.Should().NotBeNull();
+
+            var dbUsbSong = await verifyCtx.Songs.FirstOrDefaultAsync(s => s.FilePath == "D:\\UsbMusic\\usb.mp3");
+            dbUsbSong.Should().NotBeNull("offline USB songs must not be deleted during library refresh");
+        }
+    }
+
+    [Fact]
+    public async Task RescanFolderForMusicAsync_WhenAccessibleAndFileMissingOnDisk_HardDeletesMissingSong()
+    {
+        // Arrange
+        var folder = new Folder { Name = "Music", Path = "C:\\Music" };
+        var existingSong1 = new Song { Title = "Song 1", Folder = folder, FilePath = "C:\\Music\\song1.mp3", FileModifiedDate = DateTime.UtcNow };
+        var deletedSong2 = new Song { Title = "Song 2", Folder = folder, FilePath = "C:\\Music\\song2.mp3", FileModifiedDate = DateTime.UtcNow };
+
+        await using (var ctx = _dbHelper.ContextFactory.CreateDbContext())
+        {
+            ctx.Folders.Add(folder);
+            ctx.Songs.AddRange(existingSong1, deletedSong2);
+            await ctx.SaveChangesAsync();
+        }
+
+        _fileSystem.DirectoryExists("C:\\Music").Returns(true);
+        // Disk only returns song1; song2 was deleted by the user from disk
+        _fileSystem.EnumerateFilesWithLastWriteTime("C:\\Music", "*.*", SearchOption.AllDirectories)
+            .Returns(new List<(string Path, DateTime LastWriteTimeUtc)>
+            {
+                ("C:\\Music\\song1.mp3", existingSong1.FileModifiedDate!.Value)
+            });
+        _fileSystem.GetExtension("C:\\Music\\song1.mp3").Returns(".mp3");
+
+        // Act
+        var result = await _libraryService.RescanFolderForMusicAsync(folder.Id);
+
+        // Assert
+        await using (var verifyCtx = _dbHelper.ContextFactory.CreateDbContext())
+        {
+            var remainingSong1 = await verifyCtx.Songs.FirstOrDefaultAsync(s => s.FilePath == "C:\\Music\\song1.mp3");
+            remainingSong1.Should().NotBeNull("song1 still on disk should remain");
+
+            var missingSong2 = await verifyCtx.Songs.FirstOrDefaultAsync(s => s.FilePath == "C:\\Music\\song2.mp3");
+            missingSong2.Should().BeNull("song2 removed from disk must be hard-deleted from database");
+        }
+    }
+
+    [Fact]
+    public async Task RescanFolderForMusicAsync_WhenCancelled_TerminatesCooperatively()
+    {
+        // Arrange
+        var folder = new Folder { Name = "Music", Path = "C:\\Music" };
+        await using (var ctx = _dbHelper.ContextFactory.CreateDbContext())
+        {
+            ctx.Folders.Add(folder);
+            await ctx.SaveChangesAsync();
+        }
+
+        using var cts = new CancellationTokenSource();
+        cts.Cancel(); // Pre-cancelled token
+
+        // Act
+        var result = await _libraryService.RescanFolderForMusicAsync(folder.Id, cancellationToken: cts.Token);
+
+        // Assert
+        result.Should().BeFalse("cancelled scan must return false gracefully");
     }
 
     #endregion

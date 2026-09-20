@@ -124,8 +124,8 @@ Não implementar feature nova nesta etapa. Não refatorar código de produto.
 
 **Purpose**: Verificação de consistência e alinhamento documental final.
 
-- [ ] T017 [P] Atualizar links de navegação cruzada entre `plan.md`, `spec.md`, `data-model.md`, `quickstart.md` e os contratos em `specs/000-nagi-baseline-audit/`
-- [ ] T018 Realizar auditoria de conformidade com a Constituição em `.specify/memory/constitution.md` garantindo observância aos 7 princípios fundamentais
+- [x] T017 [P] Atualizar links de navegação cruzada entre `plan.md`, `spec.md`, `data-model.md`, `quickstart.md` e os contratos em `specs/000-nagi-baseline-audit/`
+- [x] T018 Realizar auditoria de conformidade com a Constituição em `.specify/memory/constitution.md` garantindo observância aos 7 princípios fundamentais
 
 ---
 

@@ -1,4 +1,4 @@
-﻿namespace Resonance.Core.Models;
+namespace Resonance.Core.Models;
 
 /// <summary>
 ///     Constants for service provider identifiers used throughout the application.
@@ -40,8 +40,9 @@ public static class ServiceProviderIds
 
     #region Internal Providers
 
-    /// <summary>Nagi's own API server (key bootstrap). Not a third-party provider.</summary>
-    public const string NagiApi = "nagi-api";
+    /// <summary>Resonance's own API server (key bootstrap). Not a third-party provider.</summary>
+    public const string ResonanceApi = "resonance-api";
+    public const string NagiApi = ResonanceApi;
 
     /// <summary>
     ///     Generic bucket for cover-art / artist-image downloads from third-party CDNs.

@@ -227,15 +227,15 @@
     <value>Critical Error</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>Nagi has encountered a critical error and must close. We are sorry for the inconvenience.</value>
+    <value>Resonance has encountered a critical error and must close. We are sorry for the inconvenience.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>Running as Administrator</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>Nagi is currently running as Administrator. This may prevent some features (like adding music folders) from working correctly.
+    <value>Resonance is currently running as Administrator. This may prevent some features (like adding music folders) from working correctly.
 
-For the best experience, please restart Nagi without administrator privileges.</value>
+For the best experience, please restart Resonance without administrator privileges.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>Restart Normally</value>
@@ -244,10 +244,10 @@ For the best experience, please restart Nagi without administrator privileges.</
     <value>Continue Anyway</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>Album Not Found</value>
@@ -505,7 +505,7 @@ For the best experience, please restart Nagi without administrator privileges.</
     <value>Disconnect Last.fm</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>Are you sure you want to disconnect your Last.fm account? Your scrobbling history will be preserved on Last.fm, but Nagi will no longer be able to scrobble.</value>
+    <value>Are you sure you want to disconnect your Last.fm account? Your scrobbling history will be preserved on Last.fm, but Resonance will no longer be able to scrobble.</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>Disconnect</value>
@@ -645,7 +645,7 @@ For the best experience, please restart Nagi without administrator privileges.</
     <value>Up to Date</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>You are running the latest version of Nagi.</value>
+    <value>You are running the latest version of Resonance.</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>Update Error</value>
@@ -738,7 +738,7 @@ For the best experience, please restart Nagi without administrator privileges.</
     <value>Artist biographies and images (fallback)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>N/A</value>
@@ -948,7 +948,7 @@ Error: {1}</value>
     <value>Up Next</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Show Nagi</value>
+    <value>Show Resonance</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>Previous</value>
@@ -1050,22 +1050,22 @@ Error: {1}</value>
     <value>Up Next</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Rediscover your local music collection with Nagi, a music player focused on speed, simplicity, and privacy. Nagi is built with C# and WinUI 3 to offer a clean, native Fluent experience. It's beautiful, efficient, and respects your privacy.</value>
+    <value>Rediscover your local music collection with Resonance, a music player focused on speed, simplicity, and privacy. Resonance is built with C# and WinUI 3 to offer a clean, native Fluent experience. It's beautiful, efficient, and respects your privacy.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Nagi Music Player</value>
+    <value>Resonance Music Player</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Open with Nagi Music Player</value>
+    <value>Open with Resonance Music Player</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Nagi Startup</value>
+    <value>Resonance Startup</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>Previous</value>
@@ -1410,10 +1410,10 @@ Error: {1}</value>
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
-    <value>Welcome to Nagi</value>
+    <value>Welcome to Resonance</value>
   </data>
   <data name="OnboardingPage_AddFolderButton_ToolTip" xml:space="preserve">
     <value>Add a music folder to get started</value>
@@ -1632,7 +1632,7 @@ Error: {1}</value>
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>Fade on Play / Pause</value>
@@ -1677,7 +1677,7 @@ Error: {1}</value>
     <value>Auto launch on startup</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>Start Nagi automatically when you log into your computer.</value>
+    <value>Start Resonance automatically when you log into your computer.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>Start minimized</value>
@@ -1806,7 +1806,7 @@ Error: {1}</value>
     <value>Export/Import Playlists</value>
   </data>
   <data name="SettingsPage_PlaylistsIO_Description" xml:space="preserve">
-    <value>Export playlists to M3U files for use in other players, or import M3U playlists into Nagi.</value>
+    <value>Export playlists to M3U files for use in other players, or import M3U playlists into Resonance.</value>
   </data>
   <data name="SettingsPage_ExportPlaylists_Content" xml:space="preserve">
     <value>Export All...</value>
@@ -1854,7 +1854,7 @@ Error: {1}</value>
     <value>Enable scrobbling</value>
   </data>
   <data name="SettingsPage_LastFm_Scrobbling_Description" xml:space="preserve">
-    <value>Automatically add the tracks you listen to on Nagi to your Last.fm profile.</value>
+    <value>Automatically add the tracks you listen to on Resonance to your Last.fm profile.</value>
   </data>
   <data name="SettingsPage_LastFm_NowPlaying_Header" xml:space="preserve">
     <value>Update 'Now Playing'</value>
@@ -1971,10 +1971,10 @@ Error: {1}</value>
     <value>About</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>About Nagi</value>
+    <value>About Resonance</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
-    <value>Rediscover your local music collection with Nagi, a music player focused on speed, simplicity, and privacy.</value>
+    <value>Rediscover your local music collection with Resonance, a music player focused on speed, simplicity, and privacy.</value>
   </data>
   <data name="SettingsPage_About_VersionPrefix" xml:space="preserve">
     <value>Version </value>
@@ -2040,7 +2040,7 @@ Error: {1}</value>
     <value>Invalid Backup File</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>The selected file is not a valid Nagi backup.</value>
+    <value>The selected file is not a valid Resonance backup.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>Restore Backup?</value>
@@ -2175,13 +2175,13 @@ Error: {1}</value>
     <value>Reset</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>Your music, beautifully organized</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Waking up Nagi…</value>
+    <value>Waking up Resonance…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>See all</value>

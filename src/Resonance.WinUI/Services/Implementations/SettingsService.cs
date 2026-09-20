@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.IO;
@@ -46,7 +46,7 @@ public class SettingsService : IUISettingsService, IDisposable
     private const string DiscordRichPresenceEnabledKey = "DiscordRichPresenceEnabled";
     private const string NavigationItemsKey = "NavigationItems";
     private const string PlayerButtonSettingsKey = "PlayerButtonSettings";
-    private const string LastFmCredentialResource = "Nagi/LastFm";
+    private const string LastFmCredentialResource = "Resonance/LastFm";
     private const string LastFmAuthTokenKey = "LastFmAuthToken";
     private const string LastFmScrobblingEnabledKey = "LastFmScrobblingEnabled";
     private const string LastFmNowPlayingEnabledKey = "LastFmNowPlayingEnabled";
@@ -54,7 +54,7 @@ public class SettingsService : IUISettingsService, IDisposable
     private const string ListenBrainzNowPlayingEnabledKey = "ListenBrainzNowPlayingEnabled";
     private const string ListenBrainzServerUrlKey = "ListenBrainzServerUrl";
     private const string ListenBrainzEnabledSinceUtcKey = "ListenBrainzEnabledSinceUtcTicks";
-    private const string ListenBrainzTokenResource = "Nagi/ListenBrainz";
+    private const string ListenBrainzTokenResource = "Resonance/ListenBrainz";
     private const string ListenBrainzTokenUserName = "token";
     private const string EqualizerSettingsKey = "EqualizerSettings";
     private const string RememberWindowSizeEnabledKey = "RememberWindowSizeEnabled";

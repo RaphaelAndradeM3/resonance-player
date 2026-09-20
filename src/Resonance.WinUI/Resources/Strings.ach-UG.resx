@@ -227,13 +227,13 @@
     <value>Tim marac madit</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>Nagi ocako tim marac madit dok myero egor. Wa kwero botwu pi jami ma ocoko.</value>
+    <value>Resonance ocako tim marac madit dok myero egor. Wa kwero botwu pi jami ma ocoko.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>Lubo calo Laric</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>Nagi tye ka lubo calo Laric. Man twero goro jami mukene (calo medo giyikol me welo wecce) me lubo atir. Pi tic ma ber loyo, lak Nagi labongo twero me laric.</value>
+    <value>Resonance tye ka lubo calo Laric. Man twero goro jami mukene (calo medo giyikol me welo wecce) me lubo atir. Pi tic ma ber loyo, lak Resonance labongo twero me laric.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>Lak atir</value>
@@ -242,10 +242,10 @@
     <value>Medde ki lobo</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>Albom pe oyenge</value>
@@ -476,7 +476,7 @@
     <value>Keto dok atir</value>
   </data>
   <data name="Settings_Reset_Message" xml:space="preserve">
-    <value>Inyeko ni imito keto dok ducu kop me nagi ki yubbe? Tic man pe twere me dwoko. Nagi-ni bidwogo i yub ma okwongo.</value>
+    <value>Inyeko ni imito keto dok ducu kop me nagi ki yubbe? Tic man pe twere me dwoko. Resonance-ni bidwogo i yub ma okwongo.</value>
   </data>
   <data name="Settings_Reset_Button" xml:space="preserve">
     <value>Keto dok</value>
@@ -503,7 +503,7 @@
     <value>Golo Last.fm</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>Inyeko ni imito golo account-ti me Last.fm? Kop me tukpi-ni bibedo ka kany i Last.fm, ento Nagi pe bidwong twero me tukko.</value>
+    <value>Inyeko ni imito golo account-ti me Last.fm? Kop me tukpi-ni bibedo ka kany i Last.fm, ento Resonance pe bidwong twero me tukko.</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>Golo</value>
@@ -590,7 +590,7 @@
     <value>Jwa ki dok</value>
   </data>
   <data name="CrashReport_Button_Reset" xml:space="preserve">
-    <value>Keto dok Nagi &amp; Kop</value>
+    <value>Keto dok Resonance &amp; Kop</value>
   </data>
   <data name="FFmpeg_Status_NotDetected" xml:space="preserve">
     <value>FFmpeg pe oyenge. Lak imok FFmpeg dok ikany 'Jwa ki dok'.</value>
@@ -638,7 +638,7 @@
     <value>Otir ki kare</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>In lubo paka manyen loyo me Nagi.</value>
+    <value>In lubo paka manyen loyo me Resonance.</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>Tim marac me alokaloka</value>
@@ -653,7 +653,7 @@
     <value>Dwokko alokaloka</value>
   </data>
   <data name="Update_Downloading_Message" xml:space="preserve">
-    <value>Paka {0} tye ka dwokko. Nagi-ni bilak ki kenne kace otir.</value>
+    <value>Paka {0} tye ka dwokko. Resonance-ni bilak ki kenne kace otir.</value>
   </data>
   <data name="Player_Error_LibVLC_Unspecified" xml:space="preserve">
     <value>LibVLC otim tim marac ma pe konyo.</value>
@@ -731,7 +731,7 @@
     <value>Kop me kwo ki picca me danokwaya (dwoko iye)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>Pe tye</value>
@@ -935,7 +935,7 @@
     <value>Man olubbe</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Nyut Nagi</value>
+    <value>Nyut Resonance</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>Mukato</value>
@@ -1037,22 +1037,22 @@
     <value>Man olubbe</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Dok i kumo wer me gangi ki Nagi, kwat wer ma tye ki yelle, kit ma laye, ki me nongo kuc pa in keken. Nagi oloko ki C# ki WinUI 3 me miyo kit ma rom, ma tye Fluent me Acholi. En ber, yelle, ki oloro kuc pa in keken.</value>
+    <value>Dok i kumo wer me gangi ki Resonance, kwat wer ma tye ki yelle, kit ma laye, ki me nongo kuc pa in keken. Resonance oloko ki C# ki WinUI 3 me miyo kit ma rom, ma tye Fluent me Acholi. En ber, yelle, ki oloro kuc pa in keken.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Kwat Wer pa Nagi</value>
+    <value>Kwat Wer pa Resonance</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Yab ki Kwat Wer pa Nagi</value>
+    <value>Yab ki Kwat Wer pa Resonance</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Nagi Acakke</value>
+    <value>Resonance Acakke</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>Mukato</value>
@@ -1397,10 +1397,10 @@
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
-    <value>Kuc bote Nagi</value>
+    <value>Kuc bote Resonance</value>
   </data>
   <data name="OnboardingPage_AddFolderButton_ToolTip" xml:space="preserve">
     <value>Keto folder wer me cako</value>
@@ -1619,7 +1619,7 @@
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>Ywen i Kany/Juk</value>
@@ -1664,7 +1664,7 @@
     <value>Cako keken i acakke</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>Cako Nagi keken ka in idonyo i computer ni.</value>
+    <value>Cako Resonance keken ka in idonyo i computer ni.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>Cako ma onyap</value>
@@ -1793,7 +1793,7 @@
     <value>Oro/Nwang Playlists</value>
   </data>
   <data name="SettingsPage_PlaylistsIO_Description" xml:space="preserve">
-    <value>Oro playlists i M3U files me tiyo ki kwat mukene, onyo nwang M3U playlists i Nagi.</value>
+    <value>Oro playlists i M3U files me tiyo ki kwat mukene, onyo nwang M3U playlists i Resonance.</value>
   </data>
   <data name="SettingsPage_ExportPlaylists_Content" xml:space="preserve">
     <value>Oro ducu...</value>
@@ -1841,7 +1841,7 @@
     <value>Mi twero me scrobbling</value>
   </data>
   <data name="SettingsPage_LastFm_Scrobbling_Description" xml:space="preserve">
-    <value>Keto keken track ducu ma in iwinyo i Nagi i profile pa Last.fm ni.</value>
+    <value>Keto keken track ducu ma in iwinyo i Resonance i profile pa Last.fm ni.</value>
   </data>
   <data name="SettingsPage_LastFm_NowPlaying_Header" xml:space="preserve">
     <value>Timo 'Man tye ka kwat'</value>
@@ -1958,10 +1958,10 @@
     <value>I kom</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>I kom Nagi</value>
+    <value>I kom Resonance</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
-    <value>Dok i kumo wer me gangi ki Nagi, kwat wer ma tye ki yelle, kit ma laye, ki me nongo kuc pa in keken.</value>
+    <value>Dok i kumo wer me gangi ki Resonance, kwat wer ma tye ki yelle, kit ma laye, ki me nongo kuc pa in keken.</value>
   </data>
   <data name="SettingsPage_About_VersionPrefix" xml:space="preserve">
     <value>Version </value>
@@ -2027,7 +2027,7 @@
     <value>Fail me Kweco Jami ma pe rwatte</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>Fail ma oyero-ni pe kweco jami me Nagi ma rwatte.</value>
+    <value>Fail ma oyero-ni pe kweco jami me Resonance ma rwatte.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>Kwany Jami ma Okwec?</value>
@@ -2162,13 +2162,13 @@
     <value>Juk</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>Werri, kitwongere maber</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Kaworo Nagi…</value>
+    <value>Kaworo Resonance…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>Nen ducu</value>

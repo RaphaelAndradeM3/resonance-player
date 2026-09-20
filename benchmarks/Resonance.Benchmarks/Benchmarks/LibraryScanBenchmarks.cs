@@ -1,9 +1,9 @@
-﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Attributes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Nagi.Benchmarks.Helpers;
+using Resonance.Benchmarks.Helpers;
 using Resonance.Core.Data;
 using Resonance.Core.Helpers;
 using Resonance.Core.Http.Pipelines;
@@ -13,7 +13,7 @@ using NSubstitute;
 using System.IO;
 using Microsoft.Data.Sqlite;
 
-namespace Nagi.Benchmarks.Benchmarks;
+namespace Resonance.Benchmarks.Benchmarks;
 
 [MemoryDiagnoser]
 public class LibraryScanBenchmarks
@@ -28,7 +28,7 @@ public class LibraryScanBenchmarks
     [GlobalSetup]
     public async Task Setup()
     {
-        _testPath = Path.Combine(Path.GetTempPath(), "NagiBenchmarks", Guid.NewGuid().ToString());
+        _testPath = Path.Combine(Path.GetTempPath(), "ResonanceBenchmarks", Guid.NewGuid().ToString());
         SyntheticAudioGenerator.GenerateLibrary(_testPath, SongCount);
 
         var services = new ServiceCollection();

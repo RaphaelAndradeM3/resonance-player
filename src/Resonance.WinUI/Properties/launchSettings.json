@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Nagi (Package)": {
+    "Resonance (Package)": {
       "commandName": "MsixPackage",
       "alwaysReinstallApp": false,
       "nativeDebugging": true

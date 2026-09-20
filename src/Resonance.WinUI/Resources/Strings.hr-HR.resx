@@ -227,15 +227,15 @@
     <value>Kritična pogreška</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>Nagi je naišao na kritičnu pogrešku i mora se zatvoriti. Ispričavamo se zbog neugodnosti.</value>
+    <value>Resonance je naišao na kritičnu pogrešku i mora se zatvoriti. Ispričavamo se zbog neugodnosti.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>Pokrenuto kao administrator</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>Nagi se trenutno izvodi kao administrator. To može spriječiti ispravno funkcioniranje nekih značajki (poput dodavanja glazbenih mapa).
+    <value>Resonance se trenutno izvodi kao administrator. To može spriječiti ispravno funkcioniranje nekih značajki (poput dodavanja glazbenih mapa).
 
-Za najbolje iskustvo, molimo ponovno pokrenite Nagi bez administratorskih ovlasti.</value>
+Za najbolje iskustvo, molimo ponovno pokrenite Resonance bez administratorskih ovlasti.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>Ponovno pokreni normalno</value>
@@ -244,10 +244,10 @@ Za najbolje iskustvo, molimo ponovno pokrenite Nagi bez administratorskih ovlast
     <value>Nastavi svejedno</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>Album nije pronađen</value>
@@ -505,7 +505,7 @@ Za najbolje iskustvo, molimo ponovno pokrenite Nagi bez administratorskih ovlast
     <value>Prekini vezu s Last.fm-om</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>Jeste li sigurni da želite prekinuti vezu sa svojim Last.fm računom? Vaša povijest "scrobblinga" bit će sačuvana na Last.fm-u, ali Nagi više neće moći "scrobbati".</value>
+    <value>Jeste li sigurni da želite prekinuti vezu sa svojim Last.fm računom? Vaša povijest "scrobblinga" bit će sačuvana na Last.fm-u, ali Resonance više neće moći "scrobbati".</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>Prekini vezu</value>
@@ -738,7 +738,7 @@ Za najbolje iskustvo, molimo ponovno pokrenite Nagi bez administratorskih ovlast
     <value>Biografije i slike izvođača (rezervno)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>N/A</value>
@@ -948,7 +948,7 @@ Pogreška: {1}</value>
     <value>Sljedeće na redu</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Prikaži Nagi</value>
+    <value>Prikaži Resonance</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>Prethodno</value>
@@ -1050,19 +1050,19 @@ Pogreška: {1}</value>
     <value>Sljedeće na redu</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Ponovno otkrijte svoju lokalnu glazbenu kolekciju uz Nagi, glazbeni reproduktor fokusiran na brzinu, jednostavnost i privatnost. Nagi je izgrađen u C# i WinUI 3 kako bi ponudio čisto, izvorno Fluent iskustvo. Lijep je, učinkovit i poštuje vašu privatnost.</value>
+    <value>Ponovno otkrijte svoju lokalnu glazbenu kolekciju uz Resonance, glazbeni reproduktor fokusiran na brzinu, jednostavnost i privatnost. Resonance je izgrađen u C# i WinUI 3 kako bi ponudio čisto, izvorno Fluent iskustvo. Lijep je, učinkovit i poštuje vašu privatnost.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Nagi glazbeni reproduktor</value>
+    <value>Resonance glazbeni reproduktor</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Otvori s Nagi glazbenim reproduktorom</value>
+    <value>Otvori s Resonance glazbenim reproduktorom</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
     <value>Pokretanje Nagija</value>
@@ -1410,10 +1410,10 @@ Pogreška: {1}</value>
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
-    <value>Dobrodošli u Nagi</value>
+    <value>Dobrodošli u Resonance</value>
   </data>
   <data name="OnboardingPage_AddFolderButton_ToolTip" xml:space="preserve">
     <value>Dodajte glazbenu mapu za početak</value>
@@ -1632,7 +1632,7 @@ Pogreška: {1}</value>
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>Blijedi pri reprodukciji / pauzi</value>
@@ -1677,7 +1677,7 @@ Pogreška: {1}</value>
     <value>Automatsko pokretanje pri uključenju</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>Automatski pokrenite Nagi kada se prijavite na računalo.</value>
+    <value>Automatski pokrenite Resonance kada se prijavite na računalo.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>Pokreni minimizirano</value>
@@ -1806,7 +1806,7 @@ Pogreška: {1}</value>
     <value>Izvoz/Uvoz popisa za reprodukciju</value>
   </data>
   <data name="SettingsPage_PlaylistsIO_Description" xml:space="preserve">
-    <value>Izvezite popise za reprodukciju u M3U datoteke za upotrebu u drugim reproduktorima, ili uvezite M3U popise za reprodukciju u Nagi.</value>
+    <value>Izvezite popise za reprodukciju u M3U datoteke za upotrebu u drugim reproduktorima, ili uvezite M3U popise za reprodukciju u Resonance.</value>
   </data>
   <data name="SettingsPage_ExportPlaylists_Content" xml:space="preserve">
     <value>Izvezi sve...</value>
@@ -1974,7 +1974,7 @@ Pogreška: {1}</value>
     <value>O Nagiju</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
-    <value>Ponovno otkrijte svoju lokalnu glazbenu kolekciju uz Nagi, glazbeni reproduktor fokusiran na brzinu, jednostavnost i privatnost.</value>
+    <value>Ponovno otkrijte svoju lokalnu glazbenu kolekciju uz Resonance, glazbeni reproduktor fokusiran na brzinu, jednostavnost i privatnost.</value>
   </data>
   <data name="SettingsPage_About_VersionPrefix" xml:space="preserve">
     <value>Verzija </value>
@@ -2040,7 +2040,7 @@ Pogreška: {1}</value>
     <value>Nevažeća datoteka sigurnosne kopije</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>Odabrana datoteka nije važeća Nagi sigurnosna kopija.</value>
+    <value>Odabrana datoteka nije važeća Resonance sigurnosna kopija.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>Vratiti sigurnosnu kopiju?</value>
@@ -2175,13 +2175,13 @@ Pogreška: {1}</value>
     <value>Poništi</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>Vaša glazba, prekrasno organizirana</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Pokrećem Nagi…</value>
+    <value>Pokrećem Resonance…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>Vidi sve</value>

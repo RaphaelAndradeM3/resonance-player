@@ -248,7 +248,7 @@
     <value>Lworo kede: </value>
   </data>
   <data name="FFmpeg_SetupInstructions" xml:space="preserve">
-    <value>FFmpeg myero tye pi poteka ma gipoto ka yubu duŋ ma tye ka yubbe maber (ReplayGain anolises) ento pe ki oyubbe i komputami.\n\nLub yo magi pi keto:\n\n1. **Ŋol**: Cokke https://www.gyan.dev/ffmpeg/builds/ dok ŋol 'ffmpeg-git-full.7z' (nana ma rwatte) gin ma myero tye.\n2. **Tiyo**: Itwero lubo yo man pi bino kede kito ma tye kwede: https://phoenixnap.com/kb/ffmpeg-windows\n3. **Gony**: Yab folder architecture dok yub directory 'bin' ma tye kede `ffmpeg.exe`.\n4. **Keto**: Ko `ffmpeg.exe` i folder ma tye kede (laboŋŋo `C:\ffmpeg\`) dok **ket folder meno i System PATH** environment variable.\n5. **Cak anywaŋ**: Cak Nagi anywaŋ lacen keto pi lokke me gonyo.</value>
+    <value>FFmpeg myero tye pi poteka ma gipoto ka yubu duŋ ma tye ka yubbe maber (ReplayGain anolises) ento pe ki oyubbe i komputami.\n\nLub yo magi pi keto:\n\n1. **Ŋol**: Cokke https://www.gyan.dev/ffmpeg/builds/ dok ŋol 'ffmpeg-git-full.7z' (nana ma rwatte) gin ma myero tye.\n2. **Tiyo**: Itwero lubo yo man pi bino kede kito ma tye kwede: https://phoenixnap.com/kb/ffmpeg-windows\n3. **Gony**: Yab folder architecture dok yub directory 'bin' ma tye kede `ffmpeg.exe`.\n4. **Keto**: Ko `ffmpeg.exe` i folder ma tye kede (laboŋŋo `C:\ffmpeg\`) dok **ket folder meno i System PATH** environment variable.\n5. **Cak anywaŋ**: Cak Resonance anywaŋ lacen keto pi lokke me gonyo.</value>
   </data>
   <data name="Error_M3uImportNoSongsMatched" xml:space="preserve">
     <value>Pe tye nyami mo ma ki oyubbe i buk nyami ma a ki i tuŋa nyam.</value>

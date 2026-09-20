@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Media;
@@ -50,7 +50,7 @@ public sealed class LibVlcAudioPlayerService : IAudioPlayer, IDisposable
     private bool _isExplicitStop; // Prevents false PlaybackEnded events on user/error stop
     private double _replayGainOffset; // Separate tracking of ReplayGain adjustment
 
-    // Nagi intentionally keeps approximately 2 dB of headroom below LibVLC's
+    // Resonance intentionally keeps approximately 2 dB of headroom below LibVLC's
     // nominal 12 dB flat/unity preset.
     private float _basePreamp = EqualizerSettings.DefaultPreampDb;
 
@@ -203,7 +203,7 @@ public sealed class LibVlcAudioPlayerService : IAudioPlayer, IDisposable
         try
         {
             var version = _appInfoService.GetAppVersion();
-            if (!string.IsNullOrWhiteSpace(version)) return $"Nagi/{version.Trim()}";
+            if (!string.IsNullOrWhiteSpace(version)) return $"Resonance/{version.Trim()}";
         }
         catch (Exception ex)
         {
@@ -918,7 +918,7 @@ public sealed class LibVlcAudioPlayerService : IAudioPlayer, IDisposable
                 }
             }
 
-            // Release Nagi's media reference. MediaPlayer retains its own reference until
+            // Release Resonance's media reference. MediaPlayer retains its own reference until
             // it is disposed below, so this ordering is safe even during shutdown.
             DisposeCurrentMedia("audio service disposal");
 
@@ -1057,7 +1057,7 @@ public sealed class LibVlcAudioPlayerService : IAudioPlayer, IDisposable
         if (_isDisposed || _isFading) return;
 
         // LibVLC 4 uses the Windows audio-session volume. A change made in Windows Settings
-        // therefore arrives here just like a change made through Nagi. Keep our user-volume
+        // therefore arrives here just like a change made through Resonance. Keep our user-volume
         // snapshot in sync so the next track does not restore a stale value over the user's
         // Windows mixer adjustment.
         var reportedVolume = _mediaPlayer?.Volume ?? -1;

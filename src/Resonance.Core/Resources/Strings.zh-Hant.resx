@@ -248,7 +248,7 @@
     <value>排序依據：</value>
   </data>
   <data name="FFmpeg_SetupInstructions" xml:space="preserve">
-    <value>高精度音量標準化（ReplayGain 分析）需要 FFmpeg，但您的系統上找不到。\n\n請按照以下步驟進行設定：\n\n1. **下載**：造訪 https://www.gyan.dev/ffmpeg/builds/ 並下載 'ffmpeg-git-full.7z'（或類似的）基本組建。\n2. **指南**：您可以按照此指南獲取詳細說明：https://phoenixnap.com/kb/ffmpeg-windows\n3. **解壓縮**：開啟架構資料夾並找到包含 `ffmpeg.exe` 的 'bin' 目錄。\n4. **安裝**：將 `ffmpeg.exe` 複製到永久資料夾（例如 `C:\ffmpeg\`）並**將該資料夾新增到您的系統 PATH** 環境變數中。\n5. **重新啟動**：安裝後請重新啟動 Nagi 以使變更生效。</value>
+    <value>高精度音量標準化（ReplayGain 分析）需要 FFmpeg，但您的系統上找不到。\n\n請按照以下步驟進行設定：\n\n1. **下載**：造訪 https://www.gyan.dev/ffmpeg/builds/ 並下載 'ffmpeg-git-full.7z'（或類似的）基本組建。\n2. **指南**：您可以按照此指南獲取詳細說明：https://phoenixnap.com/kb/ffmpeg-windows\n3. **解壓縮**：開啟架構資料夾並找到包含 `ffmpeg.exe` 的 'bin' 目錄。\n4. **安裝**：將 `ffmpeg.exe` 複製到永久資料夾（例如 `C:\ffmpeg\`）並**將該資料夾新增到您的系統 PATH** 環境變數中。\n5. **重新啟動**：安裝後請重新啟動 Resonance 以使變更生效。</value>
   </data>
   <data name="Error_M3uImportNoSongsMatched" xml:space="preserve">
     <value>在您的媒體庫中找不到播放列表中的任何歌曲。</value>

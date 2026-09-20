@@ -227,13 +227,13 @@
     <value>Kritická chyba</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>Nagi narazil na kritickou chybu a musí se zavřít. Omlouváme se za nepříjemnosti.</value>
+    <value>Resonance narazil na kritickou chybu a musí se zavřít. Omlouváme se za nepříjemnosti.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>Spuštěno jako administrátor</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>Nagi je aktuálně spuštěn jako administrátor. To může zabránit správnému fungování některých funkcí (například přidávání hudebních složek). Pro nejlepší zážitek prosím restartujte Nagi bez oprávnění administrátora.</value>
+    <value>Resonance je aktuálně spuštěn jako administrátor. To může zabránit správnému fungování některých funkcí (například přidávání hudebních složek). Pro nejlepší zážitek prosím restartujte Resonance bez oprávnění administrátora.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>Restartovat normálně</value>
@@ -242,10 +242,10 @@
     <value>Pokračovat i přesto</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>Album nenalezeno</value>
@@ -503,7 +503,7 @@
     <value>Odpojit Last.fm</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>Opravdu chcete odpojit svůj účet Last.fm? Vaše historie scrobblingu zůstane na Last.fm zachována, ale Nagi již nebude moci scroblovat.</value>
+    <value>Opravdu chcete odpojit svůj účet Last.fm? Vaše historie scrobblingu zůstane na Last.fm zachována, ale Resonance již nebude moci scroblovat.</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>Odpojit</value>
@@ -643,7 +643,7 @@
     <value>Aktuální</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>Používáte nejnovější verzi Nagi.</value>
+    <value>Používáte nejnovější verzi Resonance.</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>Chyba aktualizace</value>
@@ -736,7 +736,7 @@
     <value>Biografie a obrázky interpretů (záložní)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>N/A</value>
@@ -946,7 +946,7 @@ Chyba: {1}</value>
     <value>Další v pořadí</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Zobrazit Nagi</value>
+    <value>Zobrazit Resonance</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>Předchozí</value>
@@ -1048,22 +1048,22 @@ Chyba: {1}</value>
     <value>Další v pořadí</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Objevte znovu svou místní hudební sbírku s Nagi, hudebním přehrávačem zaměřeným na rychlost, jednoduchost a soukromí. Nagi je postaveno na C# a WinUI 3, aby nabízelo čistý, nativní Fluent zážitek. Je krásné, efektivní a respektuje vaše soukromí.</value>
+    <value>Objevte znovu svou místní hudební sbírku s Resonance, hudebním přehrávačem zaměřeným na rychlost, jednoduchost a soukromí. Resonance je postaveno na C# a WinUI 3, aby nabízelo čistý, nativní Fluent zážitek. Je krásné, efektivní a respektuje vaše soukromí.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Hudební přehrávač Nagi</value>
+    <value>Hudební přehrávač Resonance</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Otevřít v hudebním přehrávači Nagi</value>
+    <value>Otevřít v hudebním přehrávači Resonance</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Spuštění Nagi</value>
+    <value>Spuštění Resonance</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>Předchozí</value>
@@ -1408,10 +1408,10 @@ Chyba: {1}</value>
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
-    <value>Vítejte v Nagi</value>
+    <value>Vítejte v Resonance</value>
   </data>
   <data name="OnboardingPage_AddFolderButton_ToolTip" xml:space="preserve">
     <value>Pro začátek přidejte hudební složku</value>
@@ -1630,7 +1630,7 @@ Chyba: {1}</value>
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>Zeslabení při přehrávání / pozastavení</value>
@@ -1675,7 +1675,7 @@ Chyba: {1}</value>
     <value>Automatické spuštění při startu</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>Spustit Nagi automaticky po přihlášení k počítači.</value>
+    <value>Spustit Resonance automaticky po přihlášení k počítači.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>Spustit minimalizované</value>
@@ -1804,7 +1804,7 @@ Chyba: {1}</value>
     <value>Export/Import seznamů skladeb</value>
   </data>
   <data name="SettingsPage_PlaylistsIO_Description" xml:space="preserve">
-    <value>Exportovat seznamy skladeb do souborů M3U pro použití v jiných přehrávačích, nebo importovat seznamy skladeb M3U do Nagi.</value>
+    <value>Exportovat seznamy skladeb do souborů M3U pro použití v jiných přehrávačích, nebo importovat seznamy skladeb M3U do Resonance.</value>
   </data>
   <data name="SettingsPage_ExportPlaylists_Content" xml:space="preserve">
     <value>Exportovat vše...</value>
@@ -1852,7 +1852,7 @@ Chyba: {1}</value>
     <value>Povolit scrobbling</value>
   </data>
   <data name="SettingsPage_LastFm_Scrobbling_Description" xml:space="preserve">
-    <value>Automaticky přidávat skladby, které posloucháte v Nagi, do vašeho profilu Last.fm.</value>
+    <value>Automaticky přidávat skladby, které posloucháte v Resonance, do vašeho profilu Last.fm.</value>
   </data>
   <data name="SettingsPage_LastFm_NowPlaying_Header" xml:space="preserve">
     <value>Aktualizovat 'Nyní hraje'</value>
@@ -1969,10 +1969,10 @@ Chyba: {1}</value>
     <value>O aplikaci</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>O Nagi</value>
+    <value>O Resonance</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
-    <value>Objevte znovu svou místní hudební sbírku s Nagi, hudebním přehrávačem zaměřeným na rychlost, jednoduchost a soukromí.</value>
+    <value>Objevte znovu svou místní hudební sbírku s Resonance, hudebním přehrávačem zaměřeným na rychlost, jednoduchost a soukromí.</value>
   </data>
   <data name="SettingsPage_About_VersionPrefix" xml:space="preserve">
     <value>Verze </value>
@@ -2038,7 +2038,7 @@ Chyba: {1}</value>
     <value>Neplatný soubor zálohy</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>Vybraný soubor není platná záloha Nagi.</value>
+    <value>Vybraný soubor není platná záloha Resonance.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>Obnovit zálohu?</value>
@@ -2173,13 +2173,13 @@ Chyba: {1}</value>
     <value>Resetovat</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>Vaše hudba, krásně uspořádaná</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Probouzím Nagi…</value>
+    <value>Probouzím Resonance…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>Zobrazit vše</value>

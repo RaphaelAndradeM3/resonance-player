@@ -227,13 +227,13 @@
     <value>Gabim kritik</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>Nagi ka hasur një gabim kritik dhe duhet të mbyllet. Na vjen keq për shqetësimin.</value>
+    <value>Resonance ka hasur një gabim kritik dhe duhet të mbyllet. Na vjen keq për shqetësimin.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>Po funksionon si administrator</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>Nagi po funksionon aktualisht si administrator. Kjo mund të parandalojë funksionimin korrekt të disa veçorive (si shtimi i dosjeve të muzikës). Për një përvojë më të mirë, ju lutemi rindizni Nagi-n pa privilegje administratori.</value>
+    <value>Resonance po funksionon aktualisht si administrator. Kjo mund të parandalojë funksionimin korrekt të disa veçorive (si shtimi i dosjeve të muzikës). Për një përvojë më të mirë, ju lutemi rindizni Resonance-n pa privilegje administratori.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>Rindizni normalisht</value>
@@ -242,10 +242,10 @@
     <value>Vazhdo gjithsesi</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>Albumi nuk u gjet</value>
@@ -503,7 +503,7 @@
     <value>Shkëput Last.fm</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>Jeni të sigurt që dëshironi të shkëputni llogarinë tuaj Last.fm? Historia juaj e scrobbling-ut do të ruhet në Last.fm, por Nagi nuk do të jetë më në gjendje të scrobble-ojë.</value>
+    <value>Jeni të sigurt që dëshironi të shkëputni llogarinë tuaj Last.fm? Historia juaj e scrobbling-ut do të ruhet në Last.fm, por Resonance nuk do të jetë më në gjendje të scrobble-ojë.</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>Shkëput</value>
@@ -638,7 +638,7 @@
     <value>I përditësuar</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>Ju po përdorni versionin më të fundit të Nagi.</value>
+    <value>Ju po përdorni versionin më të fundit të Resonance.</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>Gabim përditësimi</value>
@@ -731,7 +731,7 @@
     <value>Biografi dhe imazhe artistësh (rezervë)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>N/A</value>
@@ -935,7 +935,7 @@
     <value>Në vazhdim</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Shfaq Nagi</value>
+    <value>Shfaq Resonance</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>Paraprake</value>
@@ -1037,22 +1037,22 @@
     <value>Në vazhdim</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Rizbuloni koleksionin tuaj lokal të muzikës me Nagi, një luajtës muzike i fokusuar në shpejtësi, thjeshtësi dhe privatësi. Nagi është ndërtuar me C# dhe WinUI 3 për të ofruar një përvojë të pastër, amtare Fluent. Është i bukur, efikas dhe respekton privatësinë tuaj.</value>
+    <value>Rizbuloni koleksionin tuaj lokal të muzikës me Resonance, një luajtës muzike i fokusuar në shpejtësi, thjeshtësi dhe privatësi. Resonance është ndërtuar me C# dhe WinUI 3 për të ofruar një përvojë të pastër, amtare Fluent. Është i bukur, efikas dhe respekton privatësinë tuaj.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Nagi Luajtës Muzike</value>
+    <value>Resonance Luajtës Muzike</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Hap me Nagi Luajtës Muzike</value>
+    <value>Hap me Resonance Luajtës Muzike</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Nisja e Nagi</value>
+    <value>Nisja e Resonance</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>Paraprake</value>
@@ -1397,10 +1397,10 @@
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
-    <value>Mirësevini te Nagi</value>
+    <value>Mirësevini te Resonance</value>
   </data>
   <data name="OnboardingPage_AddFolderButton_ToolTip" xml:space="preserve">
     <value>Shtoni një dosje muzike për të filluar</value>
@@ -1619,7 +1619,7 @@
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>Zbehje në Luaj / Ndalo</value>
@@ -1664,7 +1664,7 @@
     <value>Nisja automatike në fillim</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>Nis Nagi automatikisht kur hyni në kompjuterin tuaj.</value>
+    <value>Nis Resonance automatikisht kur hyni në kompjuterin tuaj.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>Fillo i minimizuar</value>
@@ -1793,7 +1793,7 @@
     <value>Eksporto/Importo Lista Luajtjeje</value>
   </data>
   <data name="SettingsPage_PlaylistsIO_Description" xml:space="preserve">
-    <value>Eksportoni listat e luajtjes në skedarë M3U për përdorim në luajtës të tjerë, ose importoni lista luajtjeje M3U në Nagi.</value>
+    <value>Eksportoni listat e luajtjes në skedarë M3U për përdorim në luajtës të tjerë, ose importoni lista luajtjeje M3U në Resonance.</value>
   </data>
   <data name="SettingsPage_ExportPlaylists_Content" xml:space="preserve">
     <value>Eksporto të gjitha...</value>
@@ -1841,7 +1841,7 @@
     <value>Aktivizo scrobbling-un</value>
   </data>
   <data name="SettingsPage_LastFm_Scrobbling_Description" xml:space="preserve">
-    <value>Shtoni automatikisht këngët që dëgjoni në Nagi në profilin tuaj Last.fm.</value>
+    <value>Shtoni automatikisht këngët që dëgjoni në Resonance në profilin tuaj Last.fm.</value>
   </data>
   <data name="SettingsPage_LastFm_NowPlaying_Header" xml:space="preserve">
     <value>Përditëso 'Tani duke luajtur'</value>
@@ -1958,10 +1958,10 @@
     <value>Rreth</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>Rreth Nagi</value>
+    <value>Rreth Resonance</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
-    <value>Rizbuloni koleksionin tuaj lokal të muzikës me Nagi, një luajtës muzike i fokusuar në shpejtësi, thjeshtësi dhe privatësi.</value>
+    <value>Rizbuloni koleksionin tuaj lokal të muzikës me Resonance, një luajtës muzike i fokusuar në shpejtësi, thjeshtësi dhe privatësi.</value>
   </data>
   <data name="SettingsPage_About_VersionPrefix" xml:space="preserve">
     <value>Versioni </value>
@@ -2027,7 +2027,7 @@
     <value>Skedar i pavlefshëm i kopjes rezervë</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>Skedari i zgjedhur nuk është një kopje rezervë e vlefshme e Nagi.</value>
+    <value>Skedari i zgjedhur nuk është një kopje rezervë e vlefshme e Resonance.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>Rikthe Kopjen Rezervë?</value>
@@ -2162,13 +2162,13 @@
     <value>Rivendos</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>Muzika juaj, e organizuar bukur</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Po zgjohet Nagi…</value>
+    <value>Po zgjohet Resonance…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>Shiko të gjitha</value>

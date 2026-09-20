@@ -1,4 +1,4 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 using Resonance.Core.Helpers;
@@ -36,7 +36,7 @@ public class BackupRestoreService : IBackupRestoreService
             }
 
             // Create staging directory
-            var stagingPath = Path.Combine(Path.GetTempPath(), $"NagiBackupStaging_{Guid.NewGuid()}");
+            var stagingPath = Path.Combine(Path.GetTempPath(), $"ResonanceBackupStaging_{Guid.NewGuid()}");
             Directory.CreateDirectory(stagingPath);
 
             try
@@ -119,7 +119,7 @@ public class BackupRestoreService : IBackupRestoreService
 
                 // Create Zip
                 var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-                var zipFileName = $"Nagi_Backup_{timestamp}.zip";
+                var zipFileName = $"Resonance_Backup_{timestamp}.zip";
                 var zipFilePath = Path.Combine(destinationFolderPath, zipFileName);
 
                 if (File.Exists(zipFilePath))
@@ -351,7 +351,7 @@ public class BackupRestoreService : IBackupRestoreService
                 using var archive = ZipFile.OpenRead(backupFilePath);
 
                 // Check for critical file
-                var hasDb = archive.Entries.Any(e => e.FullName.Equals("resonance.db", StringComparison.OrdinalIgnoreCase));
+                var hasDb = archive.Entries.Any(e => e.FullName.Equals("resonance.db", StringComparison.OrdinalIgnoreCase) || e.FullName.Equals("nagi.db", StringComparison.OrdinalIgnoreCase));
                 var hasSettings = archive.Entries.Any(e => e.FullName.Equals("settings.json", StringComparison.OrdinalIgnoreCase));
 
                 // We require at least the DB or settings to consider it a valid backup of THIS app

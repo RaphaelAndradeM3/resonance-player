@@ -248,7 +248,7 @@
     <value>Sorteren op: </value>
   </data>
   <data name="FFmpeg_SetupInstructions" xml:space="preserve">
-    <value>FFmpeg is vereist voor hoge-precisie volumenormalisatie (ReplayGain-analyse), maar is niet gevonden op uw systeem.\n\nVolg deze stappen om het in te stellen:\n\n1. **Downloaden**: Bezoek https://www.gyan.dev/ffmpeg/builds/ en download de 'ffmpeg-git-full.7z' (of vergelijkbare) essentiële build.\n2. **Gids**: U kunt deze gids volgen voor gedetailleerde instructies: https://phoenixnap.com/kb/ffmpeg-windows\n3. **Uitpakken**: Open de architectuurmap en zoek de 'bin'-directory met `ffmpeg.exe`.\n4. **Installeren**: Kopieer `ffmpeg.exe` naar een permanente map (bijv. `C:\ffmpeg\`) en **voeg die map toe aan uw systeem PATH** omgevingsvariabele.\n5. **Herstarten**: Herstart Nagi na installatie om de wijzigingen door te voeren.</value>
+    <value>FFmpeg is vereist voor hoge-precisie volumenormalisatie (ReplayGain-analyse), maar is niet gevonden op uw systeem.\n\nVolg deze stappen om het in te stellen:\n\n1. **Downloaden**: Bezoek https://www.gyan.dev/ffmpeg/builds/ en download de 'ffmpeg-git-full.7z' (of vergelijkbare) essentiële build.\n2. **Gids**: U kunt deze gids volgen voor gedetailleerde instructies: https://phoenixnap.com/kb/ffmpeg-windows\n3. **Uitpakken**: Open de architectuurmap en zoek de 'bin'-directory met `ffmpeg.exe`.\n4. **Installeren**: Kopieer `ffmpeg.exe` naar een permanente map (bijv. `C:\ffmpeg\`) en **voeg die map toe aan uw systeem PATH** omgevingsvariabele.\n5. **Herstarten**: Herstart Resonance na installatie om de wijzigingen door te voeren.</value>
   </data>
   <data name="Error_M3uImportNoSongsMatched" xml:space="preserve">
     <value>Geen nummers van de afspeellijst zijn gevonden in uw bibliotheek.</value>

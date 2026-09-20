@@ -1,5 +1,5 @@
-﻿# verify_startup.ps1
-# Builds Nagi, launches it, waits 60s, kills it, then parses the startup log.
+# verify_startup.ps1
+# Builds Resonance, launches it, waits 60s, kills it, then parses the startup log.
 # Outputs: STARTUP_TOTAL_MS=<number>
 # Exit code: 0 on success, 1 on failure.
 
@@ -32,7 +32,7 @@ Get-ChildItem "$buildOut\*.dll", "$buildOut\*.exe", "$buildOut\*.json" -ErrorAct
 Write-Host "[verify] Sync done." -ForegroundColor Green
 
 # ── 3. Launch ─────────────────────────────────────────────────────────────────
-Write-Host "[verify] Launching Nagi..." -ForegroundColor Cyan
+Write-Host "[verify] Launching Resonance..." -ForegroundColor Cyan
 explorer.exe shell:AppsFolder\ResonancePlayer_ejgr3wwtkesbm!App
 
 # ── 4. Wait 15 seconds for startup to complete ────────────────────────────────
@@ -40,13 +40,13 @@ Write-Host "[verify] Waiting 15 seconds for app to start..." -ForegroundColor Cy
 Start-Sleep -Seconds 15
 
 # ── 4. Kill the process ───────────────────────────────────────────────────────
-Write-Host "[verify] Killing Nagi process..." -ForegroundColor Cyan
-$processes = Get-Process -Name "Nagi" -ErrorAction SilentlyContinue
+Write-Host "[verify] Killing Resonance process..." -ForegroundColor Cyan
+$processes = Get-Process -Name "Resonance" -ErrorAction SilentlyContinue
 if ($processes) {
     $processes | Stop-Process -Force
     Write-Host "[verify] Process killed." -ForegroundColor Green
 } else {
-    Write-Warning "[verify] No Nagi process found to kill (may have already exited)."
+    Write-Warning "[verify] No Resonance process found to kill (may have already exited)."
 }
 
 # Give the process a moment to flush its log

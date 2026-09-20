@@ -263,7 +263,7 @@ Follow these steps to set it up:
 2. **Guide**: You can follow this guide for detailed instructions: https://phoenixnap.com/kb/ffmpeg-windows
 3. **Extract**: Open the architecture folder and locate the 'bin' directory containing `ffmpeg.exe`.
 4. **Install**: Copy `ffmpeg.exe` to a permanent folder (e.g., `C:\ffmpeg\`) and **add that folder to your System PATH** environment variable.
-5. **Restart**: Please restart Nagi after installation for changes to take effect.</value>
+5. **Restart**: Please restart Resonance after installation for changes to take effect.</value>
   </data>
 
   <data name="Error_M3uImportNoSongsMatched" xml:space="preserve">

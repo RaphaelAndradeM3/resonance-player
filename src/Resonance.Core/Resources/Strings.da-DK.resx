@@ -248,7 +248,7 @@
     <value>Sortér efter: </value>
   </data>
   <data name="FFmpeg_SetupInstructions" xml:space="preserve">
-    <value>FFmpeg er påkrævet for volumennormalisering med høj præcision (ReplayGain-analyse), men blev ikke fundet på dit system.\n\nFølg disse trin for at konfigurere det:\n\n1. **Download**: Besøg https://www.gyan.dev/ffmpeg/builds/ og download 'ffmpeg-git-full.7z' (eller lignende) essentials-bygning.\n2. **Guide**: Du kan følge denne guide for detaljerede instruktioner: https://phoenixnap.com/kb/ffmpeg-windows\n3. **Udpak**: Åbn arkitekturmappen og find 'bin'-mappen, der indeholder `ffmpeg.exe`.\n4. **Installer**: Kopier `ffmpeg.exe` til en permanent mappe (f.eks. `C:\ffmpeg\`) og **tilføj den mappe til din System PATH**-miljøvariabel.\n5. **Genstart**: Genstart Nagi efter installationen for at ændringerne træder i kraft.</value>
+    <value>FFmpeg er påkrævet for volumennormalisering med høj præcision (ReplayGain-analyse), men blev ikke fundet på dit system.\n\nFølg disse trin for at konfigurere det:\n\n1. **Download**: Besøg https://www.gyan.dev/ffmpeg/builds/ og download 'ffmpeg-git-full.7z' (eller lignende) essentials-bygning.\n2. **Guide**: Du kan følge denne guide for detaljerede instruktioner: https://phoenixnap.com/kb/ffmpeg-windows\n3. **Udpak**: Åbn arkitekturmappen og find 'bin'-mappen, der indeholder `ffmpeg.exe`.\n4. **Installer**: Kopier `ffmpeg.exe` til en permanent mappe (f.eks. `C:\ffmpeg\`) og **tilføj den mappe til din System PATH**-miljøvariabel.\n5. **Genstart**: Genstart Resonance efter installationen for at ændringerne træder i kraft.</value>
   </data>
   <data name="Error_M3uImportNoSongsMatched" xml:space="preserve">
     <value>Ingen sange fra afspilningslisten blev fundet i dit bibliotek.</value>

@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Resonance.WinUI.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -1206,11 +1206,11 @@
                                 <HyperlinkButton
                                     Content="{x:Bind resources:Strings.SettingsPage_About_Licenses_Content, Mode=OneTime}"
                                     Style="{StaticResource AnimatedHyperlinkButtonStyle}"
-                                    NavigateUri="https://github.com/Anthonyy232/Nagi/blob/master/LICENSE" />
+                                    NavigateUri="https://github.com/RaphaelAndradeM3/resonance-player/blob/main/LICENSE" />
                                 <HyperlinkButton
                                     Content="{x:Bind resources:Strings.SettingsPage_About_SourceCode_Content, Mode=OneTime}"
                                     Style="{StaticResource AnimatedHyperlinkButtonStyle}"
-                                    NavigateUri="https://github.com/Anthonyy232/Nagi" />
+                                    NavigateUri="https://github.com/RaphaelAndradeM3/resonance-player" />
                             </StackPanel>
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
@@ -1227,7 +1227,7 @@
                     <HyperlinkButton
                         Content="{x:Bind resources:Strings.SettingsPage_About_PrivacyPolicy_Content, Mode=OneTime}"
                         Style="{StaticResource AnimatedHyperlinkButtonStyle}"
-                        NavigateUri="https://github.com/Anthonyy232/Nagi/blob/master/PRIVACY.md" />
+                        NavigateUri="https://github.com/RaphaelAndradeM3/resonance-player/blob/main/PRIVACY.md" />
                 </StackPanel>
             </StackPanel>
         </Grid>

@@ -248,7 +248,7 @@
     <value>Seřadit podle: </value>
   </data>
   <data name="FFmpeg_SetupInstructions" xml:space="preserve">
-    <value>FFmpeg je vyžadován pro vysoce přesnou normalizaci hlasitosti (analýza ReplayGain), ale nebyl nalezen ve vašem systému.\n\nPostupujte podle těchto kroků pro nastavení:\n\n1. **Stáhněte**: Navštivte https://www.gyan.dev/ffmpeg/builds/ a stáhněte 'ffmpeg-git-full.7z' (nebo podobnou) základní sestavu.\n2. **Průvodce**: Podrobné pokyny naleznete v tomto průvodci: https://phoenixnap.com/kb/ffmpeg-windows\n3. **Rozbalte**: Otevřete složku architektury a vyhledejte adresář 'bin' obsahující `ffmpeg.exe`.\n4. **Nainstalujte**: Zkopírujte `ffmpeg.exe` do trvalé složky (např. `C:\\ffmpeg\\`) a **přidejte tuto složku do proměnné prostředí System PATH**.\n5. **Restartujte**: Pro projevení změn prosím restartujte Nagi po instalaci.</value>
+    <value>FFmpeg je vyžadován pro vysoce přesnou normalizaci hlasitosti (analýza ReplayGain), ale nebyl nalezen ve vašem systému.\n\nPostupujte podle těchto kroků pro nastavení:\n\n1. **Stáhněte**: Navštivte https://www.gyan.dev/ffmpeg/builds/ a stáhněte 'ffmpeg-git-full.7z' (nebo podobnou) základní sestavu.\n2. **Průvodce**: Podrobné pokyny naleznete v tomto průvodci: https://phoenixnap.com/kb/ffmpeg-windows\n3. **Rozbalte**: Otevřete složku architektury a vyhledejte adresář 'bin' obsahující `ffmpeg.exe`.\n4. **Nainstalujte**: Zkopírujte `ffmpeg.exe` do trvalé složky (např. `C:\\ffmpeg\\`) a **přidejte tuto složku do proměnné prostředí System PATH**.\n5. **Restartujte**: Pro projevení změn prosím restartujte Resonance po instalaci.</value>
   </data>
   <data name="Error_M3uImportNoSongsMatched" xml:space="preserve">
     <value>V knihovně nebyly nalezeny žádné skladby ze seznamu skladeb.</value>

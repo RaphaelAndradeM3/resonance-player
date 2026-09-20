@@ -227,13 +227,13 @@
     <value>Earráid Chriticiúil</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>Tharla earráid chriticiúil i Nagi agus caithfidh sé dúnadh. Gabhaimid leithscéal as an míchaoithiúlacht.</value>
+    <value>Tharla earráid chriticiúil i Resonance agus caithfidh sé dúnadh. Gabhaimid leithscéal as an míchaoithiúlacht.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>Ag rith mar Riarachán</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>Tá Nagi ag rith mar Riarachán faoi láthair. D'fhéadfadh sé seo cosc a chur ar roinnt gnéithe (cosúil le fillteáin ceoil a chur leis) ó bheith ag obair i gceart.\n\nChun an taithí is fearr a fháil, déan Nagi a atosú gan pribhléidí riarthóra.</value>
+    <value>Tá Resonance ag rith mar Riarachán faoi láthair. D'fhéadfadh sé seo cosc a chur ar roinnt gnéithe (cosúil le fillteáin ceoil a chur leis) ó bheith ag obair i gceart.\n\nChun an taithí is fearr a fháil, déan Resonance a atosú gan pribhléidí riarthóra.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>Atosaigh go Gnáth</value>
@@ -242,10 +242,10 @@
     <value>Lean Ar Aghaidh Pé Scéal É</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>Albam Gan Aimsiú</value>
@@ -503,7 +503,7 @@
     <value>Dínasc Last.fm</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>An bhfuil tú cinnte gur mhaith leat do chuntas Last.fm a dhínascadh? Caomhnófar do stair scrobbling ar Last.fm, ach ní bheidh Nagi in ann scrobble a dhéanamh a thuilleadh.</value>
+    <value>An bhfuil tú cinnte gur mhaith leat do chuntas Last.fm a dhínascadh? Caomhnófar do stair scrobbling ar Last.fm, ach ní bheidh Resonance in ann scrobble a dhéanamh a thuilleadh.</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>Dínasc</value>
@@ -638,7 +638,7 @@
     <value>Cothrom le Dáta</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>Tá an leagan is déanaí de Nagi á rith agat.</value>
+    <value>Tá an leagan is déanaí de Resonance á rith agat.</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>Earráid Nuashonraithe</value>
@@ -731,7 +731,7 @@
     <value>Beathaisnéisí agus íomhánna ealaíontóirí (cúlú)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>N/A</value>
@@ -935,7 +935,7 @@
     <value>An Chéad Eile</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Taispeáin Nagi</value>
+    <value>Taispeáin Resonance</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>Roimhe Seo</value>
@@ -1037,22 +1037,22 @@
     <value>An Chéad Eile</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Athfhionnachtain do bhailiúchán ceoil áitiúil le Nagi, seinnteoir ceoil a dhíríonn ar luas, simplíocht, agus príobháideachas. Tógadh Nagi le C# agus WinUI 3 chun eispéireas glan, dúchasach Fluent a thairiscint. Tá sé álainn, éifeachtúil, agus urramaíonn sé do phríobháideachas.</value>
+    <value>Athfhionnachtain do bhailiúchán ceoil áitiúil le Resonance, seinnteoir ceoil a dhíríonn ar luas, simplíocht, agus príobháideachas. Tógadh Resonance le C# agus WinUI 3 chun eispéireas glan, dúchasach Fluent a thairiscint. Tá sé álainn, éifeachtúil, agus urramaíonn sé do phríobháideachas.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Seinnteoir Ceoil Nagi</value>
+    <value>Seinnteoir Ceoil Resonance</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Oscail le Seinnteoir Ceoil Nagi</value>
+    <value>Oscail le Seinnteoir Ceoil Resonance</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Tús Nagi</value>
+    <value>Tús Resonance</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>Roimhe Seo</value>
@@ -1397,10 +1397,10 @@
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
-    <value>Fáilte go Nagi</value>
+    <value>Fáilte go Resonance</value>
   </data>
   <data name="OnboardingPage_AddFolderButton_ToolTip" xml:space="preserve">
     <value>Cuir fillteán ceoil leis chun tús a chur leis</value>
@@ -1619,7 +1619,7 @@
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>Meath ar Seinn / Sos</value>
@@ -1664,7 +1664,7 @@
     <value>Seoladh uathoibríoch ar thús</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>Tosaigh Nagi go huathoibríoch nuair a logálann tú isteach ar do ríomhaire.</value>
+    <value>Tosaigh Resonance go huathoibríoch nuair a logálann tú isteach ar do ríomhaire.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>Tosaigh íoslaghdaithe</value>
@@ -1793,7 +1793,7 @@
     <value>Easpórtáil/Iompórtáil Seinmliostaí</value>
   </data>
   <data name="SettingsPage_PlaylistsIO_Description" xml:space="preserve">
-    <value>Easpórtáil seinmliostaí chuig comhaid M3U le húsáid i seinnteoirí eile, nó iompórtáil seinmliostaí M3U isteach i Nagi.</value>
+    <value>Easpórtáil seinmliostaí chuig comhaid M3U le húsáid i seinnteoirí eile, nó iompórtáil seinmliostaí M3U isteach i Resonance.</value>
   </data>
   <data name="SettingsPage_ExportPlaylists_Content" xml:space="preserve">
     <value>Easpórtáil Uile...</value>
@@ -1841,7 +1841,7 @@
     <value>Cumasaigh scroblaíocht</value>
   </data>
   <data name="SettingsPage_LastFm_Scrobbling_Description" xml:space="preserve">
-    <value>Cuir na rianta a éisteann tú le Nagi go huathoibríoch le do phróifíl Last.fm.</value>
+    <value>Cuir na rianta a éisteann tú le Resonance go huathoibríoch le do phróifíl Last.fm.</value>
   </data>
   <data name="SettingsPage_LastFm_NowPlaying_Header" xml:space="preserve">
     <value>Nuashonraigh 'Ag Seinm Anois'</value>
@@ -1958,10 +1958,10 @@
     <value>Maidir Leis</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>Maidir le Nagi</value>
+    <value>Maidir le Resonance</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
-    <value>Athfhionnachtain do bhailiúchán ceoil áitiúil le Nagi, seinnteoir ceoil a dhíríonn ar luas, simplíocht, agus príobháideachas.</value>
+    <value>Athfhionnachtain do bhailiúchán ceoil áitiúil le Resonance, seinnteoir ceoil a dhíríonn ar luas, simplíocht, agus príobháideachas.</value>
   </data>
   <data name="SettingsPage_About_VersionPrefix" xml:space="preserve">
     <value>Leagan </value>
@@ -2027,7 +2027,7 @@
     <value>Comhad Cúltaca Neamhbhailí</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>Ní cúltaca bailí Nagi é an comhad roghnaithe.</value>
+    <value>Ní cúltaca bailí Resonance é an comhad roghnaithe.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>Athchóirigh Cúltaca?</value>
@@ -2162,13 +2162,13 @@
     <value>Athshocraigh</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>Do cheol, eagraithe go hálainn</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Á dhúiseacht Nagi…</value>
+    <value>Á dhúiseacht Resonance…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>Féach ar fad</value>

@@ -227,13 +227,13 @@
     <value>Kritikus hiba</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>A Nagi kritikus hibába ütközött, és be kell zárni. Elnézést kérünk a kellemetlenségért.</value>
+    <value>A Resonance kritikus hibába ütközött, és be kell zárni. Elnézést kérünk a kellemetlenségért.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>Futtatás rendszergazdaként</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>A Nagi jelenleg rendszergazdaként fut. Ez megakadályozhatja egyes funkciók (például zenemappák hozzáadása) helyes működését.\n\nA legjobb élmény érdekében indítsa újra a Nagit rendszergazdai jogosultságok nélkül.</value>
+    <value>A Resonance jelenleg rendszergazdaként fut. Ez megakadályozhatja egyes funkciók (például zenemappák hozzáadása) helyes működését.\n\nA legjobb élmény érdekében indítsa újra a Nagit rendszergazdai jogosultságok nélkül.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>Normál újraindítás</value>
@@ -242,10 +242,10 @@
     <value>Folytatás így is</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>Album nem található</value>
@@ -503,7 +503,7 @@
     <value>Last.fm leválasztása</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>Biztosan le szeretné választani Last.fm fiókját? A scrobble előzményei megmaradnak a Last.fm-en, de a Nagi többé nem fog tudni scrobble-t végezni.</value>
+    <value>Biztosan le szeretné választani Last.fm fiókját? A scrobble előzményei megmaradnak a Last.fm-en, de a Resonance többé nem fog tudni scrobble-t végezni.</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>Leválasztás</value>
@@ -638,7 +638,7 @@
     <value>Naprakész</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>A Nagi legújabb verzióját futtatja.</value>
+    <value>A Resonance legújabb verzióját futtatja.</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>Frissítési hiba</value>
@@ -731,7 +731,7 @@
     <value>Előadó életrajzok és képek (tartalék)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>N/A</value>
@@ -935,7 +935,7 @@
     <value>Következő</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Nagi megjelenítése</value>
+    <value>Resonance megjelenítése</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>Előző</value>
@@ -1037,22 +1037,22 @@
     <value>Következő</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Fedezze fel újra helyi zenei gyűjteményét a Nagival, egy zenelejátszóval, amely a sebességre, az egyszerűségre és az adatvédelemre összpontosít. A Nagi C# és WinUI 3 segítségével készült, hogy tiszta, natív Fluent élményt nyújtson. Szép, hatékony és tiszteletben tartja az adatvédelmét.</value>
+    <value>Fedezze fel újra helyi zenei gyűjteményét a Nagival, egy zenelejátszóval, amely a sebességre, az egyszerűségre és az adatvédelemre összpontosít. A Resonance C# és WinUI 3 segítségével készült, hogy tiszta, natív Fluent élményt nyújtson. Szép, hatékony és tiszteletben tartja az adatvédelmét.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Nagi Zenelejátszó</value>
+    <value>Resonance Zenelejátszó</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Megnyitás Nagi Zenelejátszóval</value>
+    <value>Megnyitás Resonance Zenelejátszóval</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Nagi indítás</value>
+    <value>Resonance indítás</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>Előző</value>
@@ -1397,7 +1397,7 @@
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
     <value>Üdvözöljük a Nagiban</value>
@@ -1619,7 +1619,7 @@
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>Áttűnés lejátszás/szünet esetén</value>
@@ -1664,7 +1664,7 @@
     <value>Automatikus indítás a rendszerindításkor</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>Indítsa el a Nagi-t automatikusan, amikor bejelentkezik a számítógépére.</value>
+    <value>Indítsa el a Resonance-t automatikusan, amikor bejelentkezik a számítógépére.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>Indítás minimalizálva</value>
@@ -1841,7 +1841,7 @@
     <value>Scrobblálás engedélyezése</value>
   </data>
   <data name="SettingsPage_LastFm_Scrobbling_Description" xml:space="preserve">
-    <value>Automatikusan hozzáadja a Nagi-n hallgatott számokat a Last.fm profiljához.</value>
+    <value>Automatikusan hozzáadja a Resonance-n hallgatott számokat a Last.fm profiljához.</value>
   </data>
   <data name="SettingsPage_LastFm_NowPlaying_Header" xml:space="preserve">
     <value>„Most játszott” frissítése</value>
@@ -1958,7 +1958,7 @@
     <value>Névjegy</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>A Nagi névjegye</value>
+    <value>A Resonance névjegye</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
     <value>Fedezze fel újra helyi zenei gyűjteményét a Nagival, egy zenelejátszóval, amely a sebességre, az egyszerűségre és az adatvédelemre összpontosít.</value>
@@ -2027,7 +2027,7 @@
     <value>Érvénytelen biztonsági mentés fájl</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>A kiválasztott fájl nem érvényes Nagi biztonsági mentés.</value>
+    <value>A kiválasztott fájl nem érvényes Resonance biztonsági mentés.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>Mentés visszaállítása?</value>
@@ -2162,13 +2162,13 @@
     <value>Visszaállítás</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>Zene gyönyörűen rendszerezve</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Nagi ébred...</value>
+    <value>Resonance ébred...</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>Összes megtekintése</value>

@@ -248,7 +248,7 @@
     <value>Diggirey Ita:</value>
   </data>
   <data name="FFmpeg_SetupInstructions" xml:space="preserve">
-    <value>Baxaxxa-fidi Sagal Madak (ReplayGain diggirey) Ayyuunih FFmpeg ginni amah. Amma siinik mayallinnum.\n\nDiggaaroy Akah Teedego:\n\n1. **Deedego**: https://www.gyan.dev/ffmpeg/builds/ gitaa kee 'ffmpeg-git-full.7z' (hinnay diggirey-madak) Deedego.\n2. **Gacsa**: Akah teedego: https://phoenixnap.com/kb/ffmpeg-windows gitaa kee Diggirey.\n3. **Ayyuuni**: Madaaba Bolda-yak Ayyuuni kee 'bin' direktoori-yak `ffmpeg.exe` diggirey.\n4. **Diggaare**: `ffmpeg.exe` Wagitteh Bolda-yak (t.f. `C:\ffmpeg\`) diggaare kee **bolda System PATH** edde diggaare.\n5. **Taddiq**: Diggirey yaaba Nagi Taddiq.</value>
+    <value>Baxaxxa-fidi Sagal Madak (ReplayGain diggirey) Ayyuunih FFmpeg ginni amah. Amma siinik mayallinnum.\n\nDiggaaroy Akah Teedego:\n\n1. **Deedego**: https://www.gyan.dev/ffmpeg/builds/ gitaa kee 'ffmpeg-git-full.7z' (hinnay diggirey-madak) Deedego.\n2. **Gacsa**: Akah teedego: https://phoenixnap.com/kb/ffmpeg-windows gitaa kee Diggirey.\n3. **Ayyuuni**: Madaaba Bolda-yak Ayyuuni kee 'bin' direktoori-yak `ffmpeg.exe` diggirey.\n4. **Diggaare**: `ffmpeg.exe` Wagitteh Bolda-yak (t.f. `C:\ffmpeg\`) diggaare kee **bolda System PATH** edde diggaare.\n5. **Taddiq**: Diggirey yaaba Resonance Taddiq.</value>
   </data>
   <data name="Error_M3uImportNoSongsMatched" xml:space="preserve">
     <value>Pileyiliisti-yak Saana Mayallinnum siinik Layibararih.</value>

@@ -227,15 +227,15 @@
     <value>Kritieke Fout</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>Nagi het 'n kritieke fout teëgekom en moet toemaak. Ons is jammer vir die ongerief.</value>
+    <value>Resonance het 'n kritieke fout teëgekom en moet toemaak. Ons is jammer vir die ongerief.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>Loop as Administrateur</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>Nagi loop tans as Administrateur. Dit mag verhoed dat sommige funksies (soos die byvoeging van musiekvouers) korrek werk.
+    <value>Resonance loop tans as Administrateur. Dit mag verhoed dat sommige funksies (soos die byvoeging van musiekvouers) korrek werk.
 
-Vir die beste ervaring, herbegin asseblief Nagi sonder administrateurvoorregte.</value>
+Vir die beste ervaring, herbegin asseblief Resonance sonder administrateurvoorregte.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>Herbegin Normaal</value>
@@ -244,10 +244,10 @@ Vir die beste ervaring, herbegin asseblief Nagi sonder administrateurvoorregte.<
     <value>Gaan Nogtans Voort</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>Album Nie Gevind Nie</value>
@@ -505,7 +505,7 @@ Vir die beste ervaring, herbegin asseblief Nagi sonder administrateurvoorregte.<
     <value>Ontkoppel Last.fm</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>Is jy seker jy wil jou Last.fm-rekening ontkoppel? Jou scrobbel-geskiedenis sal op Last.fm bewaar word, maar Nagi sal nie meer kan scrobbel nie.</value>
+    <value>Is jy seker jy wil jou Last.fm-rekening ontkoppel? Jou scrobbel-geskiedenis sal op Last.fm bewaar word, maar Resonance sal nie meer kan scrobbel nie.</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>Ontkoppel</value>
@@ -645,7 +645,7 @@ Vir die beste ervaring, herbegin asseblief Nagi sonder administrateurvoorregte.<
     <value>Op Datum</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>Jy gebruik die nuutste weergawe van Nagi.</value>
+    <value>Jy gebruik die nuutste weergawe van Resonance.</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>Opdateringsfout</value>
@@ -738,7 +738,7 @@ Vir die beste ervaring, herbegin asseblief Nagi sonder administrateurvoorregte.<
     <value>Kunstenaarbiografieë en -prente (terugval)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>N.v.t.</value>
@@ -948,7 +948,7 @@ Fout: {1}</value>
     <value>Volgende</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Wys Nagi</value>
+    <value>Wys Resonance</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>Vorige</value>
@@ -1050,22 +1050,22 @@ Fout: {1}</value>
     <value>Volgende</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Herontdek jou plaaslike musiekversameling met Nagi, 'n musiekspeler gefokus op spoed, eenvoud en privaatheid. Nagi is gebou met C# en WinUI 3 om 'n skoon, inheemse Fluent-ervaring te bied. Dit is pragtig, doeltreffend en respekteer jou privaatheid.</value>
+    <value>Herontdek jou plaaslike musiekversameling met Resonance, 'n musiekspeler gefokus op spoed, eenvoud en privaatheid. Resonance is gebou met C# en WinUI 3 om 'n skoon, inheemse Fluent-ervaring te bied. Dit is pragtig, doeltreffend en respekteer jou privaatheid.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Nagi Musiekspeler</value>
+    <value>Resonance Musiekspeler</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Maak oop met Nagi Musiekspeler</value>
+    <value>Maak oop met Resonance Musiekspeler</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Nagi Opstart</value>
+    <value>Resonance Opstart</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>Vorige</value>
@@ -1410,10 +1410,10 @@ Fout: {1}</value>
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
-    <value>Welkom by Nagi</value>
+    <value>Welkom by Resonance</value>
   </data>
   <data name="OnboardingPage_AddFolderButton_ToolTip" xml:space="preserve">
     <value>Voeg 'n musiekgids by om te begin</value>
@@ -1632,7 +1632,7 @@ Fout: {1}</value>
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>Vervaag by Speel / Pouse</value>
@@ -1677,7 +1677,7 @@ Fout: {1}</value>
     <value>Outo-bekendstelling by opstart</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>Begin Nagi outomaties wanneer jy by jou rekenaar aanmeld.</value>
+    <value>Begin Resonance outomaties wanneer jy by jou rekenaar aanmeld.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>Begin geminimaliseer</value>
@@ -1806,7 +1806,7 @@ Fout: {1}</value>
     <value>Uitvoer/Invoer Snitlyste</value>
   </data>
   <data name="SettingsPage_PlaylistsIO_Description" xml:space="preserve">
-    <value>Voer snitlyste uit na M3U-lêers vir gebruik in ander spelers, of voer M3U-snitlyste in Nagi in.</value>
+    <value>Voer snitlyste uit na M3U-lêers vir gebruik in ander spelers, of voer M3U-snitlyste in Resonance in.</value>
   </data>
   <data name="SettingsPage_ExportPlaylists_Content" xml:space="preserve">
     <value>Voer Alles Uit...</value>
@@ -1854,7 +1854,7 @@ Fout: {1}</value>
     <value>Aktiveer scrobbling</value>
   </data>
   <data name="SettingsPage_LastFm_Scrobbling_Description" xml:space="preserve">
-    <value>Voeg die snitte waarna jy op Nagi luister, outomaties by jou Last.fm-profiel.</value>
+    <value>Voeg die snitte waarna jy op Resonance luister, outomaties by jou Last.fm-profiel.</value>
   </data>
   <data name="SettingsPage_LastFm_NowPlaying_Header" xml:space="preserve">
     <value>Werk 'Speel Nou' op</value>
@@ -1971,10 +1971,10 @@ Fout: {1}</value>
     <value>Oor</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>Oor Nagi</value>
+    <value>Oor Resonance</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
-    <value>Herontdek jou plaaslike musiekversameling met Nagi, 'n musiekspeler gefokus op spoed, eenvoud en privaatheid.</value>
+    <value>Herontdek jou plaaslike musiekversameling met Resonance, 'n musiekspeler gefokus op spoed, eenvoud en privaatheid.</value>
   </data>
   <data name="SettingsPage_About_VersionPrefix" xml:space="preserve">
     <value>Weergawe </value>
@@ -2040,7 +2040,7 @@ Fout: {1}</value>
     <value>Ongeldige Rugsteunlêer</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>Die geselekteerde lêer is nie 'n geldige Nagi-rugsteun nie.</value>
+    <value>Die geselekteerde lêer is nie 'n geldige Resonance-rugsteun nie.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>Herstel Rugsteun?</value>
@@ -2175,13 +2175,13 @@ Fout: {1}</value>
     <value>Herstel</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>Jou musiek, pragtig georganiseer</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Maak Nagi wakker…</value>
+    <value>Maak Resonance wakker…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>Sien alles</value>

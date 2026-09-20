@@ -1397,7 +1397,7 @@
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
     <value>ਨਾਗੀ ਵਿੱਚ ਤੁਹਾਡਾ ਸੁਆਗਤ ਹੈ</value>
@@ -1619,7 +1619,7 @@
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>ਪਲੇ / ਪੌਜ਼ 'ਤੇ ਫੇਡ</value>
@@ -2027,7 +2027,7 @@
     <value>ਅਵੈਧ ਬੈਕਅੱਪ ਫਾਈਲ</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>ਚੁਣੀ ਗਈ ਫਾਈਲ ਇੱਕ ਵੈਧ Nagi ਬੈਕਅੱਪ ਨਹੀਂ ਹੈ।</value>
+    <value>ਚੁਣੀ ਗਈ ਫਾਈਲ ਇੱਕ ਵੈਧ Resonance ਬੈਕਅੱਪ ਨਹੀਂ ਹੈ।</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>ਬੈਕਅੱਪ ਰੀਸਟੋਰ ਕਰਨਾ ਹੈ?</value>
@@ -2162,13 +2162,13 @@
     <value>ਰੀਸੈਟ</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>ਤੁਹਾਡਾ ਸੰਗੀਤ, ਖੂਬਸੂਰਤੀ ਨਾਲ ਸੰਗਠਿਤ</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Nagi ਨੂੰ ਜਗਾ ਰਿਹਾ ਹੈ…</value>
+    <value>Resonance ਨੂੰ ਜਗਾ ਰਿਹਾ ਹੈ…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>ਸਭ ਦੇਖੋ</value>

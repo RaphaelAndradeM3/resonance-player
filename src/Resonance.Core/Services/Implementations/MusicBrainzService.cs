@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Json;
+using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Resonance.Core.Http.Pipelines;
@@ -15,7 +15,7 @@ namespace Resonance.Core.Services.Implementations;
 public class MusicBrainzService : IMusicBrainzService
 {
     private const string BaseUrl = "https://musicbrainz.org/ws/2";
-    private const string UserAgent = "Nagi/1.0 (+https://github.com/Anthonyy232/Nagi)";
+    private const string UserAgent = "Resonance/1.0 (+https://github.com/RaphaelAndradeM3/resonance-player)";
 
     private readonly HttpClient _httpClient;
     private readonly IProviderPipelineProvider _pipelines;

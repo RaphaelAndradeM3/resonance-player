@@ -227,13 +227,13 @@
     <value>Kritinė klaida</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>"Nagi" susidūrė su kritine klaida ir turi užsidaryti. Atsiprašome už nepatogumus.</value>
+    <value>"Resonance" susidūrė su kritine klaida ir turi užsidaryti. Atsiprašome už nepatogumus.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>Vykdoma kaip administratorius</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>"Nagi" šiuo metu veikia kaip administratorius. Tai gali trukdyti kai kurioms funkcijoms (pvz., muzikos aplankų pridėjimui) veikti tinkamai.\n\nNorėdami geriausios patirties, paleiskite "Nagi" iš naujo be administratoriaus privilegijų.</value>
+    <value>"Resonance" šiuo metu veikia kaip administratorius. Tai gali trukdyti kai kurioms funkcijoms (pvz., muzikos aplankų pridėjimui) veikti tinkamai.\n\nNorėdami geriausios patirties, paleiskite "Resonance" iš naujo be administratoriaus privilegijų.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>Paleisti iš naujo įprastai</value>
@@ -242,10 +242,10 @@
     <value>Vis tiek tęsti</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>Albumas nerastas</value>
@@ -503,7 +503,7 @@
     <value>Atsijungti nuo Last.fm</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>Ar tikrai norite atsijungti nuo Last.fm paskyros? Jūsų klausymosi istorija bus išsaugota Last.fm, tačiau "Nagi" nebegalės siųsti klausymosi duomenų.</value>
+    <value>Ar tikrai norite atsijungti nuo Last.fm paskyros? Jūsų klausymosi istorija bus išsaugota Last.fm, tačiau "Resonance" nebegalės siųsti klausymosi duomenų.</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>Atsijungti</value>
@@ -638,7 +638,7 @@
     <value>Atnaujinta</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>Naudojate naujausią "Nagi" versiją.</value>
+    <value>Naudojate naujausią "Resonance" versiją.</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>Naujinimo klaida</value>
@@ -731,7 +731,7 @@
     <value>Atlikėjų biografijos ir nuotraukos (atsarginis variantas)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>N/D</value>
@@ -935,7 +935,7 @@
     <value>Kitas eilėje</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Rodyti Nagi</value>
+    <value>Rodyti Resonance</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>Ankstesnis</value>
@@ -1037,22 +1037,22 @@
     <value>Kitas eilėje</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Iš naujo atraskite savo vietinę muzikos kolekciją su Nagi – muzikos grotuvu, orientuotu į greitį, paprastumą ir privatumą. Nagi sukurtas naudojant C# ir WinUI 3, kad pasiūlytų švarią, natūralią „Fluent“ patirtį. Jis yra gražus, efektyvus ir gerbia jūsų privatumą.</value>
+    <value>Iš naujo atraskite savo vietinę muzikos kolekciją su Resonance – muzikos grotuvu, orientuotu į greitį, paprastumą ir privatumą. Resonance sukurtas naudojant C# ir WinUI 3, kad pasiūlytų švarią, natūralią „Fluent“ patirtį. Jis yra gražus, efektyvus ir gerbia jūsų privatumą.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Nagi muzikos grotuvas</value>
+    <value>Resonance muzikos grotuvas</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Atidaryti su Nagi muzikos grotuvu</value>
+    <value>Atidaryti su Resonance muzikos grotuvu</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Nagi paleistis</value>
+    <value>Resonance paleistis</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>Ankstesnis</value>
@@ -1397,10 +1397,10 @@
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
-    <value>Sveiki atvykę į Nagi</value>
+    <value>Sveiki atvykę į Resonance</value>
   </data>
   <data name="OnboardingPage_AddFolderButton_ToolTip" xml:space="preserve">
     <value>Pridėkite muzikos aplanką, kad pradėtumėte</value>
@@ -1619,7 +1619,7 @@
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>Išnykimas paleidžiant / pristabdant</value>
@@ -1664,7 +1664,7 @@
     <value>Automatinis paleidimas paleidus</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>Automatiškai paleisti Nagi prisijungus prie kompiuterio.</value>
+    <value>Automatiškai paleisti Resonance prisijungus prie kompiuterio.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>Paleisti sumažintą</value>
@@ -1793,7 +1793,7 @@
     <value>Eksportuoti/Importuoti grojaraščius</value>
   </data>
   <data name="SettingsPage_PlaylistsIO_Description" xml:space="preserve">
-    <value>Eksportuoti grojaraščius į M3U failus, skirtus naudoti kituose grotuvuose, arba importuoti M3U grojaraščius į Nagi.</value>
+    <value>Eksportuoti grojaraščius į M3U failus, skirtus naudoti kituose grotuvuose, arba importuoti M3U grojaraščius į Resonance.</value>
   </data>
   <data name="SettingsPage_ExportPlaylists_Content" xml:space="preserve">
     <value>Eksportuoti viską...</value>
@@ -1841,7 +1841,7 @@
     <value>Įjungti scrobbling</value>
   </data>
   <data name="SettingsPage_LastFm_Scrobbling_Description" xml:space="preserve">
-    <value>Automatiškai pridėti kūrinius, kurių klausotės Nagi, į savo Last.fm profilį.</value>
+    <value>Automatiškai pridėti kūrinius, kurių klausotės Resonance, į savo Last.fm profilį.</value>
   </data>
   <data name="SettingsPage_LastFm_NowPlaying_Header" xml:space="preserve">
     <value>Atnaujinti „Dabar grojama“</value>
@@ -1958,10 +1958,10 @@
     <value>Apie</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>Apie Nagi</value>
+    <value>Apie Resonance</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
-    <value>Iš naujo atraskite savo vietinę muzikos kolekciją su Nagi – muzikos grotuvu, orientuotu į greitį, paprastumą ir privatumą.</value>
+    <value>Iš naujo atraskite savo vietinę muzikos kolekciją su Resonance – muzikos grotuvu, orientuotu į greitį, paprastumą ir privatumą.</value>
   </data>
   <data name="SettingsPage_About_VersionPrefix" xml:space="preserve">
     <value>Versija </value>
@@ -2027,7 +2027,7 @@
     <value>Netinkamas atsarginės kopijos failas</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>Pasirinktas failas nėra tinkama „Nagi“ atsarginė kopija.</value>
+    <value>Pasirinktas failas nėra tinkama „Resonance“ atsarginė kopija.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>Atkurti atsarginę kopiją?</value>
@@ -2162,13 +2162,13 @@
     <value>Nustatyti iš naujo</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>Jūsų muzika, dailiai sutvarkyta</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Žadinama Nagi…</value>
+    <value>Žadinama Resonance…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>Rodyti visus</value>

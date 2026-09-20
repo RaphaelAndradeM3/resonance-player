@@ -227,13 +227,13 @@
     <value>মারাত্মক ত্রুটি</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>Nagi-তে একটি গুরুতর ত্রুটি দেখা দিয়েছে এবং এটি বন্ধ করতে হবে। অসুবিধার জন্য আমরা ক্ষমাপ্রার্থী।</value>
+    <value>Resonance-তে একটি গুরুতর ত্রুটি দেখা দিয়েছে এবং এটি বন্ধ করতে হবে। অসুবিধার জন্য আমরা ক্ষমাপ্রার্থী।</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>অ্যাডমিনিস্ট্রেটর হিসাবে চলছে</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>Nagi বর্তমানে অ্যাডমিনিস্ট্রেটর হিসাবে চলছে। এটি কিছু বৈশিষ্ট্য (যেমন সঙ্গীত ফোল্ডার যুক্ত করা) সঠিকভাবে কাজ করা থেকে আটকাতে পারে। সেরা অভিজ্ঞতার জন্য, দয়া করে অ্যাডমিনিস্ট্রেটর সুবিধা ছাড়া Nagi পুনরায় চালু করুন।</value>
+    <value>Resonance বর্তমানে অ্যাডমিনিস্ট্রেটর হিসাবে চলছে। এটি কিছু বৈশিষ্ট্য (যেমন সঙ্গীত ফোল্ডার যুক্ত করা) সঠিকভাবে কাজ করা থেকে আটকাতে পারে। সেরা অভিজ্ঞতার জন্য, দয়া করে অ্যাডমিনিস্ট্রেটর সুবিধা ছাড়া Resonance পুনরায় চালু করুন।</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>সাধারণভাবে পুনরায় চালু করুন</value>
@@ -503,7 +503,7 @@
     <value>Last.fm সংযোগ বিচ্ছিন্ন করুন</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>আপনি কি আপনার Last.fm অ্যাকাউন্ট সংযোগ বিচ্ছিন্ন করতে নিশ্চিত? আপনার স্ক্রোবলিং ইতিহাস Last.fm এ সংরক্ষিত থাকবে, তবে Nagi আর স্ক্রোবল করতে সক্ষম হবে না।</value>
+    <value>আপনি কি আপনার Last.fm অ্যাকাউন্ট সংযোগ বিচ্ছিন্ন করতে নিশ্চিত? আপনার স্ক্রোবলিং ইতিহাস Last.fm এ সংরক্ষিত থাকবে, তবে Resonance আর স্ক্রোবল করতে সক্ষম হবে না।</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>সংযোগ বিচ্ছিন্ন করুন</value>
@@ -643,7 +643,7 @@
     <value>আপডেট করা হয়েছে</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>আপনি Nagi-এর সর্বশেষ সংস্করণ চালাচ্ছেন।</value>
+    <value>আপনি Resonance-এর সর্বশেষ সংস্করণ চালাচ্ছেন।</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>আপডেট ত্রুটি</value>
@@ -942,7 +942,7 @@
     <value>এরপর যা আছে</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Nagi দেখান</value>
+    <value>Resonance দেখান</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>পূর্ববর্তী</value>
@@ -1044,22 +1044,22 @@
     <value>এরপর যা আছে</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Nagi-এর মাধ্যমে আপনার স্থানীয় সঙ্গীত সংগ্রহ পুনরায় আবিষ্কার করুন, এটি গতি, সরলতা এবং গোপনীয়তার উপর কেন্দ্রিত একটি সঙ্গীত প্লেয়ার। Nagi C# এবং WinUI 3 দিয়ে তৈরি করা হয়েছে একটি পরিষ্কার, নেটিভ ফ্লুয়েন্ট অভিজ্ঞতা প্রদান করার জন্য। এটি সুন্দর, কার্যকর এবং আপনার গোপনীয়তাকে সম্মান করে।</value>
+    <value>Resonance-এর মাধ্যমে আপনার স্থানীয় সঙ্গীত সংগ্রহ পুনরায় আবিষ্কার করুন, এটি গতি, সরলতা এবং গোপনীয়তার উপর কেন্দ্রিত একটি সঙ্গীত প্লেয়ার। Resonance C# এবং WinUI 3 দিয়ে তৈরি করা হয়েছে একটি পরিষ্কার, নেটিভ ফ্লুয়েন্ট অভিজ্ঞতা প্রদান করার জন্য। এটি সুন্দর, কার্যকর এবং আপনার গোপনীয়তাকে সম্মান করে।</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Nagi মিউজিক প্লেয়ার</value>
+    <value>Resonance মিউজিক প্লেয়ার</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Nagi মিউজিক প্লেয়ার দিয়ে খুলুন</value>
+    <value>Resonance মিউজিক প্লেয়ার দিয়ে খুলুন</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Nagi স্টার্টআপ</value>
+    <value>Resonance স্টার্টআপ</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>পূর্ববর্তী</value>
@@ -1404,10 +1404,10 @@
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
-    <value>Nagi-তে স্বাগতম</value>
+    <value>Resonance-তে স্বাগতম</value>
   </data>
   <data name="OnboardingPage_AddFolderButton_ToolTip" xml:space="preserve">
     <value>শুরু করতে একটি সঙ্গীত ফোল্ডার যোগ করুন</value>
@@ -1626,7 +1626,7 @@
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>প্লে / পজে ফেড</value>
@@ -1671,7 +1671,7 @@
     <value>স্টার্টআপে স্বয়ংক্রিয় লঞ্চ</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>আপনি যখন আপনার কম্পিউটারে লগ ইন করবেন তখন স্বয়ংক্রিয়ভাবে Nagi চালু করুন।</value>
+    <value>আপনি যখন আপনার কম্পিউটারে লগ ইন করবেন তখন স্বয়ংক্রিয়ভাবে Resonance চালু করুন।</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>ছোট করে শুরু করুন</value>
@@ -1800,7 +1800,7 @@
     <value>প্লেলিস্ট রপ্তানি/আমদানি করুন</value>
   </data>
   <data name="SettingsPage_PlaylistsIO_Description" xml:space="preserve">
-    <value>অন্যান্য প্লেয়ারে ব্যবহারের জন্য প্লেলিস্ট M3U ফাইলগুলিতে রপ্তানি করুন, অথবা Nagi-তে M3U প্লেলিস্ট আমদানি করুন।</value>
+    <value>অন্যান্য প্লেয়ারে ব্যবহারের জন্য প্লেলিস্ট M3U ফাইলগুলিতে রপ্তানি করুন, অথবা Resonance-তে M3U প্লেলিস্ট আমদানি করুন।</value>
   </data>
   <data name="SettingsPage_ExportPlaylists_Content" xml:space="preserve">
     <value>সব রপ্তানি করুন...</value>
@@ -1848,7 +1848,7 @@
     <value>স্ক্রোবলিং সক্ষম করুন</value>
   </data>
   <data name="SettingsPage_LastFm_Scrobbling_Description" xml:space="preserve">
-    <value>Nagi-তে আপনি যে ট্র্যাকগুলি শোনেন তা স্বয়ংক্রিয়ভাবে আপনার Last.fm প্রোফাইলে যোগ করুন।</value>
+    <value>Resonance-তে আপনি যে ট্র্যাকগুলি শোনেন তা স্বয়ংক্রিয়ভাবে আপনার Last.fm প্রোফাইলে যোগ করুন।</value>
   </data>
   <data name="SettingsPage_LastFm_NowPlaying_Header" xml:space="preserve">
     <value>'এখন বাজছে' আপডেট করুন</value>
@@ -1965,10 +1965,10 @@
     <value>সম্পর্কে</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>Nagi সম্পর্কে</value>
+    <value>Resonance সম্পর্কে</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
-    <value>Nagi-এর মাধ্যমে আপনার স্থানীয় সঙ্গীত সংগ্রহ পুনরায় আবিষ্কার করুন, এটি গতি, সরলতা এবং গোপনীয়তার উপর কেন্দ্রিত একটি সঙ্গীত প্লেয়ার।</value>
+    <value>Resonance-এর মাধ্যমে আপনার স্থানীয় সঙ্গীত সংগ্রহ পুনরায় আবিষ্কার করুন, এটি গতি, সরলতা এবং গোপনীয়তার উপর কেন্দ্রিত একটি সঙ্গীত প্লেয়ার।</value>
   </data>
   <data name="SettingsPage_About_VersionPrefix" xml:space="preserve">
     <value>সংস্করণ </value>
@@ -2034,7 +2034,7 @@
     <value>অবৈধ ব্যাকআপ ফাইল</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>নির্বাচিত ফাইলটি একটি বৈধ Nagi ব্যাকআপ নয়।</value>
+    <value>নির্বাচিত ফাইলটি একটি বৈধ Resonance ব্যাকআপ নয়।</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>ব্যাকআপ পুনরুদ্ধার করবেন?</value>

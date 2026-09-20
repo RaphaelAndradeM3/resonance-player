@@ -1,4 +1,4 @@
-﻿namespace Resonance.Core.Models;
+namespace Resonance.Core.Models;
 
 /// <summary>
 ///     Represents the persisted state of the audio equalizer.
@@ -6,7 +6,7 @@
 public class EqualizerSettings
 {
     /// <summary>
-    ///     Nagi's default LibVLC equalizer preamp in decibels. LibVLC's nominal flat/unity
+    ///     Resonance's default LibVLC equalizer preamp in decibels. LibVLC's nominal flat/unity
     ///     preset is approximately 12 dB; using 10 dB intentionally leaves about 2 dB of
     ///     headroom for modest equalizer boosts.
     /// </summary>

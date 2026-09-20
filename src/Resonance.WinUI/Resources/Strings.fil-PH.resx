@@ -227,15 +227,15 @@
     <value>Kritikal na Error</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>Nakaranas ang Nagi ng kritikal na error at kailangang isara. Humihingi kami ng paumanhin para sa abala.</value>
+    <value>Nakaranas ang Resonance ng kritikal na error at kailangang isara. Humihingi kami ng paumanhin para sa abala.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>Tumatakbo bilang Administrator</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>Kasalukuyang tumatakbo ang Nagi bilang Administrator. Maaari nitong pigilan ang ilang feature (tulad ng pagdaragdag ng mga folder ng musika) na gumana nang tama.
+    <value>Kasalukuyang tumatakbo ang Resonance bilang Administrator. Maaari nitong pigilan ang ilang feature (tulad ng pagdaragdag ng mga folder ng musika) na gumana nang tama.
 
-Para sa pinakamahusay na karanasan, mangyaring i-restart ang Nagi nang walang mga pribilehiyong administrator.</value>
+Para sa pinakamahusay na karanasan, mangyaring i-restart ang Resonance nang walang mga pribilehiyong administrator.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>I-restart nang Normal</value>
@@ -244,10 +244,10 @@ Para sa pinakamahusay na karanasan, mangyaring i-restart ang Nagi nang walang mg
     <value>Ipagpatuloy Pa Rin</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>Hindi Nakita ang Album</value>
@@ -505,7 +505,7 @@ Para sa pinakamahusay na karanasan, mangyaring i-restart ang Nagi nang walang mg
     <value>Idiskonekta ang Last.fm</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>Sigurado ka bang gusto mong idiskonekta ang iyong Last.fm account? Mananatili ang iyong scrobbling history sa Last.fm, ngunit hindi na makakapag-scrobble ang Nagi.</value>
+    <value>Sigurado ka bang gusto mong idiskonekta ang iyong Last.fm account? Mananatili ang iyong scrobbling history sa Last.fm, ngunit hindi na makakapag-scrobble ang Resonance.</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>Idiskonekta</value>
@@ -645,7 +645,7 @@ Para sa pinakamahusay na karanasan, mangyaring i-restart ang Nagi nang walang mg
     <value>Napapanahon</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>Tumatakbo ka sa pinakabagong bersyon ng Nagi.</value>
+    <value>Tumatakbo ka sa pinakabagong bersyon ng Resonance.</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>Error sa Update</value>
@@ -738,7 +738,7 @@ Para sa pinakamahusay na karanasan, mangyaring i-restart ang Nagi nang walang mg
     <value>Mga biography at larawan ng artista (fallback)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>N/A</value>
@@ -948,7 +948,7 @@ Error: {1}</value>
     <value>Susunod</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Ipakita ang Nagi</value>
+    <value>Ipakita ang Resonance</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>Nakaraan</value>
@@ -1050,22 +1050,22 @@ Error: {1}</value>
     <value>Susunod</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Tuklasin muli ang iyong lokal na koleksyon ng musika gamit ang Nagi, isang music player na nakatuon sa bilis, pagiging simple, at privacy. Ang Nagi ay binuo gamit ang C# at WinUI 3 upang mag-alok ng malinis, katutubong karanasan sa Fluent. Ito ay maganda, mahusay, at iginagalang ang iyong privacy.</value>
+    <value>Tuklasin muli ang iyong lokal na koleksyon ng musika gamit ang Resonance, isang music player na nakatuon sa bilis, pagiging simple, at privacy. Ang Resonance ay binuo gamit ang C# at WinUI 3 upang mag-alok ng malinis, katutubong karanasan sa Fluent. Ito ay maganda, mahusay, at iginagalang ang iyong privacy.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Nagi Music Player</value>
+    <value>Resonance Music Player</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Buksan gamit ang Nagi Music Player</value>
+    <value>Buksan gamit ang Resonance Music Player</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Pagsisimula ng Nagi</value>
+    <value>Pagsisimula ng Resonance</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>Nakaraan</value>
@@ -1410,10 +1410,10 @@ Error: {1}</value>
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
-    <value>Maligayang Pagdating sa Nagi</value>
+    <value>Maligayang Pagdating sa Resonance</value>
   </data>
   <data name="OnboardingPage_AddFolderButton_ToolTip" xml:space="preserve">
     <value>Magdagdag ng music folder upang makapagsimula</value>
@@ -1632,7 +1632,7 @@ Error: {1}</value>
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>Fade sa Play / Pause</value>
@@ -1677,7 +1677,7 @@ Error: {1}</value>
     <value>Auto-launch sa startup</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>Awtomatikong simulan ang Nagi kapag nag-log in ka sa iyong computer.</value>
+    <value>Awtomatikong simulan ang Resonance kapag nag-log in ka sa iyong computer.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>Simulan nang minimized</value>
@@ -1806,7 +1806,7 @@ Error: {1}</value>
     <value>I-export/I-import ang Mga Playlist</value>
   </data>
   <data name="SettingsPage_PlaylistsIO_Description" xml:space="preserve">
-    <value>I-export ang mga playlist sa mga M3U file para magamit sa ibang mga player, o i-import ang mga M3U playlist sa Nagi.</value>
+    <value>I-export ang mga playlist sa mga M3U file para magamit sa ibang mga player, o i-import ang mga M3U playlist sa Resonance.</value>
   </data>
   <data name="SettingsPage_ExportPlaylists_Content" xml:space="preserve">
     <value>I-export Lahat...</value>
@@ -1854,7 +1854,7 @@ Error: {1}</value>
     <value>Paganahin ang scrobbling</value>
   </data>
   <data name="SettingsPage_LastFm_Scrobbling_Description" xml:space="preserve">
-    <value>Awtomatikong idagdag ang mga track na pinapakinggan mo sa Nagi sa iyong Last.fm profile.</value>
+    <value>Awtomatikong idagdag ang mga track na pinapakinggan mo sa Resonance sa iyong Last.fm profile.</value>
   </data>
   <data name="SettingsPage_LastFm_NowPlaying_Header" xml:space="preserve">
     <value>I-update ang 'Kasalukuyang Pinapatugtog'</value>
@@ -1971,10 +1971,10 @@ Error: {1}</value>
     <value>Tungkol sa</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>Tungkol sa Nagi</value>
+    <value>Tungkol sa Resonance</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
-    <value>Tuklasin muli ang iyong lokal na koleksyon ng musika gamit ang Nagi, isang music player na nakatuon sa bilis, pagiging simple, at privacy.</value>
+    <value>Tuklasin muli ang iyong lokal na koleksyon ng musika gamit ang Resonance, isang music player na nakatuon sa bilis, pagiging simple, at privacy.</value>
   </data>
   <data name="SettingsPage_About_VersionPrefix" xml:space="preserve">
     <value>Bersyon </value>
@@ -2040,7 +2040,7 @@ Error: {1}</value>
     <value>Di-wastong File ng Backup</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>Ang napiling file ay hindi wastong Nagi backup.</value>
+    <value>Ang napiling file ay hindi wastong Resonance backup.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>Ibalik ang Backup?</value>
@@ -2175,13 +2175,13 @@ Error: {1}</value>
     <value>I-reset</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>Ang iyong musika, magandang organisado</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Ginising si Nagi…</value>
+    <value>Ginising si Resonance…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>Tingnan lahat</value>

@@ -122,9 +122,9 @@ Não manter listas duplicadas de extensões se a codebase já possui fonte de ca
 
 **Purpose**: Verificação de consistência, testes de regressão de ponta a ponta e gate constitucional.
 
-- [ ] T016 [P] Atualizar links cruzados entre `spec.md`, `plan.md`, `research.md`, `data-model.md`, `quickstart.md` e contratos em `specs/002-multi-format-audio-library/`
-- [ ] T017 Executar Whole-Solution Validation completa via `dotnet build Resonance.sln -p:Platform=x64` e `dotnet test tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj` comprovando 0 erros e 100% de testes aprovados
-- [ ] T018 Executar auditoria de qualidade do checklist `specs/002-multi-format-audio-library/checklists/quality-gate.md` garantindo conformidade constitucional
+- [x] T016 [P] Atualizar links cruzados entre `spec.md`, `plan.md`, `research.md`, `data-model.md`, `quickstart.md` e contratos em `specs/002-multi-format-audio-library/`
+- [x] T017 Executar Whole-Solution Validation completa via `dotnet build Resonance.sln -p:Platform=x64` e `dotnet test tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj` comprovando 0 erros e 100% de testes aprovados
+- [x] T018 Executar auditoria de qualidade do checklist `specs/002-multi-format-audio-library/checklists/quality-gate.md` garantindo conformidade constitucional
 
 ---
 

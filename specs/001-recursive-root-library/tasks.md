@@ -19,8 +19,8 @@
 
 **⚠️ CRITICAL**: Nenhuma User Story pode avançar sem a validação do contrato de sobreposição de raízes.
 
-- [ ] T003 [P] Implementar validador de sobreposição de diretórios `RootOverlapValidator` e enum `RootOverlapAction` em `src/Resonance.Core/Helpers/RootOverlapValidator.cs` conforme contrato `CTR-ROOT-002`
-- [ ] T004 [P] Implementar testes unitários para `RootOverlapValidator` cobrindo subpastas, pastas ancestrais e caminhos idênticos em `tests/Resonance.Core.Tests/RootOverlapValidatorTests.cs`
+- [x] T003 [P] Implementar validador de sobreposição de diretórios `RootOverlapValidator` e enum `RootOverlapAction` em `src/Resonance.Core/Helpers/RootOverlapValidator.cs` conforme contrato `CTR-ROOT-002`
+- [x] T004 [P] Implementar testes unitários para `RootOverlapValidator` cobrindo subpastas, pastas ancestrais e caminhos idênticos em `tests/Resonance.Core.Tests/RootOverlapValidatorTests.cs`
 
 **Checkpoint**: Fundação de validação de caminhos pronta e testada.
 

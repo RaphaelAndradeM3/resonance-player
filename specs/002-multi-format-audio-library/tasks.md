@@ -47,11 +47,11 @@ Não manter listas duplicadas de extensões se a codebase já possui fonte de ca
 **Independent Test**: Execução dos testes automatizados de `FormatCapabilityTests` validando a matriz de formatos contra `FileExtensions.MusicFileExtensions`.
 
 ### Tests for User Story 1
-- [ ] T006 [P] [US1] Escrever testes em `tests/Resonance.Core.Tests/FormatCapabilityTests.cs` validando a matriz de capacidade para todos os formatos mandatados da baseline
+- [x] T006 [P] [US1] Escrever testes em `tests/Resonance.Core.Tests/FormatCapabilityTests.cs` validando a matriz de capacidade para todos os formatos mandatados da baseline
 
 ### Implementation for User Story 1
-- [ ] T007 [US1] Atualizar `Package.appxmanifest` em `src/Resonance.WinUI/Package.appxmanifest` para registrar a extensão de arquivo `.dff` em conformidade com `FileExtensions`
-- [ ] T008 [US1] Executar e validar aprovação de testes via `dotnet test tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj --filter "FullyQualifiedName~FormatCapability|FullyQualifiedName~FileExtensions" --no-build`
+- [x] T007 [US1] Atualizar `Package.appxmanifest` em `src/Resonance.WinUI/Package.appxmanifest` para registrar a extensão de arquivo `.dff` em conformidade com `FileExtensions`
+- [x] T008 [US1] Executar e validar aprovação de testes via `dotnet test tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj --filter "FullyQualifiedName~FormatCapability|FullyQualifiedName~FileExtensions" --no-build`
 
 **Checkpoint**: Fonte única e matriz de formatos plenamente validadas de forma independente.
 

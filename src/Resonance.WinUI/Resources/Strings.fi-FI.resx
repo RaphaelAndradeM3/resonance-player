@@ -227,13 +227,13 @@
     <value>Kriittinen virhe</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>Nagi kohtasi kriittisen virheen ja sen on suljettava. Pahoittelemme häiriötä.</value>
+    <value>Resonance kohtasi kriittisen virheen ja sen on suljettava. Pahoittelemme häiriötä.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>Suoritetaan järjestelmänvalvojana</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>Nagiä suoritetaan tällä hetkellä järjestelmänvalvojana. Tämä saattaa estää joitakin ominaisuuksia (kuten musiikkikansioiden lisäämisen) toimimasta oikein.\n\nParhaan käyttökokemuksen saamiseksi käynnistä Nagi uudelleen ilman järjestelmänvalvojan oikeuksia.</value>
+    <value>Nagiä suoritetaan tällä hetkellä järjestelmänvalvojana. Tämä saattaa estää joitakin ominaisuuksia (kuten musiikkikansioiden lisäämisen) toimimasta oikein.\n\nParhaan käyttökokemuksen saamiseksi käynnistä Resonance uudelleen ilman järjestelmänvalvojan oikeuksia.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>Käynnistä normaalisti uudelleen</value>
@@ -242,10 +242,10 @@
     <value>Jatka silti</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>Albumia ei löydy</value>
@@ -503,7 +503,7 @@
     <value>Katkaise yhteys Last.fm:stä</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>Haluatko varmasti katkaista yhteyden Last.fm-tiliisi? Kuunteluhistoriasi säilyy Last.fm:ssä, mutta Nagi ei voi enää skroblata.</value>
+    <value>Haluatko varmasti katkaista yhteyden Last.fm-tiliisi? Kuunteluhistoriasi säilyy Last.fm:ssä, mutta Resonance ei voi enää skroblata.</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>Katkaise yhteys</value>
@@ -638,7 +638,7 @@
     <value>Ajantasalla</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>Käytät Nagi-sovelluksen uusinta versiota.</value>
+    <value>Käytät Resonance-sovelluksen uusinta versiota.</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>Päivitysvirhe</value>
@@ -731,7 +731,7 @@
     <value>Artistien elämäkerrat ja kuvat (vararatkaisu)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>Ei saatavilla</value>
@@ -935,7 +935,7 @@
     <value>Seuraavat</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Näytä Nagi</value>
+    <value>Näytä Resonance</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>Edellinen</value>
@@ -1037,19 +1037,19 @@
     <value>Seuraavat</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Löydä paikallinen musiikkikokoelmasi uudelleen Nagin avulla. Nagi on musiikkisoitin, joka keskittyy nopeuteen, yksinkertaisuuteen ja yksityisyyteen. Nagi on rakennettu C#:lla ja WinUI 3:lla tarjotakseen puhtaan, natiivin Fluent-kokemuksen. Se on kaunis, tehokas ja kunnioittaa yksityisyyttäsi.</value>
+    <value>Löydä paikallinen musiikkikokoelmasi uudelleen Nagin avulla. Resonance on musiikkisoitin, joka keskittyy nopeuteen, yksinkertaisuuteen ja yksityisyyteen. Resonance on rakennettu C#:lla ja WinUI 3:lla tarjotakseen puhtaan, natiivin Fluent-kokemuksen. Se on kaunis, tehokas ja kunnioittaa yksityisyyttäsi.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Nagi-musiikkisoitin</value>
+    <value>Resonance-musiikkisoitin</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Avaa Nagi-musiikkisoittimella</value>
+    <value>Avaa Resonance-musiikkisoittimella</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
     <value>Nagin käynnistys</value>
@@ -1397,7 +1397,7 @@
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
     <value>Tervetuloa Nagiin</value>
@@ -1619,7 +1619,7 @@
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>Himmennys toistettaessa / keskeytettäessä</value>
@@ -1664,7 +1664,7 @@
     <value>Käynnistä automaattisesti käynnistyksen yhteydessä</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>Käynnistä Nagi automaattisesti, kun kirjaudut tietokoneellesi.</value>
+    <value>Käynnistä Resonance automaattisesti, kun kirjaudut tietokoneellesi.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>Käynnistä pienennettynä</value>
@@ -1961,7 +1961,7 @@
     <value>Tietoja Nagista</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
-    <value>Löydä paikallinen musiikkikokoelmasi uudelleen Nagin avulla. Nagi on musiikkisoitin, joka keskittyy nopeuteen, yksinkertaisuuteen ja yksityisyyteen.</value>
+    <value>Löydä paikallinen musiikkikokoelmasi uudelleen Nagin avulla. Resonance on musiikkisoitin, joka keskittyy nopeuteen, yksinkertaisuuteen ja yksityisyyteen.</value>
   </data>
   <data name="SettingsPage_About_VersionPrefix" xml:space="preserve">
     <value>Versio </value>
@@ -2027,7 +2027,7 @@
     <value>Virheellinen varmuuskopiotiedosto</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>Valittu tiedosto ei ole kelvollinen Nagi-varmuuskopio.</value>
+    <value>Valittu tiedosto ei ole kelvollinen Resonance-varmuuskopio.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>Palautetaanko varmuuskopio?</value>
@@ -2162,7 +2162,7 @@
     <value>Nollaa</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>Musiikkisi, kauniisti järjestettynä</value>

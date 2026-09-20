@@ -1,6 +1,6 @@
 using BenchmarkDotNet.Running;
 
-namespace Nagi.Benchmarks;
+namespace Resonance.Benchmarks;
 
 public class Program
 {

@@ -248,7 +248,7 @@
     <value>Sırala: </value>
   </data>
   <data name="FFmpeg_SetupInstructions" xml:space="preserve">
-    <value>FFmpeg Yüksek Hassasiyetli Ses Normalizasyonu (ReplayGain analizi) için gereklidir ancak sisteminizde bulunamadı.\n\nKurulum için şu adımları izleyin:\n\n1. **İndir**: https://www.gyan.dev/ffmpeg/builds/ adresini ziyaret edin ve 'ffmpeg-git-full.7z' (veya benzeri) temel sürümü indirin.\n2. **Rehber**: Ayrıntılı talimatlar için bu rehberi takip edebilirsiniz: https://phoenixnap.com/kb/ffmpeg-windows\n3. **Çıkar**: Mimari klasörünü açın ve 'ffmpeg.exe' içeren 'bin' dizinini bulun.\n4. **Kur**: 'ffmpeg.exe' dosyasını kalıcı bir klasöre (örn. 'C:\\ffmpeg\\') kopyalayın ve **bu klasörü Sistem PATH** ortam değişkeninize ekleyin.\n5. **Yeniden Başlat**: Değişikliklerin etkili olması için kurulumdan sonra Nagi'yi yeniden başlatın.</value>
+    <value>FFmpeg Yüksek Hassasiyetli Ses Normalizasyonu (ReplayGain analizi) için gereklidir ancak sisteminizde bulunamadı.\n\nKurulum için şu adımları izleyin:\n\n1. **İndir**: https://www.gyan.dev/ffmpeg/builds/ adresini ziyaret edin ve 'ffmpeg-git-full.7z' (veya benzeri) temel sürümü indirin.\n2. **Rehber**: Ayrıntılı talimatlar için bu rehberi takip edebilirsiniz: https://phoenixnap.com/kb/ffmpeg-windows\n3. **Çıkar**: Mimari klasörünü açın ve 'ffmpeg.exe' içeren 'bin' dizinini bulun.\n4. **Kur**: 'ffmpeg.exe' dosyasını kalıcı bir klasöre (örn. 'C:\\ffmpeg\\') kopyalayın ve **bu klasörü Sistem PATH** ortam değişkeninize ekleyin.\n5. **Yeniden Başlat**: Değişikliklerin etkili olması için kurulumdan sonra Resonance'yi yeniden başlatın.</value>
   </data>
   <data name="Error_M3uImportNoSongsMatched" xml:space="preserve">
     <value>Çalma listesindeki şarkılardan hiçbiri kütüphanenizde bulunamadı.</value>

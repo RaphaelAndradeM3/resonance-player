@@ -242,10 +242,10 @@
     <value>とにかく続行</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>アルバムが見つかりません</value>
@@ -731,7 +731,7 @@
     <value>アーティストのバイオグラフィーと画像 (フォールバック)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>N/A</value>
@@ -1037,22 +1037,22 @@
     <value>次に再生</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
     <value>Nagiでローカルの音楽コレクションを再発見しましょう。Nagiは速度、シンプルさ、プライバシーに焦点を当てた音楽プレイヤーです。C#とWinUI 3で構築されており、クリーンでネイティブなFluent体験を提供します。美しく、効率的で、プライバシーを尊重します。</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Nagi ミュージックプレイヤー</value>
+    <value>Resonance ミュージックプレイヤー</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Nagi ミュージックプレイヤーで開く</value>
+    <value>Resonance ミュージックプレイヤーで開く</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Nagi 起動</value>
+    <value>Resonance 起動</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>前へ</value>
@@ -1397,7 +1397,7 @@
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
     <value>Nagiへようこそ</value>
@@ -1619,7 +1619,7 @@
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>再生/一時停止時のフェード</value>
@@ -2162,13 +2162,13 @@
     <value>リセット</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>あなたの音楽を美しく整理します</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Nagi を起動しています…</value>
+    <value>Resonance を起動しています…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>すべて表示</value>

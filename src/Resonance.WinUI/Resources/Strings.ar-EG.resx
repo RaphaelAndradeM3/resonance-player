@@ -227,13 +227,13 @@
     <value>خطأ فادح</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>واجه Nagi خطأً فادحًا ويجب إغلاقه. نعتذر عن الإزعاج.</value>
+    <value>واجه Resonance خطأً فادحًا ويجب إغلاقه. نعتذر عن الإزعاج.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>التشغيل كمسؤول</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>Nagi يعمل حاليًا كمسؤول. قد يمنع هذا بعض الميزات (مثل إضافة مجلدات الموسيقى) من العمل بشكل صحيح. للحصول على أفضل تجربة، يرجى إعادة تشغيل Nagi بدون امتيازات المسؤول.</value>
+    <value>Resonance يعمل حاليًا كمسؤول. قد يمنع هذا بعض الميزات (مثل إضافة مجلدات الموسيقى) من العمل بشكل صحيح. للحصول على أفضل تجربة، يرجى إعادة تشغيل Resonance بدون امتيازات المسؤول.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>إعادة التشغيل بشكل طبيعي</value>
@@ -242,10 +242,10 @@
     <value>متابعة على أي حال</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>الألبوم غير موجود</value>
@@ -503,7 +503,7 @@
     <value>قطع اتصال Last.fm</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>هل أنت متأكد أنك تريد قطع اتصال حسابك على Last.fm؟ ستظل سجلات التشغيل الخاصة بك محفوظة على Last.fm، لكن Nagi لن يتمكن من تسجيل الأغاني بعد الآن.</value>
+    <value>هل أنت متأكد أنك تريد قطع اتصال حسابك على Last.fm؟ ستظل سجلات التشغيل الخاصة بك محفوظة على Last.fm، لكن Resonance لن يتمكن من تسجيل الأغاني بعد الآن.</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>قطع الاتصال</value>
@@ -643,7 +643,7 @@
     <value>محدث</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>أنت تستخدم أحدث إصدار من Nagi.</value>
+    <value>أنت تستخدم أحدث إصدار من Resonance.</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>خطأ في التحديث</value>
@@ -736,7 +736,7 @@
     <value>سير وصور الفنانين (بديل)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>غير متوفر</value>
@@ -946,7 +946,7 @@
     <value>التالي</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>إظهار Nagi</value>
+    <value>إظهار Resonance</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>السابق</value>
@@ -1048,22 +1048,22 @@
     <value>التالي</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>أعد اكتشاف مجموعتك الموسيقية المحلية مع Nagi، مشغل موسيقى يركز على السرعة والبساطة والخصوصية. تم تصميم Nagi باستخدام C# وWinUI 3 لتقديم تجربة Fluent نظيفة وأصلية. إنه جميل وفعال ويحترم خصوصيتك.</value>
+    <value>أعد اكتشاف مجموعتك الموسيقية المحلية مع Resonance، مشغل موسيقى يركز على السرعة والبساطة والخصوصية. تم تصميم Resonance باستخدام C# وWinUI 3 لتقديم تجربة Fluent نظيفة وأصلية. إنه جميل وفعال ويحترم خصوصيتك.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>مشغل موسيقى Nagi</value>
+    <value>مشغل موسيقى Resonance</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>فتح باستخدام مشغل موسيقى Nagi</value>
+    <value>فتح باستخدام مشغل موسيقى Resonance</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>بدء تشغيل Nagi</value>
+    <value>بدء تشغيل Resonance</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>السابق</value>
@@ -1408,10 +1408,10 @@
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
-    <value>مرحبًا بك في Nagi</value>
+    <value>مرحبًا بك في Resonance</value>
   </data>
   <data name="OnboardingPage_AddFolderButton_ToolTip" xml:space="preserve">
     <value>أضف مجلد موسيقى للبدء</value>
@@ -1630,7 +1630,7 @@
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>تلاشي الصوت عند التشغيل / الإيقاف المؤقت</value>
@@ -1675,7 +1675,7 @@
     <value>التشغيل التلقائي عند بدء التشغيل</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>ابدأ Nagi تلقائيًا عند تسجيل الدخول إلى جهاز الكمبيوتر الخاص بك.</value>
+    <value>ابدأ Resonance تلقائيًا عند تسجيل الدخول إلى جهاز الكمبيوتر الخاص بك.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>بدء مصغرة</value>
@@ -1804,7 +1804,7 @@
     <value>تصدير/استيراد قوائم التشغيل</value>
   </data>
   <data name="SettingsPage_PlaylistsIO_Description" xml:space="preserve">
-    <value>تصدير قوائم التشغيل إلى ملفات M3U لاستخدامها في مشغلات أخرى، أو استيراد قوائم تشغيل M3U إلى Nagi.</value>
+    <value>تصدير قوائم التشغيل إلى ملفات M3U لاستخدامها في مشغلات أخرى، أو استيراد قوائم تشغيل M3U إلى Resonance.</value>
   </data>
   <data name="SettingsPage_ExportPlaylists_Content" xml:space="preserve">
     <value>تصدير الكل...</value>
@@ -1852,7 +1852,7 @@
     <value>تفعيل التسجيل (scrobbling)</value>
   </data>
   <data name="SettingsPage_LastFm_Scrobbling_Description" xml:space="preserve">
-    <value>إضافة الأغاني التي تستمع إليها في Nagi تلقائيًا إلى ملفك الشخصي على Last.fm.</value>
+    <value>إضافة الأغاني التي تستمع إليها في Resonance تلقائيًا إلى ملفك الشخصي على Last.fm.</value>
   </data>
   <data name="SettingsPage_LastFm_NowPlaying_Header" xml:space="preserve">
     <value>تحديث "قيد التشغيل الآن"</value>
@@ -1969,10 +1969,10 @@
     <value>عَنَّا</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>عن Nagi</value>
+    <value>عن Resonance</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
-    <value>أعد اكتشاف مجموعتك الموسيقية المحلية مع Nagi، مشغل موسيقى يركز على السرعة والبساطة والخصوصية.</value>
+    <value>أعد اكتشاف مجموعتك الموسيقية المحلية مع Resonance، مشغل موسيقى يركز على السرعة والبساطة والخصوصية.</value>
   </data>
   <data name="SettingsPage_About_VersionPrefix" xml:space="preserve">
     <value>الإصدار </value>
@@ -2038,7 +2038,7 @@
     <value>ملف النسخة الاحتياطية غير صالح</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>الملف المحدد ليس نسخة احتياطية صالحة لتطبيق Nagi.</value>
+    <value>الملف المحدد ليس نسخة احتياطية صالحة لتطبيق Resonance.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>استعادة النسخة الاحتياطية؟</value>
@@ -2173,13 +2173,13 @@
     <value>إعادة تعيين</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>موسيقاك، منظمة بشكل جميل</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>جارٍ تشغيل Nagi…</value>
+    <value>جارٍ تشغيل Resonance…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>شوف الكل</value>

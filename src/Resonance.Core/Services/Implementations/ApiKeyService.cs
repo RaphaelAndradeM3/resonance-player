@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -95,13 +95,18 @@ public class ApiKeyService : IApiKeyService, IDisposable
     /// </summary>
     private async Task<string?> FetchKeyFromServerAsync(string keyName, CancellationToken cancellationToken)
     {
-        var serverUrl = _configuration["NagiApiServer:Url"];
-        var serverKey = _configuration["NagiApiServer:ApiKey"];
-        var subscriptionKey = _configuration["NagiApiServer:SubscriptionKey"];
+        var serverUrl = _configuration["ResonanceApiServer:Url"];
+        if (string.IsNullOrEmpty(serverUrl)) serverUrl = _configuration["NagiApiServer:Url"];
+
+        var serverKey = _configuration["ResonanceApiServer:ApiKey"];
+        if (string.IsNullOrEmpty(serverKey)) serverKey = _configuration["NagiApiServer:ApiKey"];
+
+        var subscriptionKey = _configuration["ResonanceApiServer:SubscriptionKey"];
+        if (string.IsNullOrEmpty(subscriptionKey)) subscriptionKey = _configuration["NagiApiServer:SubscriptionKey"];
 
         if (string.IsNullOrEmpty(serverUrl) || string.IsNullOrEmpty(serverKey))
         {
-            _logger.LogCritical("Nagi API Server URL or ApiKey is not configured. API key retrieval will fail.");
+            _logger.LogCritical("Resonance API Server URL or ApiKey is not configured. API key retrieval will fail.");
             return null;
         }
 
@@ -155,7 +160,7 @@ public class ApiKeyService : IApiKeyService, IDisposable
                 {
                     _globalAuthFailed = true;
                     _logger.LogCritical(
-                        "Authentication failed for Nagi API Server. All future requests disabled. Status: {StatusCode}. Response: {ErrorContent}",
+                        "Authentication failed for Resonance API Server. All future requests disabled. Status: {StatusCode}. Response: {ErrorContent}",
                         response.StatusCode, errorContent);
                     return null;
                 }

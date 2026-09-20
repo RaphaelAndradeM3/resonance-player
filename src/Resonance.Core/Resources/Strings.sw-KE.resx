@@ -248,7 +248,7 @@
     <value>Panga Kwa: </value>
   </data>
   <data name="FFmpeg_SetupInstructions" xml:space="preserve">
-    <value>FFmpeg inahitajika kwa Usawazishaji Sauti wa Usahihi wa Juu (uchambuzi wa ReplayGain) lakini haikupatikana kwenye mfumo wako.\n\nFuata hatua hizi kuiweka:\n\n1. **Pakua**: Tembelea https://www.gyan.dev/ffmpeg/builds/ na pakua 'ffmpeg-git-full.7z' (au sawa na hiyo) toleo muhimu.\n2. **Mwongozo**: Unaweza kufuata mwongozo huu kwa maelekezo ya kina: https://phoenixnap.com/kb/ffmpeg-windows\n3. **Toa**: Fungua folda ya usanifu na upate saraka ya 'bin' iliyo na `ffmpeg.exe`.\n4. **Sakinisha**: Nakili `ffmpeg.exe` kwenye folda ya kudumu (k.m., `C:\ffmpeg\`) na **ongeza folda hiyo kwenye vigezo vyako vya System PATH**.\n5. **Washa Upya**: Tafadhali washa upya Nagi baada ya kusakinisha ili mabadiliko yaanze kutumika.</value>
+    <value>FFmpeg inahitajika kwa Usawazishaji Sauti wa Usahihi wa Juu (uchambuzi wa ReplayGain) lakini haikupatikana kwenye mfumo wako.\n\nFuata hatua hizi kuiweka:\n\n1. **Pakua**: Tembelea https://www.gyan.dev/ffmpeg/builds/ na pakua 'ffmpeg-git-full.7z' (au sawa na hiyo) toleo muhimu.\n2. **Mwongozo**: Unaweza kufuata mwongozo huu kwa maelekezo ya kina: https://phoenixnap.com/kb/ffmpeg-windows\n3. **Toa**: Fungua folda ya usanifu na upate saraka ya 'bin' iliyo na `ffmpeg.exe`.\n4. **Sakinisha**: Nakili `ffmpeg.exe` kwenye folda ya kudumu (k.m., `C:\ffmpeg\`) na **ongeza folda hiyo kwenye vigezo vyako vya System PATH**.\n5. **Washa Upya**: Tafadhali washa upya Resonance baada ya kusakinisha ili mabadiliko yaanze kutumika.</value>
   </data>
   <data name="Error_M3uImportNoSongsMatched" xml:space="preserve">
     <value>Hakuna nyimbo kutoka kwenye orodha ya kucheza zilizopatikana kwenye maktaba yako.</value>

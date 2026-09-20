@@ -227,14 +227,14 @@
     <value>Hitilafu Muhimu</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>Nagi imekumbana na hitilafu muhimu na lazima ifungwe. Tunaomba radhi kwa usumbufu.</value>
+    <value>Resonance imekumbana na hitilafu muhimu na lazima ifungwe. Tunaomba radhi kwa usumbufu.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>Inaendeshwa kama Msimamizi</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>Nagi inaendeshwa kama Msimamizi. Hii inaweza kuzuia baadhi ya vipengele (kama vile kuongeza folda za muziki) kufanya kazi ipasavyo.n
-Kwa matumizi bora, tafadhali anzisha upya Nagi bila ruhusa za msimamizi.</value>
+    <value>Resonance inaendeshwa kama Msimamizi. Hii inaweza kuzuia baadhi ya vipengele (kama vile kuongeza folda za muziki) kufanya kazi ipasavyo.n
+Kwa matumizi bora, tafadhali anzisha upya Resonance bila ruhusa za msimamizi.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>Anzisha Upya Kawaida</value>
@@ -243,10 +243,10 @@ Kwa matumizi bora, tafadhali anzisha upya Nagi bila ruhusa za msimamizi.</value>
     <value>Endelea Hata Hivyo</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>Albamu Haikupatikana</value>
@@ -504,7 +504,7 @@ Kwa matumizi bora, tafadhali anzisha upya Nagi bila ruhusa za msimamizi.</value>
     <value>Tenganisha Last.fm</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>Una uhakika unataka kukata akaunti yako ya Last.fm? Historia yako ya "scrobbling" itahifadhiwa kwenye Last.fm, lakini Nagi haitaweza tena "scrobble".</value>
+    <value>Una uhakika unataka kukata akaunti yako ya Last.fm? Historia yako ya "scrobbling" itahifadhiwa kwenye Last.fm, lakini Resonance haitaweza tena "scrobble".</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>Tenganisha</value>
@@ -641,7 +641,7 @@ Faili {0} zimeshindwa kuingizwa.</value>
     <value>Imesasishwa</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>Unatumia toleo la hivi karibuni la Nagi.</value>
+    <value>Unatumia toleo la hivi karibuni la Resonance.</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>Hitilafu ya Sasisho</value>
@@ -734,7 +734,7 @@ Faili {0} zimeshindwa kuingizwa.</value>
     <value>Wasifu na picha za wasanii (mbadala)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>Haipatikani</value>
@@ -940,7 +940,7 @@ Je, unataka kuendelea?</value>
     <value>Inayofuata</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Onyesha Nagi</value>
+    <value>Onyesha Resonance</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>Iliyotangulia</value>
@@ -1042,22 +1042,22 @@ Je, unataka kuendelea?</value>
     <value>Inayofuata</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Gundua tena mkusanyiko wako wa muziki wa ndani ukitumia Nagi, kichezaji cha muziki kinacholenga kasi, urahisi, na faragha. Nagi imejengwa kwa C# na WinUI 3 ili kutoa uzoefu safi, asili wa Fluent. Ni nzuri, inafanya kazi vizuri, na inaheshimu faragha yako.</value>
+    <value>Gundua tena mkusanyiko wako wa muziki wa ndani ukitumia Resonance, kichezaji cha muziki kinacholenga kasi, urahisi, na faragha. Resonance imejengwa kwa C# na WinUI 3 ili kutoa uzoefu safi, asili wa Fluent. Ni nzuri, inafanya kazi vizuri, na inaheshimu faragha yako.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Kichezaji Muziki cha Nagi</value>
+    <value>Kichezaji Muziki cha Resonance</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Fungua na Kichezaji Muziki cha Nagi</value>
+    <value>Fungua na Kichezaji Muziki cha Resonance</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Mwanzo wa Nagi</value>
+    <value>Mwanzo wa Resonance</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>Iliyotangulia</value>
@@ -1402,10 +1402,10 @@ Je, unataka kuendelea?</value>
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
-    <value>Karibu Nagi</value>
+    <value>Karibu Resonance</value>
   </data>
   <data name="OnboardingPage_AddFolderButton_ToolTip" xml:space="preserve">
     <value>Ongeza folda ya muziki ili kuanza</value>
@@ -1624,7 +1624,7 @@ Je, unataka kuendelea?</value>
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>Fifisha wakati wa Cheza / Sitisha</value>
@@ -1669,7 +1669,7 @@ Je, unataka kuendelea?</value>
     <value>Zindua kiotomatiki wakati wa kuanza</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>Anzisha Nagi kiotomatiki unapoingia kwenye kompyuta yako.</value>
+    <value>Anzisha Resonance kiotomatiki unapoingia kwenye kompyuta yako.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>Anzisha imepunguzwa</value>
@@ -1798,7 +1798,7 @@ Je, unataka kuendelea?</value>
     <value>Hamisha/Leta Orodha za Nyimbo</value>
   </data>
   <data name="SettingsPage_PlaylistsIO_Description" xml:space="preserve">
-    <value>Hamisha orodha za nyimbo kwenye faili za M3U kwa matumizi katika vichezaji vingine, au leta orodha za nyimbo za M3U kwenye Nagi.</value>
+    <value>Hamisha orodha za nyimbo kwenye faili za M3U kwa matumizi katika vichezaji vingine, au leta orodha za nyimbo za M3U kwenye Resonance.</value>
   </data>
   <data name="SettingsPage_ExportPlaylists_Content" xml:space="preserve">
     <value>Hamisha Zote...</value>
@@ -1846,7 +1846,7 @@ Je, unataka kuendelea?</value>
     <value>Washa uwekaji kumbukumbu</value>
   </data>
   <data name="SettingsPage_LastFm_Scrobbling_Description" xml:space="preserve">
-    <value>Ongeza nyimbo unazosikiliza kwenye Nagi kiotomatiki kwenye wasifu wako wa Last.fm.</value>
+    <value>Ongeza nyimbo unazosikiliza kwenye Resonance kiotomatiki kwenye wasifu wako wa Last.fm.</value>
   </data>
   <data name="SettingsPage_LastFm_NowPlaying_Header" xml:space="preserve">
     <value>Sasisha 'Inacheza Sasa'</value>
@@ -1963,10 +1963,10 @@ Je, unataka kuendelea?</value>
     <value>Kuhusu</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>Kuhusu Nagi</value>
+    <value>Kuhusu Resonance</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
-    <value>Gundua tena mkusanyiko wako wa muziki wa ndani ukitumia Nagi, kichezaji cha muziki kinacholenga kasi, urahisi, na faragha.</value>
+    <value>Gundua tena mkusanyiko wako wa muziki wa ndani ukitumia Resonance, kichezaji cha muziki kinacholenga kasi, urahisi, na faragha.</value>
   </data>
   <data name="SettingsPage_About_VersionPrefix" xml:space="preserve">
     <value>Toleo </value>
@@ -2032,7 +2032,7 @@ Je, unataka kuendelea?</value>
     <value>Faili ya Nakala ya Hifadhi Batili</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>Faili iliyochaguliwa si nakala halali ya hifadhi ya Nagi.</value>
+    <value>Faili iliyochaguliwa si nakala halali ya hifadhi ya Resonance.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>Rejesha Nakala ya Hifadhi?</value>
@@ -2167,13 +2167,13 @@ Je, unataka kuendelea?</value>
     <value>Weka upya</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>Muziki wako, umepangwa vizuri</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Inaamsha Nagi…</value>
+    <value>Inaamsha Resonance…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>Angalia zote</value>

@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Text.Json;
 using System.Web;
 using Microsoft.Extensions.Logging;
@@ -17,7 +17,7 @@ public class LrcLibService : IOnlineLyricsService
 {
     private const string BaseUrl = "https://lrclib.net/api/get";
     private const string SearchUrl = "https://lrclib.net/api/search";
-    private const string UserAgent = "Nagi/1.0 (https://github.com/Anthonyy232/Nagi)";
+    private const string UserAgent = "Resonance/1.0 (https://github.com/RaphaelAndradeM3/resonance-player)";
 
     private readonly HttpClient _httpClient;
     private readonly IProviderPipelineProvider _pipelines;

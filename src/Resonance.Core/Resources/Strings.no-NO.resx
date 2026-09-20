@@ -256,7 +256,7 @@ Følg disse trinnene for å konfigurere det:
 2. **Veiledning**: Du kan følge denne veiledningen for detaljerte instruksjoner: https://phoenixnap.com/kb/ffmpeg-windows
 3. **Pakk ut**: Åpne arkitekturmappen og finn "bin"-katalogen som inneholder `ffmpeg.exe`.
 4. **Installer**: Kopier `ffmpeg.exe` til en permanent mappe (f.eks. `C:\ffmpeg\`) og **legg til den mappen i systemets PATH**-miljøvariabel.
-5. **Start på nytt**: Vennligst start Nagi på nytt etter installasjonen for at endringene skal tre i kraft.</value>
+5. **Start på nytt**: Vennligst start Resonance på nytt etter installasjonen for at endringene skal tre i kraft.</value>
   </data>
   <data name="Error_M3uImportNoSongsMatched" xml:space="preserve">
     <value>Ingen sanger fra spillelisten ble funnet i biblioteket ditt.</value>

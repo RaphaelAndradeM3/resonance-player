@@ -1410,7 +1410,7 @@
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
     <value>நாகிக்கு வரவேற்கிறோம்</value>
@@ -1632,7 +1632,7 @@
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>பிளே / இடைநிறுத்தத்தில் மங்கச் செய்</value>
@@ -2040,7 +2040,7 @@
     <value>தவறான காப்புப்பிரதி கோப்பு</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>தேர்ந்தெடுக்கப்பட்ட கோப்பு ஒரு செல்லுபடியாகும் Nagi காப்புப்பிரதி அல்ல.</value>
+    <value>தேர்ந்தெடுக்கப்பட்ட கோப்பு ஒரு செல்லுபடியாகும் Resonance காப்புப்பிரதி அல்ல.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>காப்புப்பிரதியை மீட்டெடுக்கவா?</value>

@@ -1,4 +1,4 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -157,7 +157,7 @@ internal sealed class PackToolOptions
 {
     public string SourceDirectory { get; private init; } = Path.Combine("tools", "romanization-packs", "src");
     public string OutputDirectory { get; private init; } = Path.Combine("tools", "romanization-packs", "dist");
-    public string BaseDownloadUrl { get; private init; } = "https://github.com/Anthonyy232/Nagi/releases/download/romanization-packs";
+    public string BaseDownloadUrl { get; private init; } = "https://github.com/RaphaelAndradeM3/resonance-player/releases/download/romanization-packs";
 
     public static PackToolOptions Parse(string[] args)
     {

@@ -248,7 +248,7 @@
     <value>ترتيب حسب: </value>
   </data>
   <data name="FFmpeg_SetupInstructions" xml:space="preserve">
-    <value>يتطلب FFmpeg لتطبيع مستوى الصوت عالي الدقة (تحليل ReplayGain) ولكنه لم يتم العثور عليه على نظامك.\n\nاتبع هذه الخطوات لإعداده:\n\n1. **تنزيل**: قم بزيارة https://www.gyan.dev/ffmpeg/builds/ وقم بتنزيل بنية 'ffmpeg-git-full.7z' (أو ما شابهها) الأساسية.\n2. **دليل**: يمكنك اتباع هذا الدليل للحصول على إرشادات مفصلة: https://phoenixnap.com/kb/ffmpeg-windows\n3. **استخراج**: افتح مجلد البنية وحدد موقع دليل 'bin' الذي يحتوي على `ffmpeg.exe`.\n4. **تثبيت**: انسخ `ffmpeg.exe` إلى مجلد دائم (على سبيل المثال، `C:\ffmpeg\`) و**أضف هذا المجلد إلى متغير بيئة System PATH الخاص بك**.\n5. **إعادة التشغيل**: يرجى إعادة تشغيل Nagi بعد التثبيت حتى تسري التغييرات.</value>
+    <value>يتطلب FFmpeg لتطبيع مستوى الصوت عالي الدقة (تحليل ReplayGain) ولكنه لم يتم العثور عليه على نظامك.\n\nاتبع هذه الخطوات لإعداده:\n\n1. **تنزيل**: قم بزيارة https://www.gyan.dev/ffmpeg/builds/ وقم بتنزيل بنية 'ffmpeg-git-full.7z' (أو ما شابهها) الأساسية.\n2. **دليل**: يمكنك اتباع هذا الدليل للحصول على إرشادات مفصلة: https://phoenixnap.com/kb/ffmpeg-windows\n3. **استخراج**: افتح مجلد البنية وحدد موقع دليل 'bin' الذي يحتوي على `ffmpeg.exe`.\n4. **تثبيت**: انسخ `ffmpeg.exe` إلى مجلد دائم (على سبيل المثال، `C:\ffmpeg\`) و**أضف هذا المجلد إلى متغير بيئة System PATH الخاص بك**.\n5. **إعادة التشغيل**: يرجى إعادة تشغيل Resonance بعد التثبيت حتى تسري التغييرات.</value>
   </data>
   <data name="Error_M3uImportNoSongsMatched" xml:space="preserve">
     <value>لم يتم العثور على أي أغاني من قائمة التشغيل في مكتبتك.</value>

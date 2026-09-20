@@ -227,13 +227,13 @@
     <value>Eroare critică</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>Nagi a întâmpinat o eroare critică și trebuie să se închidă. Ne cerem scuze pentru neplăcere.</value>
+    <value>Resonance a întâmpinat o eroare critică și trebuie să se închidă. Ne cerem scuze pentru neplăcere.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>Se execută ca administrator</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>Nagi se execută în prezent ca Administrator. Acest lucru poate împiedica funcționarea corectă a unor caracteristici (cum ar fi adăugarea de foldere de muzică).\n\nPentru cea mai bună experiență, vă rugăm să reporniți Nagi fără privilegii de administrator.</value>
+    <value>Resonance se execută în prezent ca Administrator. Acest lucru poate împiedica funcționarea corectă a unor caracteristici (cum ar fi adăugarea de foldere de muzică).\n\nPentru cea mai bună experiență, vă rugăm să reporniți Resonance fără privilegii de administrator.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>Reporniți normal</value>
@@ -242,10 +242,10 @@
     <value>Continuați oricum</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>Album negăsit</value>
@@ -503,7 +503,7 @@
     <value>Deconectați Last.fm</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>Sigur doriți să vă deconectați contul Last.fm? Istoricul dvs. de scrobbling va fi păstrat pe Last.fm, dar Nagi nu va mai putea scrobbla.</value>
+    <value>Sigur doriți să vă deconectați contul Last.fm? Istoricul dvs. de scrobbling va fi păstrat pe Last.fm, dar Resonance nu va mai putea scrobbla.</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>Deconectare</value>
@@ -638,7 +638,7 @@
     <value>La zi</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>Utilizați cea mai recentă versiune a Nagi.</value>
+    <value>Utilizați cea mai recentă versiune a Resonance.</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>Eroare de actualizare</value>
@@ -731,7 +731,7 @@
     <value>Biografii și imagini ale artiștilor (alternativă)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>N/A</value>
@@ -935,7 +935,7 @@
     <value>Urmează</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Afișează Nagi</value>
+    <value>Afișează Resonance</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>Anterior</value>
@@ -1037,22 +1037,22 @@
     <value>Urmează</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Redescoperă colecția ta de muzică locală cu Nagi, un player de muzică axat pe viteză, simplitate și confidențialitate. Nagi este construit cu C# și WinUI 3 pentru a oferi o experiență Fluent curată și nativă. Este frumos, eficient și respectă confidențialitatea ta.</value>
+    <value>Redescoperă colecția ta de muzică locală cu Resonance, un player de muzică axat pe viteză, simplitate și confidențialitate. Resonance este construit cu C# și WinUI 3 pentru a oferi o experiență Fluent curată și nativă. Este frumos, eficient și respectă confidențialitatea ta.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Nagi Player de Muzică</value>
+    <value>Resonance Player de Muzică</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Deschide cu Nagi Player de Muzică</value>
+    <value>Deschide cu Resonance Player de Muzică</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Pornire Nagi</value>
+    <value>Pornire Resonance</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>Anterior</value>
@@ -1397,10 +1397,10 @@
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
-    <value>Bun venit la Nagi</value>
+    <value>Bun venit la Resonance</value>
   </data>
   <data name="OnboardingPage_AddFolderButton_ToolTip" xml:space="preserve">
     <value>Adaugă un dosar de muzică pentru a începe</value>
@@ -1619,7 +1619,7 @@
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>Atenuare la Redare / Pauză</value>
@@ -1664,7 +1664,7 @@
     <value>Pornire automată la lansare</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>Pornește Nagi automat când te conectezi la computer.</value>
+    <value>Pornește Resonance automat când te conectezi la computer.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>Pornește minimizat</value>
@@ -1793,7 +1793,7 @@
     <value>Export/Import Playlisturi</value>
   </data>
   <data name="SettingsPage_PlaylistsIO_Description" xml:space="preserve">
-    <value>Exportează playlisturi în fișiere M3U pentru a le utiliza în alte playere, sau importă playlisturi M3U în Nagi.</value>
+    <value>Exportează playlisturi în fișiere M3U pentru a le utiliza în alte playere, sau importă playlisturi M3U în Resonance.</value>
   </data>
   <data name="SettingsPage_ExportPlaylists_Content" xml:space="preserve">
     <value>Exportează Tot...</value>
@@ -1841,7 +1841,7 @@
     <value>Activează scrobbling-ul</value>
   </data>
   <data name="SettingsPage_LastFm_Scrobbling_Description" xml:space="preserve">
-    <value>Adaugă automat piesele pe care le asculți pe Nagi la profilul tău Last.fm.</value>
+    <value>Adaugă automat piesele pe care le asculți pe Resonance la profilul tău Last.fm.</value>
   </data>
   <data name="SettingsPage_LastFm_NowPlaying_Header" xml:space="preserve">
     <value>Actualizează 'Se redă acum'</value>
@@ -1958,10 +1958,10 @@
     <value>Despre</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>Despre Nagi</value>
+    <value>Despre Resonance</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
-    <value>Redescoperă colecția ta de muzică locală cu Nagi, un player de muzică axat pe viteză, simplitate și confidențialitate.</value>
+    <value>Redescoperă colecția ta de muzică locală cu Resonance, un player de muzică axat pe viteză, simplitate și confidențialitate.</value>
   </data>
   <data name="SettingsPage_About_VersionPrefix" xml:space="preserve">
     <value>Versiune </value>
@@ -2027,7 +2027,7 @@
     <value>Fișier de copie de rezervă invalid</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>Fișierul selectat nu este o copie de rezervă Nagi validă.</value>
+    <value>Fișierul selectat nu este o copie de rezervă Resonance validă.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>Restaurare copie de rezervă?</value>
@@ -2162,13 +2162,13 @@
     <value>Resetează</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>Muzica ta, frumos organizată</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Pornire Nagi…</value>
+    <value>Pornire Resonance…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>Vezi tot</value>

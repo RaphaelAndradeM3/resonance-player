@@ -1,4 +1,4 @@
-﻿<!-- Nagi/Pages/InsightsPage.xaml -->
+<!-- Resonance/Pages/InsightsPage.xaml -->
 <Page
     x:Class="Resonance.WinUI.Pages.InsightsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"

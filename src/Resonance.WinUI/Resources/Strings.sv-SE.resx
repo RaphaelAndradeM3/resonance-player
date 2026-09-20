@@ -227,13 +227,13 @@
     <value>Kritiskt fel</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>Nagi har stött på ett kritiskt fel och måste stängas. Vi ber om ursäkt för besväret.</value>
+    <value>Resonance har stött på ett kritiskt fel och måste stängas. Vi ber om ursäkt för besväret.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>Kör som administratör</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>Nagi körs för närvarande som administratör. Detta kan förhindra att vissa funktioner (som att lägga till musikmappar) fungerar korrekt. För bästa upplevelse, vänligen starta om Nagi utan administratörsbehörighet.</value>
+    <value>Resonance körs för närvarande som administratör. Detta kan förhindra att vissa funktioner (som att lägga till musikmappar) fungerar korrekt. För bästa upplevelse, vänligen starta om Resonance utan administratörsbehörighet.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>Starta om normalt</value>
@@ -242,10 +242,10 @@
     <value>Fortsätt ändå</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>Album hittades inte</value>
@@ -503,7 +503,7 @@
     <value>Koppla från Last.fm</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>Är du säker på att du vill koppla bort ditt Last.fm-konto? Din scrobbling-historik kommer att bevaras på Last.fm, men Nagi kommer inte längre att kunna scrobbla.</value>
+    <value>Är du säker på att du vill koppla bort ditt Last.fm-konto? Din scrobbling-historik kommer att bevaras på Last.fm, men Resonance kommer inte längre att kunna scrobbla.</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>Koppla från</value>
@@ -638,7 +638,7 @@
     <value>Uppdaterad</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>Du kör den senaste versionen av Nagi.</value>
+    <value>Du kör den senaste versionen av Resonance.</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>Uppdateringsfel</value>
@@ -731,7 +731,7 @@
     <value>Artistbiografier och bilder (återgång)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>N/A</value>
@@ -935,7 +935,7 @@
     <value>Nästa i kö</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Visa Nagi</value>
+    <value>Visa Resonance</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>Föregående</value>
@@ -1037,22 +1037,22 @@
     <value>Nästa i kö</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Återupptäck din lokala musiksamling med Nagi, en musikspelare fokuserad på snabbhet, enkelhet och integritet. Nagi är byggd med C# och WinUI 3 för att erbjuda en ren, nativ Fluent-upplevelse. Den är vacker, effektiv och respekterar din integritet.</value>
+    <value>Återupptäck din lokala musiksamling med Resonance, en musikspelare fokuserad på snabbhet, enkelhet och integritet. Resonance är byggd med C# och WinUI 3 för att erbjuda en ren, nativ Fluent-upplevelse. Den är vacker, effektiv och respekterar din integritet.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Nagi Musikspelare</value>
+    <value>Resonance Musikspelare</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Öppna med Nagi Musikspelare</value>
+    <value>Öppna med Resonance Musikspelare</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Nagi Start</value>
+    <value>Resonance Start</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>Föregående</value>
@@ -1397,10 +1397,10 @@
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
-    <value>Välkommen till Nagi</value>
+    <value>Välkommen till Resonance</value>
   </data>
   <data name="OnboardingPage_AddFolderButton_ToolTip" xml:space="preserve">
     <value>Lägg till en musikmapp för att komma igång</value>
@@ -1619,7 +1619,7 @@
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>Tona vid uppspelning / paus</value>
@@ -1664,7 +1664,7 @@
     <value>Autostarta vid uppstart</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>Starta Nagi automatiskt när du loggar in på din dator.</value>
+    <value>Starta Resonance automatiskt när du loggar in på din dator.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>Starta minimerad</value>
@@ -1793,7 +1793,7 @@
     <value>Exportera/importera spellistor</value>
   </data>
   <data name="SettingsPage_PlaylistsIO_Description" xml:space="preserve">
-    <value>Exportera spellistor till M3U-filer för användning i andra spelare, eller importera M3U-spellistor till Nagi.</value>
+    <value>Exportera spellistor till M3U-filer för användning i andra spelare, eller importera M3U-spellistor till Resonance.</value>
   </data>
   <data name="SettingsPage_ExportPlaylists_Content" xml:space="preserve">
     <value>Exportera alla...</value>
@@ -1841,7 +1841,7 @@
     <value>Aktivera "scrobbling"</value>
   </data>
   <data name="SettingsPage_LastFm_Scrobbling_Description" xml:space="preserve">
-    <value>Lägg automatiskt till de spår du lyssnar på i Nagi till din Last.fm-profil.</value>
+    <value>Lägg automatiskt till de spår du lyssnar på i Resonance till din Last.fm-profil.</value>
   </data>
   <data name="SettingsPage_LastFm_NowPlaying_Header" xml:space="preserve">
     <value>Uppdatera "Spelas nu"</value>
@@ -1958,10 +1958,10 @@
     <value>Om</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>Om Nagi</value>
+    <value>Om Resonance</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
-    <value>Återupptäck din lokala musiksamling med Nagi, en musikspelare fokuserad på snabbhet, enkelhet och integritet.</value>
+    <value>Återupptäck din lokala musiksamling med Resonance, en musikspelare fokuserad på snabbhet, enkelhet och integritet.</value>
   </data>
   <data name="SettingsPage_About_VersionPrefix" xml:space="preserve">
     <value>Version </value>
@@ -2027,7 +2027,7 @@
     <value>Ogiltig säkerhetskopiafil</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>Den valda filen är inte en giltig Nagi-säkerhetskopia.</value>
+    <value>Den valda filen är inte en giltig Resonance-säkerhetskopia.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>Återställa säkerhetskopia?</value>
@@ -2162,13 +2162,13 @@
     <value>Återställ</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>Din musik, vackert organiserad</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Väcker Nagi…</value>
+    <value>Väcker Resonance…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>Se alla</value>

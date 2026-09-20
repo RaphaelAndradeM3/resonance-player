@@ -227,13 +227,13 @@
     <value>Kesalahan Kritis</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>Nagi mengalami kesalahan kritis dan harus ditutup. Kami mohon maaf atas ketidaknyamanan ini.</value>
+    <value>Resonance mengalami kesalahan kritis dan harus ditutup. Kami mohon maaf atas ketidaknyamanan ini.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>Berjalan sebagai Administrator</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>Nagi saat ini berjalan sebagai Administrator. Hal ini dapat mencegah beberapa fitur (seperti menambahkan folder musik) berfungsi dengan benar.\n\nUntuk pengalaman terbaik, harap mulai ulang Nagi tanpa hak istimewa administrator.</value>
+    <value>Resonance saat ini berjalan sebagai Administrator. Hal ini dapat mencegah beberapa fitur (seperti menambahkan folder musik) berfungsi dengan benar.\n\nUntuk pengalaman terbaik, harap mulai ulang Resonance tanpa hak istimewa administrator.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>Mulai Ulang Normal</value>
@@ -242,10 +242,10 @@
     <value>Lanjutkan Saja</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>Album Tidak Ditemukan</value>
@@ -503,7 +503,7 @@
     <value>Putuskan Last.fm</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>Apakah Anda yakin ingin memutuskan akun Last.fm Anda? Riwayat scrobbling Anda akan tetap tersimpan di Last.fm, tetapi Nagi tidak akan lagi dapat melakukan scrobble.</value>
+    <value>Apakah Anda yakin ingin memutuskan akun Last.fm Anda? Riwayat scrobbling Anda akan tetap tersimpan di Last.fm, tetapi Resonance tidak akan lagi dapat melakukan scrobble.</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>Putuskan</value>
@@ -638,7 +638,7 @@
     <value>Terbaru</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>Anda menjalankan Nagi versi terbaru.</value>
+    <value>Anda menjalankan Resonance versi terbaru.</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>Kesalahan Pembaruan</value>
@@ -731,7 +731,7 @@
     <value>Biografi dan gambar artis (cadangan)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>T/A</value>
@@ -935,7 +935,7 @@
     <value>Berikutnya</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Tampilkan Nagi</value>
+    <value>Tampilkan Resonance</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>Sebelumnya</value>
@@ -1037,22 +1037,22 @@
     <value>Berikutnya</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Temukan kembali koleksi musik lokal Anda dengan Nagi, pemutar musik yang berfokus pada kecepatan, kesederhanaan, dan privasi. Nagi dibangun dengan C# dan WinUI 3 untuk menawarkan pengalaman Fluent yang bersih dan asli. Indah, efisien, dan menghormati privasi Anda.</value>
+    <value>Temukan kembali koleksi musik lokal Anda dengan Resonance, pemutar musik yang berfokus pada kecepatan, kesederhanaan, dan privasi. Resonance dibangun dengan C# dan WinUI 3 untuk menawarkan pengalaman Fluent yang bersih dan asli. Indah, efisien, dan menghormati privasi Anda.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Pemutar Musik Nagi</value>
+    <value>Pemutar Musik Resonance</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Buka dengan Pemutar Musik Nagi</value>
+    <value>Buka dengan Pemutar Musik Resonance</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Startup Nagi</value>
+    <value>Startup Resonance</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>Sebelumnya</value>
@@ -1397,10 +1397,10 @@
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
-    <value>Selamat Datang di Nagi</value>
+    <value>Selamat Datang di Resonance</value>
   </data>
   <data name="OnboardingPage_AddFolderButton_ToolTip" xml:space="preserve">
     <value>Tambah folder musik untuk memulai</value>
@@ -1619,7 +1619,7 @@
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>Fade saat Putar / Jeda</value>
@@ -1664,7 +1664,7 @@
     <value>Luncurkan otomatis saat startup</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>Mulai Nagi secara otomatis saat Anda masuk ke komputer Anda.</value>
+    <value>Mulai Resonance secara otomatis saat Anda masuk ke komputer Anda.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>Mulai diminimalkan</value>
@@ -1793,7 +1793,7 @@
     <value>Ekspor/Impor Daftar Putar</value>
   </data>
   <data name="SettingsPage_PlaylistsIO_Description" xml:space="preserve">
-    <value>Ekspor daftar putar ke file M3U untuk digunakan di pemutar lain, atau impor daftar putar M3U ke Nagi.</value>
+    <value>Ekspor daftar putar ke file M3U untuk digunakan di pemutar lain, atau impor daftar putar M3U ke Resonance.</value>
   </data>
   <data name="SettingsPage_ExportPlaylists_Content" xml:space="preserve">
     <value>Ekspor Semua...</value>
@@ -1841,7 +1841,7 @@
     <value>Aktifkan scrobbling</value>
   </data>
   <data name="SettingsPage_LastFm_Scrobbling_Description" xml:space="preserve">
-    <value>Secara otomatis menambahkan trek yang Anda dengarkan di Nagi ke profil Last.fm Anda.</value>
+    <value>Secara otomatis menambahkan trek yang Anda dengarkan di Resonance ke profil Last.fm Anda.</value>
   </data>
   <data name="SettingsPage_LastFm_NowPlaying_Header" xml:space="preserve">
     <value>Perbarui 'Sedang Diputar'</value>
@@ -1958,10 +1958,10 @@
     <value>Tentang</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>Tentang Nagi</value>
+    <value>Tentang Resonance</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
-    <value>Temukan kembali koleksi musik lokal Anda dengan Nagi, pemutar musik yang berfokus pada kecepatan, kesederhanaan, dan privasi.</value>
+    <value>Temukan kembali koleksi musik lokal Anda dengan Resonance, pemutar musik yang berfokus pada kecepatan, kesederhanaan, dan privasi.</value>
   </data>
   <data name="SettingsPage_About_VersionPrefix" xml:space="preserve">
     <value>Versi </value>
@@ -2027,7 +2027,7 @@
     <value>Berkas Cadangan Tidak Valid</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>Berkas yang dipilih bukan cadangan Nagi yang valid.</value>
+    <value>Berkas yang dipilih bukan cadangan Resonance yang valid.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>Pulihkan Cadangan?</value>
@@ -2162,13 +2162,13 @@
     <value>Atur Ulang</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>Musik Anda, tertata dengan indah</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Membangunkan Nagi…</value>
+    <value>Membangunkan Resonance…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>Lihat semua</value>

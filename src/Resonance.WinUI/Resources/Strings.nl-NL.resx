@@ -227,13 +227,13 @@
     <value>Kritieke fout</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>Nagi heeft een kritieke fout ondervonden en moet worden afgesloten. Onze excuses voor het ongemak.</value>
+    <value>Resonance heeft een kritieke fout ondervonden en moet worden afgesloten. Onze excuses voor het ongemak.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>Uitgevoerd als beheerder</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>Nagi wordt momenteel als beheerder uitgevoerd. Dit kan voorkomen dat sommige functies (zoals het toevoegen van muziekmappen) correct werken.\n\nVoor de beste ervaring, start Nagi opnieuw zonder beheerdersrechten.</value>
+    <value>Resonance wordt momenteel als beheerder uitgevoerd. Dit kan voorkomen dat sommige functies (zoals het toevoegen van muziekmappen) correct werken.\n\nVoor de beste ervaring, start Resonance opnieuw zonder beheerdersrechten.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>Normaal opnieuw starten</value>
@@ -242,10 +242,10 @@
     <value>Toch doorgaan</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>Album niet gevonden</value>
@@ -503,7 +503,7 @@
     <value>Last.fm ontkoppelen</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>Weet u zeker dat u uw Last.fm-account wilt ontkoppelen? Uw scrobble-geschiedenis blijft behouden op Last.fm, maar Nagi kan niet langer scrobblen.</value>
+    <value>Weet u zeker dat u uw Last.fm-account wilt ontkoppelen? Uw scrobble-geschiedenis blijft behouden op Last.fm, maar Resonance kan niet langer scrobblen.</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>Ontkoppelen</value>
@@ -638,7 +638,7 @@
     <value>Up-to-date</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>U gebruikt de nieuwste versie van Nagi.</value>
+    <value>U gebruikt de nieuwste versie van Resonance.</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>Updatefout</value>
@@ -731,7 +731,7 @@
     <value>Artiestbiografieën en -afbeeldingen (terugval)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>N.v.t.</value>
@@ -935,7 +935,7 @@
     <value>Volgende</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Nagi weergeven</value>
+    <value>Resonance weergeven</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>Vorige</value>
@@ -1037,22 +1037,22 @@
     <value>Volgende</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Herontdek uw lokale muziekcollectie met Nagi, een muziekspeler gericht op snelheid, eenvoud en privacy. Nagi is gebouwd met C# en WinUI 3 om een schone, native Fluent-ervaring te bieden. Het is mooi, efficiënt en respecteert uw privacy.</value>
+    <value>Herontdek uw lokale muziekcollectie met Resonance, een muziekspeler gericht op snelheid, eenvoud en privacy. Resonance is gebouwd met C# en WinUI 3 om een schone, native Fluent-ervaring te bieden. Het is mooi, efficiënt en respecteert uw privacy.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Nagi Muziekspeler</value>
+    <value>Resonance Muziekspeler</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Openen met Nagi Muziekspeler</value>
+    <value>Openen met Resonance Muziekspeler</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Nagi Opstarten</value>
+    <value>Resonance Opstarten</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>Vorige</value>
@@ -1397,10 +1397,10 @@
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
-    <value>Welkom bij Nagi</value>
+    <value>Welkom bij Resonance</value>
   </data>
   <data name="OnboardingPage_AddFolderButton_ToolTip" xml:space="preserve">
     <value>Voeg een muziekmap toe om te beginnen</value>
@@ -1619,7 +1619,7 @@
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>Faden bij Afspelen / Pauzeren</value>
@@ -1664,7 +1664,7 @@
     <value>Automatisch starten bij opstarten</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>Start Nagi automatisch wanneer u inlogt op uw computer.</value>
+    <value>Start Resonance automatisch wanneer u inlogt op uw computer.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>Geminimaliseerd starten</value>
@@ -1793,7 +1793,7 @@
     <value>Afspeellijsten exporteren/importeren</value>
   </data>
   <data name="SettingsPage_PlaylistsIO_Description" xml:space="preserve">
-    <value>Exporteer afspeellijsten naar M3U-bestanden voor gebruik in andere spelers, of importeer M3U-afspeellijsten in Nagi.</value>
+    <value>Exporteer afspeellijsten naar M3U-bestanden voor gebruik in andere spelers, of importeer M3U-afspeellijsten in Resonance.</value>
   </data>
   <data name="SettingsPage_ExportPlaylists_Content" xml:space="preserve">
     <value>Alles exporteren...</value>
@@ -1841,7 +1841,7 @@
     <value>Scrobbling inschakelen</value>
   </data>
   <data name="SettingsPage_LastFm_Scrobbling_Description" xml:space="preserve">
-    <value>Voeg de nummers die u op Nagi beluistert automatisch toe aan uw Last.fm-profiel.</value>
+    <value>Voeg de nummers die u op Resonance beluistert automatisch toe aan uw Last.fm-profiel.</value>
   </data>
   <data name="SettingsPage_LastFm_NowPlaying_Header" xml:space="preserve">
     <value>'Nu afspelen' bijwerken</value>
@@ -1958,10 +1958,10 @@
     <value>Over</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>Over Nagi</value>
+    <value>Over Resonance</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
-    <value>Herontdek uw lokale muziekcollectie met Nagi, een muziekspeler gericht op snelheid, eenvoud en privacy.</value>
+    <value>Herontdek uw lokale muziekcollectie met Resonance, een muziekspeler gericht op snelheid, eenvoud en privacy.</value>
   </data>
   <data name="SettingsPage_About_VersionPrefix" xml:space="preserve">
     <value>Versie </value>
@@ -2027,7 +2027,7 @@
     <value>Ongeldig back-upbestand</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>Het geselecteerde bestand is geen geldige Nagi-back-up.</value>
+    <value>Het geselecteerde bestand is geen geldige Resonance-back-up.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>Back-up herstellen?</value>
@@ -2162,13 +2162,13 @@
     <value>Resetten</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>Jouw muziek, prachtig georganiseerd</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Nagi wordt wakker…</value>
+    <value>Resonance wordt wakker…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>Alles weergeven</value>

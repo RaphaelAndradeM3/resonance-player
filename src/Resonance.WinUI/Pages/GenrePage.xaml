@@ -1,4 +1,4 @@
-﻿<!-- Nagi/Pages/GenrePage.xaml -->
+<!-- Resonance/Pages/GenrePage.xaml -->
 <Page
     x:Class="Resonance.WinUI.Pages.GenrePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"

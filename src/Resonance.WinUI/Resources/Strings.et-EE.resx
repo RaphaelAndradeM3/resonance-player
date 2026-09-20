@@ -227,13 +227,13 @@
     <value>Kriitiline viga</value>
   </data>
   <data name="CrashReport_Message" xml:space="preserve">
-    <value>Nagi leidis kriitilise vea ja peab sulguma. Vabandame ebamugavuste pärast.</value>
+    <value>Resonance leidis kriitilise vea ja peab sulguma. Vabandame ebamugavuste pärast.</value>
   </data>
   <data name="ElevationWarning_Title" xml:space="preserve">
     <value>Käivitamine administraatorina</value>
   </data>
   <data name="ElevationWarning_Message" xml:space="preserve">
-    <value>Nagi töötab praegu administraatorina. See võib takistada mõnede funktsioonide (nt muusikakaustade lisamise) korrektset toimimist. Parima kasutuskogemuse tagamiseks taaskäivita Nagi ilma administraatoriõigusteta.</value>
+    <value>Resonance töötab praegu administraatorina. See võib takistada mõnede funktsioonide (nt muusikakaustade lisamise) korrektset toimimist. Parima kasutuskogemuse tagamiseks taaskäivita Resonance ilma administraatoriõigusteta.</value>
   </data>
   <data name="ElevationWarning_Restart" xml:space="preserve">
     <value>Taaskäivita tavapäraselt</value>
@@ -242,10 +242,10 @@
     <value>Jätka siiski</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>Albumit ei leitud</value>
@@ -503,7 +503,7 @@
     <value>Ühenda Last.fm lahti</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Message" xml:space="preserve">
-    <value>Kas olete kindel, et soovite Last.fm-i konto lahti ühendada? Teie scrobbling ajalugu säilib Last.fm-is, kuid Nagi ei saa enam scrobble'ida.</value>
+    <value>Kas olete kindel, et soovite Last.fm-i konto lahti ühendada? Teie scrobbling ajalugu säilib Last.fm-is, kuid Resonance ei saa enam scrobble'ida.</value>
   </data>
   <data name="Settings_LastFm_Disconnect_Button" xml:space="preserve">
     <value>Ühenda lahti</value>
@@ -643,7 +643,7 @@
     <value>Ajakohane</value>
   </data>
   <data name="Update_UpToDate_Message" xml:space="preserve">
-    <value>Kasutate Nagi uusimat versiooni.</value>
+    <value>Kasutate Resonance uusimat versiooni.</value>
   </data>
   <data name="Update_Error_Title" xml:space="preserve">
     <value>Uuendamise viga</value>
@@ -736,7 +736,7 @@
     <value>Artisti biograafiad ja pildid (varuvariant)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>Pole saadaval</value>
@@ -1048,22 +1048,22 @@ Viga: {1}</value>
     <value>Järgmisena</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Avasta oma kohalik muusikakogu uuesti Nagiga – muusikapleieriga, mis keskendub kiirusele, lihtsusele ja privaatsusele. Nagi on ehitatud C# ja WinUI 3-ga, et pakkuda puhast, natiivset Fluent-kogemust. See on ilus, tõhus ja austab teie privaatsust.</value>
+    <value>Avasta oma kohalik muusikakogu uuesti Nagiga – muusikapleieriga, mis keskendub kiirusele, lihtsusele ja privaatsusele. Resonance on ehitatud C# ja WinUI 3-ga, et pakkuda puhast, natiivset Fluent-kogemust. See on ilus, tõhus ja austab teie privaatsust.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Nagi muusikapleier</value>
+    <value>Resonance muusikapleier</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Ava Nagi muusikapleieriga</value>
+    <value>Ava Resonance muusikapleieriga</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Nagi käivitamine</value>
+    <value>Resonance käivitamine</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>Eelmine</value>
@@ -1408,7 +1408,7 @@ Viga: {1}</value>
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
     <value>Tere tulemast Nagisse</value>
@@ -1630,7 +1630,7 @@ Viga: {1}</value>
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>Hajumine esitamisel / peatamisel</value>
@@ -1675,7 +1675,7 @@ Viga: {1}</value>
     <value>Käivita automaatselt käivitamisel</value>
   </data>
   <data name="SettingsPage_AutoLaunch_Description" xml:space="preserve">
-    <value>Käivita Nagi automaatselt, kui logite arvutisse sisse.</value>
+    <value>Käivita Resonance automaatselt, kui logite arvutisse sisse.</value>
   </data>
   <data name="SettingsPage_StartMinimized_Header" xml:space="preserve">
     <value>Käivita minimeeritult</value>
@@ -1852,7 +1852,7 @@ Viga: {1}</value>
     <value>Luba skroblimine</value>
   </data>
   <data name="SettingsPage_LastFm_Scrobbling_Description" xml:space="preserve">
-    <value>Lisage automaatselt Nagi's kuulatud lood oma Last.fm profiilile.</value>
+    <value>Lisage automaatselt Resonance's kuulatud lood oma Last.fm profiilile.</value>
   </data>
   <data name="SettingsPage_LastFm_NowPlaying_Header" xml:space="preserve">
     <value>Uuenda 'Hetkel mängib'</value>
@@ -1969,7 +1969,7 @@ Viga: {1}</value>
     <value>Teave</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>Teave Nagi kohta</value>
+    <value>Teave Resonance kohta</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
     <value>Avasta oma kohalik muusikakogu uuesti Nagiga – muusikapleieriga, mis keskendub kiirusele, lihtsusele ja privaatsusele.</value>
@@ -2038,7 +2038,7 @@ Viga: {1}</value>
     <value>Vigane varukoopia fail</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>Valitud fail ei ole kehtiv Nagi varukoopia.</value>
+    <value>Valitud fail ei ole kehtiv Resonance varukoopia.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>Taasta varukoopia?</value>
@@ -2173,13 +2173,13 @@ Viga: {1}</value>
     <value>Lähtesta</value>
   </data>
   <data name="SplashPage_AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="SplashPage_Tagline" xml:space="preserve">
     <value>Sinu muusika, kaunilt organiseeritud</value>
   </data>
   <data name="SplashPage_Status" xml:space="preserve">
-    <value>Nagi käivitamine…</value>
+    <value>Resonance käivitamine…</value>
   </data>
   <data name="InsightsPage_SeeAll_ToolTip" xml:space="preserve">
     <value>Vaata kõiki</value>

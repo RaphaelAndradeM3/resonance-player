@@ -248,7 +248,7 @@
     <value>Sắp xếp theo: </value>
   </data>
   <data name="FFmpeg_SetupInstructions" xml:space="preserve">
-    <value>FFmpeg được yêu cầu để Chuẩn hóa âm lượng độ chính xác cao (phân tích ReplayGain) nhưng không tìm thấy trên hệ thống của bạn.\n\nLàm theo các bước sau để thiết lập:\n\n1. **Tải xuống**: Truy cập https://www.gyan.dev/ffmpeg/builds/ và tải xuống bản 'ffmpeg-git-full.7z' (hoặc tương tự).\n2. **Hướng dẫn**: Bạn có thể làm theo hướng dẫn này để biết chi tiết: https://phoenixnap.com/kb/ffmpeg-windows\n3. **Giải nén**: Mở thư mục kiến trúc và tìm thư mục 'bin' chứa `ffmpeg.exe`.\n4. **Cài đặt**: Sao chép `ffmpeg.exe` vào một thư mục cố định (ví dụ: `C:\\ffmpeg\\`) và **thêm thư mục đó vào biến môi trường System PATH của bạn**.\n5. **Khởi động lại**: Vui lòng khởi động lại Nagi sau khi cài đặt để các thay đổi có hiệu lực.</value>
+    <value>FFmpeg được yêu cầu để Chuẩn hóa âm lượng độ chính xác cao (phân tích ReplayGain) nhưng không tìm thấy trên hệ thống của bạn.\n\nLàm theo các bước sau để thiết lập:\n\n1. **Tải xuống**: Truy cập https://www.gyan.dev/ffmpeg/builds/ và tải xuống bản 'ffmpeg-git-full.7z' (hoặc tương tự).\n2. **Hướng dẫn**: Bạn có thể làm theo hướng dẫn này để biết chi tiết: https://phoenixnap.com/kb/ffmpeg-windows\n3. **Giải nén**: Mở thư mục kiến trúc và tìm thư mục 'bin' chứa `ffmpeg.exe`.\n4. **Cài đặt**: Sao chép `ffmpeg.exe` vào một thư mục cố định (ví dụ: `C:\\ffmpeg\\`) và **thêm thư mục đó vào biến môi trường System PATH của bạn**.\n5. **Khởi động lại**: Vui lòng khởi động lại Resonance sau khi cài đặt để các thay đổi có hiệu lực.</value>
   </data>
   <data name="Error_M3uImportNoSongsMatched" xml:space="preserve">
     <value>Không tìm thấy bài hát nào từ danh sách phát trong thư viện của bạn.</value>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Globalization;
@@ -96,7 +96,7 @@ public partial class App : Application
     public static DispatcherQueue? MainDispatcherQueue => CurrentApp?._window?.DispatcherQueue;
 
     /// <summary>
-    ///     Gets Nagi's default brand accent color, derived from the app logo.
+    ///     Gets Resonance's default brand accent color, derived from the app logo.
     /// </summary>
     public static Color DefaultAccentColor { get; } = Color.FromArgb(255, 0x21, 0x94, 0x4B);
 
@@ -394,7 +394,7 @@ public partial class App : Application
             .ConfigureHttpClient(client =>
             {
                 client.Timeout = TimeSpan.FromSeconds(20);
-                client.DefaultRequestHeaders.UserAgent.ParseAdd("Nagi/1.0 (+https://github.com/Anthonyy232/Nagi)");
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("Resonance/1.0 (+https://github.com/RaphaelAndradeM3/resonance-player)");
             })
             .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
             {
@@ -410,7 +410,7 @@ public partial class App : Application
             .ConfigureHttpClient(client =>
             {
                 client.Timeout = TimeSpan.FromSeconds(30);
-                client.DefaultRequestHeaders.UserAgent.ParseAdd("Nagi/1.0 (+https://github.com/Anthonyy232/Nagi)");
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("Resonance/1.0 (+https://github.com/RaphaelAndradeM3/resonance-player)");
             })
             .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
             {
@@ -563,7 +563,7 @@ public partial class App : Application
                 },
             });
 
-            // Nagi's own API server (key bootstrap). Internal infra; conservative retry.
+            // Resonance's own API server (key bootstrap). Internal infra; conservative retry.
             builder.AddProvider(new ProviderPolicy
             {
                 ProviderId = ServiceProviderIds.NagiApi,
@@ -990,7 +990,7 @@ public partial class App : Application
                         Resonance.WinUI.Resources.Strings.CrashReport_Title,
                         Resonance.WinUI.Resources.Strings.CrashReport_Message,
                         fullCrashReport,
-                        "https://github.com/Anthonyy232/Nagi/issues"
+                        "https://github.com/RaphaelAndradeM3/resonance-player/issues"
                     );
 
                     if (result == CrashReportResult.Reset)

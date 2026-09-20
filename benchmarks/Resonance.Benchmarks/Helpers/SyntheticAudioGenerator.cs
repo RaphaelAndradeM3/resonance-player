@@ -1,7 +1,7 @@
 using ATL;
 using System.Diagnostics;
 
-namespace Nagi.Benchmarks.Helpers;
+namespace Resonance.Benchmarks.Helpers;
 
 public static class SyntheticAudioGenerator
 {

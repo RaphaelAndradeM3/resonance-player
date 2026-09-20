@@ -256,7 +256,7 @@ Slijedite ove korake za postavljanje:
 2. **Vodič**: Možete slijediti ovaj vodič za detaljne upute: https://phoenixnap.com/kb/ffmpeg-windows
 3. **Raspakirajte**: Otvorite mapu arhitekture i pronađite "bin" direktorij koji sadrži `ffmpeg.exe`.
 4. **Instalirajte**: Kopirajte `ffmpeg.exe` u trajnu mapu (npr. `C:\ffmpeg\`) i **dodajte tu mapu u varijablu okruženja System PATH**.
-5. **Ponovo pokrenite**: Molimo ponovo pokrenite Nagi nakon instalacije da bi promjene stupile na snagu.</value>
+5. **Ponovo pokrenite**: Molimo ponovo pokrenite Resonance nakon instalacije da bi promjene stupile na snagu.</value>
   </data>
   <data name="Error_M3uImportNoSongsMatched" xml:space="preserve">
     <value>Nijedna pjesma s popisa pjesama nije pronađena u vašoj knjižnici.</value>

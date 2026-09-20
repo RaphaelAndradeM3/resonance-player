@@ -1,4 +1,4 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Resonance.Core.Helpers;
@@ -49,13 +49,13 @@ public class BackupRestoreServiceTests : IDisposable
     }
 
     [Fact]
-    public async Task ValidateBackupAsync_WithZipContainingNagiDb_ReturnsTrue()
+    public async Task ValidateBackupAsync_WithZipContainingResonanceDb_ReturnsTrue()
     {
         var zipPath = CreateTempZip(("resonance.db", "database content"));
 
         var result = await _service.ValidateBackupAsync(zipPath);
 
-        result.Should().BeTrue("a ZIP containing nagi.db is a valid Nagi backup");
+        result.Should().BeTrue("a ZIP containing resonance.db is a valid Resonance backup");
     }
 
     [Fact]
@@ -75,7 +75,7 @@ public class BackupRestoreServiceTests : IDisposable
 
         var result = await _service.ValidateBackupAsync(zipPath);
 
-        result.Should().BeFalse("a backup missing both nagi.db and settings.json should be rejected");
+        result.Should().BeFalse("a backup missing both resonance.db and settings.json should be rejected");
     }
 
     [Fact]
@@ -152,8 +152,8 @@ public class BackupRestoreServiceTests : IDisposable
         await File.WriteAllTextAsync(Path.Combine(sourceDir, "settings.json"), "{ }");
         await File.WriteAllTextAsync(Path.Combine(sourceDir, "temp.tmp"), "tmp");
         await File.WriteAllTextAsync(Path.Combine(sourceDir, "data.lock"), "lock");
-        await File.WriteAllTextAsync(Path.Combine(sourceDir, "nagi.db-wal"), "wal");
-        await File.WriteAllTextAsync(Path.Combine(sourceDir, "nagi.db-shm"), "shm");
+        await File.WriteAllTextAsync(Path.Combine(sourceDir, "resonance.db-wal"), "wal");
+        await File.WriteAllTextAsync(Path.Combine(sourceDir, "resonance.db-shm"), "shm");
         _pathConfig.AppDataRoot.Returns(sourceDir);
 
         var result = await _service.CreateBackupAsync(destDir);
@@ -256,7 +256,7 @@ public class BackupRestoreServiceTests : IDisposable
     [Fact]
     public async Task RestoreFromBackupAsync_WithInvalidBackupFile_ReturnsFailure()
     {
-        // A ZIP without nagi.db or settings.json is not a valid backup.
+        // A ZIP without resonance.db or settings.json is not a valid backup.
         var zipPath = CreateTempZip(("unrelated.txt", "data"));
         var destDir = CreateTempDir();
         _pathConfig.AppDataRoot.Returns(destDir);
@@ -279,7 +279,7 @@ public class BackupRestoreServiceTests : IDisposable
         var result = await _service.RestoreFromBackupAsync(zipPath);
 
         result.Success.Should().BeTrue();
-        File.Exists(Path.Combine(destDir, "resonance.db")).Should().BeTrue("nagi.db should be restored to AppDataRoot");
+        File.Exists(Path.Combine(destDir, "resonance.db")).Should().BeTrue("resonance.db should be restored to AppDataRoot");
         File.Exists(Path.Combine(destDir, "settings.json")).Should().BeTrue("settings.json should be restored to AppDataRoot");
         var restoredDbContent = await File.ReadAllTextAsync(Path.Combine(destDir, "resonance.db"));
         restoredDbContent.Should().Be("restored db content");

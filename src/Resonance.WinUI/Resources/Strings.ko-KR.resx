@@ -242,10 +242,10 @@
     <value>그래도 계속</value>
   </data>
   <data name="MiniPlayer_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Title" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AlbumView_AlbumNotFound" xml:space="preserve">
     <value>앨범을 찾을 수 없음</value>
@@ -736,7 +736,7 @@
     <value>아티스트 바이오그래피 및 이미지 (대체)</value>
   </data>
   <data name="App_Name_Default" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="App_Version_Unknown" xml:space="preserve">
     <value>해당 없음</value>
@@ -940,7 +940,7 @@
     <value>다음 재생</value>
   </data>
   <data name="MiniPlayer_RestoreButton_ToolTip" xml:space="preserve">
-    <value>Nagi 표시</value>
+    <value>Resonance 표시</value>
   </data>
   <data name="MiniPlayer_PreviousButton_ToolTip" xml:space="preserve">
     <value>이전</value>
@@ -1042,22 +1042,22 @@
     <value>다음 재생</value>
   </data>
   <data name="AppName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
     <value>속도, 단순성, 개인 정보 보호에 중점을 둔 음악 플레이어 Nagi로 로컬 음악 컬렉션을 재발견하세요. Nagi는 깨끗하고 기본 Fluent 경험을 제공하기 위해 C# 및 WinUI 3으로 구축되었습니다. 아름답고 효율적이며 개인 정보 보호를 존중합니다.</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Nagi</value>
+    <value>Resonance</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Nagi 음악 플레이어</value>
+    <value>Resonance 음악 플레이어</value>
   </data>
   <data name="AppInfoTip" xml:space="preserve">
-    <value>Nagi 음악 플레이어로 열기</value>
+    <value>Resonance 음악 플레이어로 열기</value>
   </data>
   <data name="StartupTaskDisplayName" xml:space="preserve">
-    <value>Nagi 시작</value>
+    <value>Resonance 시작</value>
   </data>
   <data name="Player_PreviousButton_ToolTip" xml:space="preserve">
     <value>이전</value>
@@ -1402,7 +1402,7 @@
     <value>Lyrics could not be updated</value>
   </data>
   <data name="LyricsPage_EditLyrics_Error_Message" xml:space="preserve">
-    <value>Nagi could not save the lyrics. Check the log for details and try again.</value>
+    <value>Resonance could not save the lyrics. Check the log for details and try again.</value>
   </data>
   <data name="OnboardingPage_Welcome_Title" xml:space="preserve">
     <value>Nagi에 오신 것을 환영합니다</value>
@@ -1624,7 +1624,7 @@
     <value>WASAPI exclusive mode</value>
   </data>
   <data name="SettingsPage_WasapiExclusive_Description" xml:space="preserve">
-    <value>Give Nagi exclusive control of the Windows audio device. Other apps may be silent. Restart Nagi after changing this setting.</value>
+    <value>Give Resonance exclusive control of the Windows audio device. Other apps may be silent. Restart Resonance after changing this setting.</value>
   </data>
   <data name="SettingsPage_FadeOnPlayPause_Header" xml:space="preserve">
     <value>재생/일시정지 시 페이드</value>
@@ -1963,7 +1963,7 @@
     <value>정보</value>
   </data>
   <data name="SettingsPage_AboutExpander_Header" xml:space="preserve">
-    <value>Nagi 정보</value>
+    <value>Resonance 정보</value>
   </data>
   <data name="SettingsPage_AboutExpander_Description" xml:space="preserve">
     <value>속도, 단순성, 개인 정보 보호에 중점을 둔 음악 플레이어 Nagi로 로컬 음악 컬렉션을 재발견하세요.</value>
@@ -2032,7 +2032,7 @@
     <value>유효하지 않은 백업 파일</value>
   </data>
   <data name="Settings_Restore_Invalid_Message" xml:space="preserve">
-    <value>선택한 파일은 유효한 Nagi 백업이 아닙니다.</value>
+    <value>선택한 파일은 유효한 Resonance 백업이 아닙니다.</value>
   </data>
   <data name="Settings_Restore_Confirm_Title" xml:space="preserve">
     <value>백업을 복원하시겠습니까?</value>

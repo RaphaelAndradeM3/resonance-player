@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <!-- =============================================================== -->
     <!-- == Project Properties                                          == -->
     <!-- =============================================================== -->
@@ -59,7 +59,7 @@
         <!--
             Exclude Language from auto resource package splitting.
             By default, PRI splits language-qualified files (including .NET satellite assemblies
-            in locale subdirectories like en-US\Nagi.resources.dll) into separate language
+            in locale subdirectories like en-US\Resonance.resources.dll) into separate language
             resource packages. Since .NET satellite assemblies have no neutral root-level version,
             PRI warns PRI263 and drops them entirely rather than packaging them. Removing Language
             from this list keeps satellite assemblies in the main architecture package, which is

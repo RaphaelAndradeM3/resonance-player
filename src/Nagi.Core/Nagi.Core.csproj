@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net$(NetVersion)</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="Nagi.Core.Tests" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="ModernLrc" />
+
+        <!-- Data Access: Entity Framework Core -->
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="SixLabors.ImageSharp" />
+        <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" />
+
+        <!-- Core Utilities & Services -->
+        <PackageReference Include="z440.atl.core" />
+
+        <PackageReference Include="MaterialColorUtilities" />
+        <PackageReference Include="DiscordRichPresence" />
+
+        <!-- MVVM & Dependency Injection -->
+        <PackageReference Include="CommunityToolkit.Mvvm" />
+
+        <!-- HTTP -->
+        <PackageReference Include="Microsoft.Extensions.Http" />
+
+        <!-- Resilience pipelines (rate limiting, retry, circuit breaker) -->
+        <PackageReference Include="Polly" />
+        <PackageReference Include="Polly.RateLimiting" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,301 @@
+<Page
+    x:Class="Nagi.WinUI.Pages.ArtistPage"
+    NavigationCacheMode="Enabled"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:ImageEx"
+    xmlns:converters="using:Nagi.WinUI.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Nagi.WinUI.ViewModels"
+    xmlns:helpers="using:Nagi.Core.Helpers"
+    xmlns:resources="using:Nagi.WinUI.Resources"
+    xmlns:uicontrols="using:Nagi.WinUI.Controls"
+    x:Name="ArtistPageRoot"
+    Background="Transparent"
+    mc:Ignorable="d">
+
+
+
+    <Grid Padding="{StaticResource PageContainerPaddingVertical}"
+          Margin="{StaticResource SongListViewMargin}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="SearchStates">
+                <VisualState x:Name="SearchCollapsed">
+                    <Storyboard>
+                        <DoubleAnimation
+                            Storyboard.TargetName="SearchTextBox"
+                            Storyboard.TargetProperty="Width"
+                            To="0"
+                            Duration="0:0:0.3"
+                            EnableDependentAnimation="True">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseInOut" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <DoubleAnimation
+                            Storyboard.TargetName="SearchTextBox"
+                            Storyboard.TargetProperty="Opacity"
+                            To="0"
+                            Duration="0:0:0.15" />
+                        <ObjectAnimationUsingKeyFrames
+                            Storyboard.TargetName="SearchTextBox"
+                            Storyboard.TargetProperty="IsHitTestVisible">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="False" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames
+                            Storyboard.TargetName="SearchIcon"
+                            Storyboard.TargetProperty="Glyph">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="&#xE721;" />
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0.3" Value="&#xE721;" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="SearchExpanded">
+                    <Storyboard>
+                        <DoubleAnimation
+                            Storyboard.TargetName="SearchTextBox"
+                            Storyboard.TargetProperty="Width"
+                            To="{StaticResource SearchBoxExpandedWidth}"
+                            Duration="0:0:0.3"
+                            EnableDependentAnimation="True">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseInOut" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <DoubleAnimation
+                            Storyboard.TargetName="SearchTextBox"
+                            Storyboard.TargetProperty="Opacity"
+                            To="1"
+                            BeginTime="0:0:0.15"
+                            Duration="0:0:0.15" />
+                        <ObjectAnimationUsingKeyFrames
+                            Storyboard.TargetName="SearchTextBox"
+                            Storyboard.TargetProperty="IsHitTestVisible">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="True" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames
+                            Storyboard.TargetName="SearchIcon"
+                            Storyboard.TargetProperty="Glyph">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="&#xE711;" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="WindowSizeStates">
+                <!-- Large displays (1600px+) -->
+                <VisualState x:Name="WideLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1600" />
+                    </VisualState.StateTriggers>
+                    <!-- Future: Scale up artist cards for better space utilization -->
+                </VisualState>
+
+                <!-- Normal/Small displays -->
+                <VisualState x:Name="NormalLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <!-- Default sizing from resources -->
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Page Header -->
+        <Grid Grid.Row="0"
+              Margin="{StaticResource PageHeaderMarginIndented}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                <TextBlock Text="{x:Bind resources:Strings.ArtistPage_Title, Mode=OneTime}" Style="{StaticResource PageTitleTextStyle}" />
+                <TextBlock
+                    Margin="0,0,0,5"
+                    VerticalAlignment="Bottom"
+                    FontSize="13"
+                    Foreground="{ThemeResource TextFillColorSecondary}"
+                    Text="{x:Bind ViewModel.TotalItemsText, Mode=OneWay}" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                <!-- Search functionality -->
+                <Grid>
+                    <TextBox x:Name="SearchTextBox"
+                             PlaceholderText="{x:Bind resources:Strings.ArtistPage_SearchBox_Placeholder, Mode=OneTime}"
+                             Style="{StaticResource SearchTextBoxStyle}"
+                             Width="0"
+                             Opacity="0"
+                             IsHitTestVisible="False"
+                             HorizontalAlignment="Right"
+                             KeyDown="OnSearchTextBoxKeyDown"
+                             Text="{x:Bind ViewModel.SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Canvas.ZIndex="0">
+                        </TextBox>
+                    <Button x:Name="SearchToggleButton"
+                            ToolTipService.ToolTip="{x:Bind resources:Strings.ArtistPage_SearchButton_ToolTip, Mode=OneTime}"
+                            Click="OnSearchToggleButtonClick"
+                            Style="{StaticResource SongListViewPageIconButton}"
+                            HorizontalAlignment="Right"
+                            Margin="0,0,1,0"
+                            Canvas.ZIndex="1">
+                        <FontIcon x:Name="SearchIcon" FontSize="16" Glyph="&#xE721;" />
+                    </Button>
+                </Grid>
+
+                <Button x:Name="RandomArtistButton"
+                        ToolTipService.ToolTip="{x:Bind resources:Strings.ArtistPage_RandomButton_ToolTip, Mode=OneTime}"
+                        Style="{StaticResource SongListViewPageIconButton}"
+                        Command="{x:Bind ViewModel.PlayRandomArtistCommand}"
+                        Margin="0,0,1,0">
+                    <ContentControl Style="{StaticResource DiceIconStyle}" />
+                </Button>
+
+                <Button Style="{StaticResource SongListViewPageIconButton}"
+                        ToolTipService.ToolTip="{x:Bind ViewModel.CurrentSortOrderText, Mode=OneWay}">
+                    <Button.Flyout>
+                        <MenuFlyout Placement="Bottom">
+                            <RadioMenuFlyoutItem GroupName="ArtistSort" Command="{x:Bind ViewModel.ChangeSortOrderCommand}"
+                                            CommandParameter="NameAsc" Text="{x:Bind helpers:SortOrderHelper.ArtistAscLabel}"
+                                            IsChecked="{x:Bind ViewModel.CurrentSortOrder, Mode=OneWay, Converter={StaticResource SortOrderEqualsConverter}, ConverterParameter=NameAsc}" />
+                            <RadioMenuFlyoutItem GroupName="ArtistSort" Command="{x:Bind ViewModel.ChangeSortOrderCommand}"
+                                            CommandParameter="NameDesc" Text="{x:Bind helpers:SortOrderHelper.ArtistDescLabel}"
+                                            IsChecked="{x:Bind ViewModel.CurrentSortOrder, Mode=OneWay, Converter={StaticResource SortOrderEqualsConverter}, ConverterParameter=NameDesc}" />
+                            <RadioMenuFlyoutItem GroupName="ArtistSort" Command="{x:Bind ViewModel.ChangeSortOrderCommand}"
+                                             CommandParameter="SongCountAsc" Text="{x:Bind helpers:SortOrderHelper.LeastSongsLabel}"
+                                             IsChecked="{x:Bind ViewModel.CurrentSortOrder, Mode=OneWay, Converter={StaticResource SortOrderEqualsConverter}, ConverterParameter=SongCountAsc}" />
+                            <RadioMenuFlyoutItem GroupName="ArtistSort" Command="{x:Bind ViewModel.ChangeSortOrderCommand}"
+                                             CommandParameter="SongCountDesc" Text="{x:Bind helpers:SortOrderHelper.MostSongsLabel}"
+                                             IsChecked="{x:Bind ViewModel.CurrentSortOrder, Mode=OneWay, Converter={StaticResource SortOrderEqualsConverter}, ConverterParameter=SongCountDesc}" />
+                        </MenuFlyout>
+                    </Button.Flyout>
+                    <FontIcon FontSize="16" Glyph="&#xE8CB;" />
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <!-- Displays the collection of artists -->
+            <GridView
+                x:Name="ArtistsGridView"
+                IsItemClickEnabled="True"
+                ItemClick="ArtistsGridView_ItemClick"
+                Padding="{StaticResource SongListViewPadding}"
+                ItemContainerStyle="{StaticResource ArtistPageGridViewItemStyle}"
+                ItemsSource="{x:Bind ViewModel.Artists, Mode=OneWay}"
+                SelectionMode="None"
+                Visibility="{x:Bind ViewModel.HasArtists, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid ItemWidth="200" Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:ArtistViewModelItem">
+                        <Grid
+                            Width="{StaticResource ArtistGridCardWidth}"
+                            Height="{StaticResource ArtistGridCardHeight}"
+                            Margin="8,16,8,16"
+                            Background="Transparent">
+                            <Grid.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem
+                                        Text="{x:Bind resources:Strings.ArtistPage_Menu_Play, Mode=OneTime}"
+                                        Command="{Binding ViewModel.PlayArtistCommand, ElementName=ArtistPageRoot}"
+                                        CommandParameter="{x:Bind Id}"
+                                        IsEnabled="{Binding ViewModel.IsLoading, ElementName=ArtistPageRoot, Converter={StaticResource BooleanToInverseBooleanConverter}}" />
+                                    <MenuFlyoutSeparator />
+                                    <MenuFlyoutItem
+                                        Text="{x:Bind resources:Strings.ArtistPage_Menu_ChangeImage, Mode=OneTime}"
+                                        Click="ChangeImage_Click" />
+                                    <MenuFlyoutItem
+                                        Text="{x:Bind resources:Strings.ArtistPage_Menu_RemoveImage, Mode=OneTime}"
+                                        Click="RemoveImage_Click"
+                                        Visibility="{x:Bind IsCustomImage, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                </MenuFlyout>
+                            </Grid.ContextFlyout>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Artist Image or Placeholder -->
+                            <Grid Grid.Row="0" Width="{StaticResource ArtistGridCardImageSize}" Height="{StaticResource ArtistGridCardImageSize}" HorizontalAlignment="Center">
+                                <Border
+                                    CornerRadius="80"
+                                    Visibility="{x:Bind IsArtworkAvailable, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+                                    <controls:ImageEx
+                                        IsCacheEnabled="True"
+                                        Source="{x:Bind LocalImageCachePath, Mode=OneWay, Converter={StaticResource StringToImageSourceConverter}, FallbackValue=null}"
+                                        DecodePixelWidth="{StaticResource ArtistGridCardImageSize}"
+                                        DecodePixelType="Logical"
+                                        Stretch="UniformToFill" />
+                                </Border>
+                                <Grid
+                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                    CornerRadius="80"
+                                    Visibility="{x:Bind IsArtworkAvailable, Converter={StaticResource InverseBooleanToVisibilityConverter}, Mode=OneWay}">
+                                    <FontIcon
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontSize="48"
+                                        Glyph="" />
+                                </Grid>
+                            </Grid>
+
+                            <TextBlock
+                                Grid.Row="1"
+                                Margin="0,12,0,0"
+                                HorizontalAlignment="Center"
+                                FontWeight="SemiBold"
+                                Text="{x:Bind Name, Mode=OneWay}"
+                                TextTrimming="CharacterEllipsis"
+                                TextWrapping="NoWrap" />
+                        </Grid>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+
+            <!-- Message shown when the library is empty -->
+            <StackPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Spacing="16"
+                Visibility="{x:Bind ViewModel.HasArtists, Converter={StaticResource InverseBooleanToVisibilityConverter}, Mode=OneWay}">
+                <StackPanel.ChildrenTransitions>
+                    <TransitionCollection>
+                        <EntranceThemeTransition FromVerticalOffset="20" />
+                    </TransitionCollection>
+                </StackPanel.ChildrenTransitions>
+                <FontIcon
+                    Glyph="&#xE77B;"
+                    FontSize="48"
+                    Margin="0,0,0,12"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    HorizontalAlignment="Center" />
+                <TextBlock
+                    Text="{x:Bind resources:Strings.ArtistPage_Empty_Title, Mode=OneTime}"
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock
+                    Text="{x:Bind resources:Strings.ArtistPage_Empty_Subtitle, Mode=OneTime}"
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+            </StackPanel>
+        </Grid>
+
+        <uicontrols:PaginationControl
+            Grid.Row="2"
+            ViewModel="{x:Bind ViewModel}"
+            HorizontalAlignment="Right"
+            Margin="0,16,24,16" />
+    </Grid>
+</Page>

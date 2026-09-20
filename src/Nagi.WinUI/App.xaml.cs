@@ -1,0 +1,1351 @@
+﻿using System;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using Windows.ApplicationModel;
+using Windows.ApplicationModel.Activation;
+using Windows.Storage;
+using Windows.UI;
+using Windows.Globalization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.UI;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Nagi.Core.Data;
+using Nagi.Core.Helpers;
+using Nagi.Core.Http.Pipelines;
+using Nagi.Core.Models;
+using Nagi.Core.Services.Abstractions;
+using Nagi.Core.Services.Implementations;
+using Nagi.Core.Services.Implementations.Presence;
+using Nagi.Core.Services.Implementations.Romanization;
+using Nagi.WinUI.Helpers;
+using Nagi.WinUI.Pages;
+using Nagi.WinUI.Services.Abstractions;
+using Nagi.WinUI.Services.Implementations;
+using Nagi.WinUI.ViewModels;
+using Serilog;
+using Serilog.Events;
+using WinRT;
+using LaunchActivatedEventArgs = Microsoft.UI.Xaml.LaunchActivatedEventArgs;
+using UnhandledExceptionEventArgs = Microsoft.UI.Xaml.UnhandledExceptionEventArgs;
+
+
+
+
+namespace Nagi.WinUI;
+
+/// <summary>
+///     Provides application-specific behavior, manages the application lifecycle,
+///     and configures dependency injection.
+/// </summary>
+public partial class App : Application
+{
+    private static string? _currentLogFilePath;
+    private static Task<MainPage>? _prebuiltMainPageTask;
+    private static bool? _cachedHasAnyFolder;
+    private static Task? _efWarmupTask;
+
+
+    private readonly ConcurrentQueue<string> _fileActivationQueue = new();
+    private volatile bool _isProcessingFileQueue;
+    private ILogger<App>? _logger;
+    private Window? _window;
+
+    public App()
+    {
+        CurrentApp = this;
+        InitializeComponent();
+
+        UnhandledException += OnAppUnhandledException;
+    }
+
+
+
+
+    /// <summary>
+    ///     Gets the current running App instance.
+    /// </summary>
+    public static App? CurrentApp { get; private set; }
+
+    /// <summary>
+    ///     Gets the main application window.
+    /// </summary>
+    public static Window? RootWindow => CurrentApp?._window;
+
+    /// <summary>
+    ///     Gets the configured service provider.
+    /// </summary>
+    public static IServiceProvider? Services { get; private set; }
+
+    /// <summary>
+    ///     Gets the dispatcher queue for the main UI thread.
+    /// </summary>
+    public static DispatcherQueue? MainDispatcherQueue => CurrentApp?._window?.DispatcherQueue;
+
+    /// <summary>
+    ///     Gets Nagi's default brand accent color, derived from the app logo.
+    /// </summary>
+    public static Color DefaultAccentColor { get; } = Color.FromArgb(255, 0x21, 0x94, 0x4B);
+
+    protected override async void OnLaunched(LaunchActivatedEventArgs args)
+    {
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .Build();
+        var tempPathConfig = new PathConfiguration(configuration);
+
+        _currentLogFilePath = Path.Combine(tempPathConfig.LogsDirectory, "log.txt");
+
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+            .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Migrations", LogEventLevel.Error)
+            .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Error)
+            .Enrich.FromLogContext()
+            .Enrich.WithThreadId()
+            .WriteTo.Debug()
+            .WriteTo.File(_currentLogFilePath,
+                rollingInterval: RollingInterval.Day,
+                retainedFileCountLimit: 7,
+                fileSizeLimitBytes: 10 * 1024 * 1024,
+                rollOnFileSizeLimit: true,
+                outputTemplate:
+                "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{ThreadId}] {Message:lj}{NewLine}{Exception}")
+            .WriteTo.Sink(MemoryLog.Instance)
+            .CreateLogger();
+
+        try
+        {
+            InitializeWindowAndServices(configuration);
+            _logger = Services!.GetRequiredService<ILogger<App>>();
+            _logger.LogInformation("Application starting up.");
+
+            InitializeSystemIntegration();
+
+            // Set a Splash/Skeleton page immediately and restore layout
+            if (_window is MainWindow mainWindow)
+            {
+                mainWindow.Content = new Pages.SplashPage();
+                mainWindow.InitializeCustomTitleBar();
+                await mainWindow.RestoreWindowStateAsync();
+            }
+            // Before doing heavy blocking initialization, show the window to the user
+            var isStartupLaunch = Environment.GetCommandLineArgs()
+                .Any(arg => arg.Equals("--startup", StringComparison.OrdinalIgnoreCase));
+            var uiSettings = Services!.GetRequiredService<IUISettingsService>();
+            var startMinimized = await uiSettings.GetStartMinimizedEnabledAsync();
+
+            if (!isStartupLaunch && !startMinimized)
+            {
+                _window?.AppWindow?.Show();
+                _window?.Activate();
+                if (_window?.AppWindow is not null) _window.AppWindow.IsShownInSwitchers = true;
+            }
+            HandleInitialActivation(args.UWPLaunchActivatedEventArgs);
+
+            // Pre-build MainPage on the UI thread while core services initialize in background.
+            // MainPage's constructor only resolves already-registered DI singletons; it does not
+            // call any async init, so it is safe to construct before services are fully initialized.
+            var tcs = new TaskCompletionSource<MainPage>();
+            _window?.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
+            {
+                try { tcs.SetResult(new MainPage()); }
+                catch (Exception ex) { tcs.SetException(ex); }
+            });
+            _prebuiltMainPageTask = tcs.Task;
+
+            var restoreSession = _fileActivationQueue.IsEmpty;
+            await InitializeCoreServicesAsync(restoreSession);
+            await CheckAndNavigateToMainContent();
+
+            ProcessFileActivationQueue();
+
+            await HandleWindowActivationAsync(isStartupLaunch);
+
+            PerformPostLaunchTasks();
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Application terminated unexpectedly during startup.");
+            await ShowCrashReportAndExitAsync(ex);
+        }
+    }
+
+    private void HandleInitialActivation(IActivatedEventArgs args)
+    {
+        string? filePath = null;
+
+        if (args.Kind == ActivationKind.File)
+        {
+            var fileArgs = args.As<IFileActivatedEventArgs>();
+            if (fileArgs.Files.Any()) filePath = fileArgs.Files[0].Path;
+        }
+        else if (args.Kind == ActivationKind.Launch)
+        {
+            var commandLineArgs = Environment.GetCommandLineArgs();
+            if (commandLineArgs.Length > 1) filePath = commandLineArgs[1];
+        }
+
+        if (!string.IsNullOrEmpty(filePath)) _fileActivationQueue.Enqueue(filePath);
+    }
+
+    /// <summary>
+    ///     Queues a file path for playback. This can be called from external sources
+    ///     (e.g., a single-instance redirection) to open files in the running application.
+    /// </summary>
+    public void EnqueueFileActivation(string filePath)
+    {
+        if (string.IsNullOrEmpty(filePath)) return;
+        _fileActivationQueue.Enqueue(filePath);
+        ProcessFileActivationQueue();
+    }
+
+    /// <summary>
+    ///     Handles an activation request from an external source (e.g., a secondary instance).
+    ///     This method orchestrates file queuing and window activation logic on the UI thread.
+    /// </summary>
+    /// <param name="filePath">The file path from the activation arguments, if any.</param>
+    public void HandleExternalActivation(string? filePath)
+    {
+        MainDispatcherQueue?.TryEnqueue(() =>
+        {
+            if (_window is null)
+            {
+                _logger?.LogError("HandleExternalActivation: Aborted because the main window is not available");
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(filePath)) EnqueueFileActivation(filePath);
+
+            try
+            {
+                var windowService = Services?.GetRequiredService<IWindowService>();
+                var isMiniPlayerActive = windowService?.IsMiniPlayerActive ?? false;
+
+                // If a file path is provided and we are already in the mini-player, we just
+                // play the file without disrupting the mini-player view.
+                if (!string.IsNullOrEmpty(filePath) && isMiniPlayerActive)
+                {
+                    return;
+                }
+
+                // Otherwise, always activate and show the main window on external activation,
+                // whether it was triggered by a file play request or a simple app launch.
+                if (windowService != null)
+                {
+                    // Use the WindowService to activate, which handles closing the mini-player
+                    // and restoring task switcher visibility automatically.
+                    windowService.ShowAndActivate();
+                }
+                else
+                {
+                    // Fallback if services aren't fully initialized (unlikely but possible).
+                    _logger?.LogWarning(
+                        "HandleExternalActivation: WindowService not available, using fallback activation");
+                    _window.AppWindow.Show();
+                    _window.Activate();
+                    if (_window.AppWindow is not null) _window.AppWindow.IsShownInSwitchers = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "HandleExternalActivation: Exception during window activation");
+                _window.AppWindow.Show();
+                _window.Activate();
+                if (_window.AppWindow is not null) _window.AppWindow.IsShownInSwitchers = true;
+            }
+        });
+    }
+
+    private void ProcessFileActivationQueue()
+    {
+        if (_isProcessingFileQueue) return;
+
+        MainDispatcherQueue?.TryEnqueue(async () =>
+        {
+            if (_isProcessingFileQueue) return;
+
+            _isProcessingFileQueue = true;
+            try
+            {
+                while (_fileActivationQueue.TryDequeue(out var filePath)) await ProcessFileActivationAsync(filePath);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Exception while processing file activation queue");
+            }
+            finally
+            {
+                _isProcessingFileQueue = false;
+            }
+        });
+    }
+
+    public async Task ProcessFileActivationAsync(string filePath)
+    {
+        if (Services is null || string.IsNullOrEmpty(filePath))
+        {
+            _logger?.LogError("ProcessFileActivationAsync: Aborted due to null services or file path");
+            return;
+        }
+
+        try
+        {
+            var playbackService = Services.GetRequiredService<IMusicPlaybackService>();
+            await playbackService.PlayTransientFileAsync(filePath);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to process file '{FilePath}'", filePath);
+        }
+    }
+
+    private async Task InitializeCoreServicesAsync(bool restoreSession = true)
+    {
+        if (Services is null) return;
+        try
+        {
+            _logger?.LogDebug("Starting core services initialization.");
+
+            // Pre-warm the audio player on a background thread.
+            // This runs concurrently with database/window init so LibVLC is ready when user presses play.
+            var audioWarmupTask = Task.Run(async () =>
+            {
+                try
+                {
+                    await Services.GetRequiredService<IAudioPlayer>().EnsureInitializedAsync().ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(ex, "Audio player warm-up failed. Will initialize on first playback.");
+                }
+            });
+
+            // 1. Foundation Phase: Initialize Database and WindowService in parallel.
+            var dbTask = InitializeDatabaseAsync(Services);
+            var windowTask = Services.GetRequiredService<IWindowService>().InitializeAsync();
+
+            // Wait for windowTask first (~5ms), then start non-EF services immediately
+            // while dbTask (EF warmup) is still running in the background.
+            await windowTask;
+
+            // 2. Services Phase: start services that don't depend on EF or playback state.
+            var presenceTask = Services.GetRequiredService<IPresenceManager>().InitializeAsync();
+            var trayTask = Services.GetRequiredService<TrayIconViewModel>().InitializeAsync();
+            var appInfoTask = Services.GetRequiredService<IAppInfoService>().InitializeAsync();
+
+            // playback and settings both need EF ready. LoadSettingsAsync also reads
+            // CurrentEqualizerSettings from the playback service, so settings starts after playback.
+            // Offline scrobbling queries ListenHistory, including columns added by recent migrations,
+            // so start it only after database migration/backfill has completed.
+            await dbTask;
+            var offlineScrobbleService = Services.GetRequiredService<IOfflineScrobbleService>();
+            offlineScrobbleService.Start();
+            var scrobbleTask = offlineScrobbleService.ProcessQueueAsync();
+            var playbackTask = Services.GetRequiredService<IMusicPlaybackService>().InitializeAsync(restoreSession);
+            await playbackTask;
+            var settingsTask = Services.GetRequiredService<SettingsViewModel>().LoadSettingsAsync();
+
+            await Task.WhenAll(presenceTask, trayTask, scrobbleTask, appInfoTask, settingsTask);
+
+            _logger?.LogInformation("Core services initialized successfully.");
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to initialize core services");
+        }
+    }
+
+    private static IServiceProvider ConfigureServices(Window window, DispatcherQueue dispatcherQueue, App appInstance,
+        IConfiguration configuration)
+    {
+        var services = new ServiceCollection();
+
+        services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
+
+        services.AddSingleton(configuration);
+        services.AddSingleton<IPathConfiguration, PathConfiguration>();
+        // Register the pre-warmed ApplicationDataContainer so SettingsService doesn't pay
+        // the ~275ms first-access cost during its constructor.
+        services.AddHttpClient();
+
+        // Configure the default HTTP client with standardized settings:
+        // - 10s timeout to fail fast on unresponsive servers
+        // - HTTP/1.1 forced for compatibility
+        // - 30s connection lifetime, 15s idle timeout to prevent "Response Ended Prematurely"
+        //   errors from servers closing idle connections that HttpClient tries to reuse
+        services.AddHttpClient("")
+            .ConfigureHttpClient(client =>
+            {
+                client.Timeout = TimeSpan.FromSeconds(20);
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("Nagi/1.0 (+https://github.com/Anthonyy232/Nagi)");
+            })
+            .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+            {
+                PooledConnectionLifetime = TimeSpan.FromMinutes(2),
+                ConnectTimeout = TimeSpan.FromSeconds(10),
+                KeepAlivePingPolicy = HttpKeepAlivePingPolicy.Always,
+                KeepAlivePingDelay = TimeSpan.FromSeconds(30),
+                KeepAlivePingTimeout = TimeSpan.FromSeconds(5)
+            });
+
+        // Image downloads are larger payloads and tolerate slower CDNs; use a longer timeout.
+        services.AddHttpClient("ImageDownloader")
+            .ConfigureHttpClient(client =>
+            {
+                client.Timeout = TimeSpan.FromSeconds(30);
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("Nagi/1.0 (+https://github.com/Anthonyy232/Nagi)");
+            })
+            .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+            {
+                PooledConnectionLifetime = TimeSpan.FromMinutes(2),
+                ConnectTimeout = TimeSpan.FromSeconds(10),
+            });
+
+        ConfigureAppSettingsServices(services);
+        ConfigureCoreLogicServices(services);
+        ConfigureWinUIServices(services, window, dispatcherQueue, appInstance);
+        ConfigureViewModels(services);
+
+        return services.BuildServiceProvider();
+    }
+
+    private static void ConfigureAppSettingsServices(IServiceCollection services)
+    {
+        services.AddSingleton<ICredentialLockerService, CredentialLockerService>();
+        services.AddSingleton<SettingsService>();
+        services.AddSingleton<IUISettingsService>(sp => sp.GetRequiredService<SettingsService>());
+        services.AddSingleton<ISettingsService>(sp => sp.GetRequiredService<SettingsService>());
+    }
+
+    private static void ConfigureCoreLogicServices(IServiceCollection services)
+    {
+        services.AddDbContextFactory<MusicDbContext>((serviceProvider, options) =>
+        {
+            var pathConfig = serviceProvider.GetRequiredService<IPathConfiguration>();
+            options.UseSqlite($"Data Source={pathConfig.DatabasePath}");
+        });
+
+        services.AddSingleton<LibraryService>();
+        services.AddSingleton<ILibraryService>(sp => sp.GetRequiredService<LibraryService>());
+        services.AddSingleton<ILibraryReader>(sp => sp.GetRequiredService<LibraryService>());
+        services.AddSingleton<ILibraryWriter>(sp => sp.GetRequiredService<LibraryService>());
+        services.AddSingleton<ILibraryScanner>(sp => sp.GetRequiredService<LibraryService>());
+        services.AddSingleton<IPlaylistService>(sp => sp.GetRequiredService<LibraryService>());
+
+        services.AddSingleton<IMusicPlaybackService, MusicPlaybackService>();
+        services.AddSingleton<IOfflineScrobbleService, OfflineScrobbleService>();
+        services.AddSingleton<IFileSystemService, FileSystemService>();
+        services.AddSingleton<IImageProcessor, ImageSharpProcessor>();
+        services.AddSingleton<IMetadataService, AtlMetadataService>();
+        services.AddSingleton<ILrcService, LrcService>();
+
+        services.AddSingleton<IApiKeyService, ApiKeyService>();
+
+        services.AddProviderPipelines(builder =>
+        {
+            builder.AddProvider(new ProviderPolicy
+            {
+                ProviderId = ServiceProviderIds.MusicBrainz,
+                // MusicBrainz mandates 1 req/s per IP with a UA identifying the client.
+                // Excess traffic returns 503 until the rate falls back under 1 RPS.
+                Channel = new ChannelPolicy
+                {
+                    PermitsPerWindow = 1,
+                    Window = TimeSpan.FromSeconds(1),
+                    MaxConcurrent = 1,
+                    MaxRetries = 3,
+                    BaseRetryDelay = TimeSpan.FromSeconds(1),
+                },
+            });
+
+            builder.AddProvider(new ProviderPolicy
+            {
+                ProviderId = ServiceProviderIds.TheAudioDb,
+                // Free tier: 30 req/min. Once breached, the key is locked out for a full
+                // minute — short retry delays just waste calls. Wait the full minute, once.
+                Channel = new ChannelPolicy
+                {
+                    PermitsPerWindow = 1,
+                    Window = TimeSpan.FromSeconds(2),
+                    MaxConcurrent = 2,
+                    MaxRetries = 1,
+                    BaseRetryDelay = TimeSpan.FromSeconds(60),
+                    MaxRetryDelay = TimeSpan.FromSeconds(75),
+                },
+            });
+
+            // Last.fm: metadata, auth, and scrobbling all run through a single provider so an
+            // auth-trip on one of them pauses the others (shared breaker). Last.fm's limits
+            // are undisclosed/dynamic; 5 RPS/IP is the long-standing convention.
+            builder.AddProvider(new ProviderPolicy
+            {
+                ProviderId = ServiceProviderIds.LastFm,
+                Channel = new ChannelPolicy
+                {
+                    PermitsPerWindow = 5,
+                    Window = TimeSpan.FromSeconds(1),
+                    MaxConcurrent = 4,
+                    MaxRetries = 3,
+                    BaseRetryDelay = TimeSpan.FromSeconds(5),
+                },
+            });
+
+            // Fanart.tv: effectively unlimited for normal use (token bucket, 429 rare). The
+            // pipeline auto-honors Retry-After if the service ever pushes back.
+            builder.AddProvider(new ProviderPolicy
+            {
+                ProviderId = ServiceProviderIds.FanartTv,
+                Channel = new ChannelPolicy
+                {
+                    PermitsPerWindow = 10,
+                    Window = TimeSpan.FromSeconds(1),
+                    MaxConcurrent = 8,
+                    MaxRetries = 3,
+                },
+            });
+
+            // LRCLIB: no rate limit documented. Keep concurrency reasonable to be polite.
+            builder.AddProvider(new ProviderPolicy
+            {
+                ProviderId = ServiceProviderIds.LrcLib,
+                Channel = new ChannelPolicy
+                {
+                    PermitsPerWindow = 20,
+                    Window = TimeSpan.FromSeconds(1),
+                    MaxConcurrent = 8,
+                    MaxRetries = 3,
+                },
+            });
+
+            // NetEase: unofficial API; treat aggressively-rate-limited and back off fast.
+            builder.AddProvider(new ProviderPolicy
+            {
+                ProviderId = ServiceProviderIds.NetEase,
+                Channel = new ChannelPolicy
+                {
+                    PermitsPerWindow = 2,
+                    Window = TimeSpan.FromSeconds(1),
+                    MaxConcurrent = 2,
+                    MaxRetries = 3,
+                    BaseRetryDelay = TimeSpan.FromSeconds(3),
+                },
+            });
+
+            // ListenBrainz: dynamic limit advertised via X-RateLimit-* headers. The pipeline
+            // honors X-RateLimit-Reset-In on 429 (alongside Retry-After), so we can run at a
+            // healthy steady-state and let the server tell us when to back off.
+            builder.AddProvider(new ProviderPolicy
+            {
+                ProviderId = ServiceProviderIds.ListenBrainz,
+                Channel = new ChannelPolicy
+                {
+                    PermitsPerWindow = 5,
+                    Window = TimeSpan.FromSeconds(1),
+                    MaxConcurrent = 4,
+                    MaxRetries = 3,
+                },
+            });
+
+            // Nagi's own API server (key bootstrap). Internal infra; conservative retry.
+            builder.AddProvider(new ProviderPolicy
+            {
+                ProviderId = ServiceProviderIds.NagiApi,
+                Channel = new ChannelPolicy
+                {
+                    PermitsPerWindow = 5,
+                    Window = TimeSpan.FromSeconds(1),
+                    MaxConcurrent = 4,
+                    MaxRetries = 3,
+                },
+            });
+
+            // Generic CDN image downloads. Provider id is shared by all artist/album image
+            // fetches because the source CDN isn't always knowable from the URL.
+            builder.AddProvider(new ProviderPolicy
+            {
+                ProviderId = ServiceProviderIds.ImageDownload,
+                Channel = new ChannelPolicy
+                {
+                    PermitsPerWindow = 10,
+                    Window = TimeSpan.FromSeconds(1),
+                    MaxConcurrent = 4,
+                    MaxRetries = 3,
+                },
+            });
+        });
+
+        services.AddSingleton<ILastFmMetadataService, LastFmMetadataService>();
+        services.AddSingleton<ILastFmAuthService, LastFmAuthService>();
+        services.AddSingleton<IMusicBrainzService, MusicBrainzService>();
+        services.AddSingleton<IFanartTvService, FanartTvService>();
+        services.AddSingleton<ITheAudioDbService, TheAudioDbService>();
+        services.AddSingleton<INetEaseLyricsService, NetEaseLyricsService>();
+        services.AddSingleton<LastFmScrobblerService>();
+        services.AddSingleton<ILastFmScrobblerService>(sp => sp.GetRequiredService<LastFmScrobblerService>());
+        services.AddSingleton<IListenSubmitter>(sp => sp.GetRequiredService<LastFmScrobblerService>());
+        services.AddSingleton<ListenBrainzScrobblerService>();
+        services.AddSingleton<IListenBrainzScrobblerService>(sp => sp.GetRequiredService<ListenBrainzScrobblerService>());
+        services.AddSingleton<IListenSubmitter>(sp => sp.GetRequiredService<ListenBrainzScrobblerService>());
+        services.AddSingleton<IPresenceManager, PresenceManager>();
+        services.AddSingleton<IPresenceService, DiscordPresenceService>();
+        services.AddSingleton<IPresenceService, LastFmPresenceService>();
+        services.AddSingleton<IPresenceService, ListenBrainzPresenceService>();
+        services.AddSingleton<ISmartPlaylistService, SmartPlaylistService>();
+        services.AddSingleton<IOnlineLyricsService, LrcLibService>();
+        services.AddSingleton<IRomanizationProvider, JapaneseRomanizationProvider>();
+        services.AddSingleton<IRomanizationProvider, DevanagariRomanizationProvider>();
+        services.AddSingleton<IRomanizationProvider, KoreanRomanizationProvider>();
+        services.AddSingleton<IRomanizationCatalogVerifier, EcdsaRomanizationCatalogVerifier>();
+        services.AddSingleton<IRomanizationPackManager, RomanizationPackManager>();
+        services.AddSingleton<ILyricRomanizationService, LyricRomanizationService>();
+        services.AddSingleton<IPlaylistExportService, M3uPlaylistExportService>();
+        services.AddSingleton<IBackupRestoreService, BackupRestoreService>();
+        services.AddSingleton<IStatisticsService, StatisticsService>();
+
+        // FFmpeg and ReplayGain services
+        services.AddSingleton<IFFmpegService, FFmpegService>();
+        services.AddSingleton<IPcmExtractor, FFmpegPcmExtractor>();
+        services.AddSingleton<IReplayGainService, ReplayGainService>();
+
+
+    }
+
+    private static void ConfigureWinUIServices(IServiceCollection services, Window window,
+        DispatcherQueue dispatcherQueue, App appInstance)
+    {
+        services.AddSingleton<IWin32InteropService, Win32InteropService>();
+        services.AddSingleton<IWindowService>(sp => new WindowService(
+            sp.GetRequiredService<IWin32InteropService>(),
+            sp.GetRequiredService<IUISettingsService>(),
+            sp.GetRequiredService<IDispatcherService>(),
+            sp.GetRequiredService<ILogger<WindowService>>()
+        ));
+        services.AddSingleton<IUIService, UIService>();
+        services.AddSingleton(dispatcherQueue);
+        services.AddSingleton<IDispatcherService, DispatcherService>();
+        services.AddSingleton<IThemeService>(sp =>
+            new ThemeService(appInstance, sp, sp.GetRequiredService<ILogger<ThemeService>>()));
+        services.AddSingleton<IApplicationLifecycle>(sp =>
+            new ApplicationLifecycle(appInstance, sp, sp.GetRequiredService<ILogger<ApplicationLifecycle>>()));
+        services.AddSingleton<IAppInfoService, AppInfoService>();
+        services.AddSingleton<INavigationService, NavigationService>();
+        services.AddSingleton<IMusicNavigationService, MusicNavigationService>();
+        services.AddSingleton<ITrayPopupService, TrayPopupService>();
+        services.AddSingleton<IViewModelFactory, ViewModelFactory>();
+        services.AddSingleton<IAudioPlayer>(provider =>
+            new LibVlcAudioPlayerService(provider.GetRequiredService<IDispatcherService>(),
+                provider.GetRequiredService<IAppInfoService>(),
+                provider.GetRequiredService<ISettingsService>(),
+                provider.GetRequiredService<ILogger<LibVlcAudioPlayerService>>()));
+        services.AddTransient<ITaskbarService>(provider =>
+            new TaskbarService(
+                provider.GetRequiredService<ILogger<TaskbarService>>(),
+                provider.GetRequiredService<IMusicPlaybackService>(),
+                provider.GetRequiredService<IDispatcherService>(),
+                provider.GetRequiredService<IWin32InteropService>()));
+    }
+
+    private static void ConfigureViewModels(IServiceCollection services)
+    {
+        // Global singletons - persist for app lifetime
+        services.AddSingleton<PlayerViewModel>();
+        services.AddSingleton<TrayIconViewModel>();
+
+        // List/Grid ViewModels - Singleton for fast navigation, refresh on data changes
+        services.AddSingleton<LibraryViewModel>();
+        services.AddSingleton<PlaylistViewModel>();
+        services.AddSingleton<FolderViewModel>();
+        services.AddSingleton<ArtistViewModel>();
+        services.AddSingleton<AlbumViewModel>();
+        services.AddSingleton<GenreViewModel>();
+        services.AddSingleton<InsightsViewModel>();
+
+        // Detail/Context ViewModels
+        services.AddSingleton<SettingsViewModel>();
+        services.AddTransient<OnboardingViewModel>();
+    }
+
+    /// <summary>
+    ///     One-shot population of sort keys for rows that pre-date the AddSortKeys migration.
+    ///     New writes are handled by <c>DenormalizationInterceptor</c>; this catches everything already in DB.
+    /// </summary>
+    private static async Task BackfillSortKeysAsync(Nagi.Core.Data.MusicDbContext dbContext)
+    {
+        const int batchSize = 500;
+
+        // Artists: load batches with empty SortName; the interceptor's backfill branch
+        // populates SortName and marks the column Modified on save.
+        while (true)
+        {
+            var artists = await dbContext.Artists
+                .Where(a => a.SortName == string.Empty || a.SortName == null)
+                .OrderBy(a => a.Id)
+                .Take(batchSize)
+                .ToListAsync().ConfigureAwait(false);
+            if (artists.Count == 0) break;
+            foreach (var a in artists) a.SyncSortName();
+            await dbContext.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        // Albums: load with AlbumArtists so SyncDenormalizedFields can compute PrimaryArtistSortName.
+        // Call Sync directly (interceptor only syncs on AlbumArtist changes or Added state).
+        while (true)
+        {
+            var albums = await dbContext.Albums
+                .Include(a => a.AlbumArtists).ThenInclude(aa => aa.Artist)
+                .Where(a => a.SortTitle == string.Empty || a.SortTitle == null ||
+                            a.PrimaryArtistSortName == string.Empty || a.PrimaryArtistSortName == null)
+                .OrderBy(a => a.Id)
+                .Take(batchSize)
+                .ToListAsync().ConfigureAwait(false);
+            if (albums.Count == 0) break;
+            foreach (var al in albums)
+            {
+                al.SyncDenormalizedFields();
+                var entry = dbContext.Entry(al);
+                entry.Property(x => x.SortTitle).IsModified = true;
+                entry.Property(x => x.PrimaryArtistSortName).IsModified = true;
+            }
+            await dbContext.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        // Songs: same pattern as albums.
+        while (true)
+        {
+            var songs = await dbContext.Songs
+                .Include(s => s.SongArtists).ThenInclude(sa => sa.Artist)
+                .Where(s => s.SortTitle == string.Empty || s.SortTitle == null ||
+                            s.PrimaryArtistSortName == string.Empty || s.PrimaryArtistSortName == null)
+                .OrderBy(s => s.Id)
+                .Take(batchSize)
+                .ToListAsync().ConfigureAwait(false);
+            if (songs.Count == 0) break;
+            foreach (var s in songs)
+            {
+                s.SyncDenormalizedFields();
+                var entry = dbContext.Entry(s);
+                entry.Property(x => x.SortTitle).IsModified = true;
+                entry.Property(x => x.PrimaryArtistSortName).IsModified = true;
+            }
+            await dbContext.SaveChangesAsync().ConfigureAwait(false);
+        }
+    }
+
+    private static async Task InitializeDatabaseAsync(IServiceProvider services)
+    {
+        try
+        {
+            await Task.Run(async () =>
+            {
+                // Use EF to check for and apply any pending migrations, then set PRAGMAs.
+                var dbContextFactory = services.GetRequiredService<IDbContextFactory<MusicDbContext>>();
+                await using var dbContext = await dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
+
+                await dbContext.Database.ExecuteSqlRawAsync("PRAGMA journal_mode=WAL;").ConfigureAwait(false);
+                await dbContext.Database.ExecuteSqlRawAsync("PRAGMA synchronous=NORMAL; PRAGMA cache_size=-32000; PRAGMA temp_store=MEMORY;").ConfigureAwait(false);
+
+                var pending = await dbContext.Database.GetPendingMigrationsAsync().ConfigureAwait(false);
+                if (pending.Any())
+                {
+                    await dbContext.Database.MigrateAsync().ConfigureAwait(false);
+                }
+
+                await BackfillSortKeysAsync(dbContext).ConfigureAwait(false);
+
+                // EF warmup is running in _efWarmupTask (started right after DI build).
+                // Await it here so hasFolderCheck result is ready before Services phase.
+                if (_efWarmupTask != null)
+                    await _efWarmupTask.ConfigureAwait(false);
+            }).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Failed to initialize or migrate database.");
+            throw; // Re-throw to propagate the failure to the startup handler.
+        }
+    }
+
+
+    private void InitializeWindowAndServices(IConfiguration configuration)
+    {
+        try
+        {
+            _window = new MainWindow();
+            _window.Closed += OnWindowClosed;
+
+            Services = ConfigureServices(_window, _window.DispatcherQueue, this, configuration);
+
+            // Kick off EF warmup immediately after DI is ready, but only if the DB already
+            // exists — on first launch the DB hasn't been created yet so the query would fail.
+            var pathConfig = Services.GetRequiredService<IPathConfiguration>();
+            if (File.Exists(pathConfig.DatabasePath))
+            {
+                _efWarmupTask = Task.Run(async () =>
+                {
+                    var efFactory = Services.GetRequiredService<IDbContextFactory<MusicDbContext>>();
+                    await using var ctx = await efFactory.CreateDbContextAsync().ConfigureAwait(false);
+                    _cachedHasAnyFolder = await ctx.Folders.AnyAsync().ConfigureAwait(false);
+                });
+            }
+
+            if (_window is MainWindow mainWindow)
+                mainWindow.InitializeDependencies(Services.GetRequiredService<IUISettingsService>());
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Failed to initialize window and services.");
+            throw;
+        }
+    }
+
+    private void InitializeSystemIntegration()
+    {
+        try
+        {
+            var interopService = Services!.GetRequiredService<IWin32InteropService>();
+            interopService.SetWindowIcon(_window!, "Assets/AppLogo.ico");
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to set window icon");
+        }
+    }
+
+    private void PerformPostLaunchTasks()
+    {
+        EnqueuePostLaunchTasks();
+    }
+
+    private async Task SaveApplicationStateAsync(IServiceProvider services)
+    {
+        var settingsService = services.GetRequiredService<ISettingsService>();
+        var musicPlaybackService = services.GetRequiredService<IMusicPlaybackService>();
+
+        try
+        {
+            if (await settingsService.GetRestorePlaybackStateEnabledAsync())
+                await musicPlaybackService.SavePlaybackStateAsync();
+            else
+                await settingsService.ClearPlaybackStateAsync();
+
+            await settingsService.FlushAsync();
+        }
+        catch (IOException ioEx)
+        {
+            _logger?.LogError(ioEx, "I/O error saving application state. Settings file may be locked or disk full.");
+        }
+        catch (UnauthorizedAccessException accessEx)
+        {
+            _logger?.LogError(accessEx, "Access denied while saving application state. Check LocalAppData permissions.");
+        }
+        catch (ObjectDisposedException disposedEx)
+        {
+            _logger?.LogWarning(disposedEx, "Service already disposed during save. State may be partially saved.");
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Unexpected error saving application state or flushing settings.");
+        }
+    }
+
+    private bool _isExiting;
+
+    private async void OnWindowClosed(object sender, WindowEventArgs args)
+    {
+        if (_isExiting)
+        {
+            args.Handled = false;
+            return;
+        }
+
+        _isExiting = true;
+
+        // We need to handle this manually to ensure async tasks complete before the app exits.
+        args.Handled = true;
+
+        try
+        {
+            if (_window is MainWindow mainWindow)
+            {
+                _logger?.LogDebug("Saving window state...");
+                await mainWindow.SaveWindowStateAsync();
+                mainWindow.Cleanup();
+            }
+
+            if (Services is not null)
+            {
+                _logger?.LogInformation("Window is closing. Shutting down services.");
+
+                // Clean up singleton ViewModels
+                Services.GetRequiredService<PlayerViewModel>().Cleanup();
+                Services.GetRequiredService<TrayIconViewModel>().Cleanup();
+
+                var presenceTask = Services.GetRequiredService<IPresenceManager>().ShutdownAsync();
+                var saveStateTask = SaveApplicationStateAsync(Services);
+
+                await Task.WhenAll(presenceTask, saveStateTask);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error during application shutdown.");
+        }
+        finally
+        {
+            await Log.CloseAndFlushAsync();
+
+            if (Services is IAsyncDisposable asyncDisposableServices)
+                await asyncDisposableServices.DisposeAsync();
+            else if (Services is IDisposable disposableServices)
+                disposableServices.Dispose();
+
+            // Force process exit to ensure all threads (like VLC) are terminated.
+            Current.Exit();
+            Process.GetCurrentProcess().Kill();
+        }
+    }
+
+    private void OnAppUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        e.Handled = true;
+        _ = ShowCrashReportAndExitAsync(e.Exception);
+    }
+
+    private async Task ShowCrashReportAndExitAsync(Exception ex)
+    {
+        var exceptionDetails = ex.ToString();
+        var originalLogPath = _currentLogFilePath ?? "Not set";
+
+        Log.Fatal(ex,
+            "A critical error occurred. Application will now terminate. Log path: {LogPath}",
+            originalLogPath);
+
+        // Primary strategy: Get logs from the in-memory sink.
+        var logContent = MemoryLog.Instance.GetContent();
+
+        // Fallback strategy: If memory is empty, try reading the log file from disk.
+        if (string.IsNullOrWhiteSpace(logContent))
+            try
+            {
+                await Task.Delay(250).ConfigureAwait(false);
+                logContent = await File.ReadAllTextAsync(originalLogPath).ConfigureAwait(false);
+            }
+            catch (Exception fileEx)
+            {
+                logContent = string.Format(
+                    Nagi.WinUI.Resources.Strings.App_CrashReport_LogFallbackError_Format,
+                    originalLogPath,
+                    fileEx.Message);
+            }
+
+        var fullCrashReport = $"{logContent}\n\n--- EXCEPTION DETAILS ---\n{exceptionDetails}";
+
+        if (MainDispatcherQueue == null)
+        {
+            await Log.CloseAndFlushAsync();
+            Current?.Exit();
+            Process.GetCurrentProcess().Kill();
+            return;
+        }
+
+        var dispatcherService = Services?.GetService<IDispatcherService>();
+        if (dispatcherService == null && MainDispatcherQueue != null)
+        {
+            dispatcherService = new DispatcherService(MainDispatcherQueue);
+        }
+
+        if (dispatcherService == null)
+        {
+            await Log.CloseAndFlushAsync();
+            Current?.Exit();
+            Process.GetCurrentProcess().Kill();
+            return;
+        }
+
+        await dispatcherService.EnqueueAsync(async () =>
+        {
+            try
+            {
+                var uiService = Services?.GetRequiredService<IUIService>();
+                if (uiService != null)
+                {
+                    var result = await uiService.ShowCrashReportDialogAsync(
+                        Nagi.WinUI.Resources.Strings.CrashReport_Title,
+                        Nagi.WinUI.Resources.Strings.CrashReport_Message,
+                        fullCrashReport,
+                        "https://github.com/Anthonyy232/Nagi/issues"
+                    );
+
+                    if (result == CrashReportResult.Reset)
+                    {
+                        await ResetApplicationDataAsync();
+                        return; // App will restart in ResetApplicationDataAsync
+                    }
+                }
+            }
+            catch (Exception dialogEx)
+            {
+                Debug.WriteLine($"Failed to show the crash report dialog: {dialogEx}");
+            }
+            finally
+            {
+                await Log.CloseAndFlushAsync();
+                Current?.Exit();
+                Process.GetCurrentProcess().Kill();
+            }
+        });
+    }
+
+    private async Task ResetApplicationDataAsync()
+    {
+        try
+        {
+            Log.Information("User requested a full application data reset from the crash dialog.");
+
+            // Determine paths first so we have them for manual fallback
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
+            var pathConfig = new PathConfiguration(configuration);
+
+            if (Services != null)
+            {
+                try
+                {
+                    var settingsService = Services.GetRequiredService<ISettingsService>();
+                    var libraryService = Services.GetRequiredService<ILibraryService>();
+
+                    // Use robust service methods first
+                    await settingsService.ResetToDefaultsAsync();
+                    await libraryService.ClearAllLibraryDataAsync();
+                }
+                catch (Exception serviceEx)
+                {
+                    Log.Warning(serviceEx, "Service-based reset failed. Falling back to manual file deletion.");
+                    PerformManualFileReset(pathConfig);
+                }
+            }
+            else
+            {
+                // Fallback: Manually delete files if DI hasn't initialized
+                Log.Warning("Services not available during reset. Performing manual file deletion.");
+                PerformManualFileReset(pathConfig);
+            }
+
+            Log.Information("Reset complete. Restarting application.");
+            await Log.CloseAndFlushAsync();
+
+            // Restart the app cleanly
+            ElevationHelper.RestartWithoutElevation();
+
+            // Just in case RestartWithoutElevation doesn't exit the process immediately
+            Current.Exit();
+            Process.GetCurrentProcess().Kill();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Critical failure during app reset: {ex}");
+            Log.Fatal(ex, "Critical failure during app reset.");
+            Current.Exit();
+            Process.GetCurrentProcess().Kill();
+        }
+    }
+
+    private void PerformManualFileReset(IPathConfiguration pathConfig)
+    {
+        try
+        {
+            // 1. Packaged apps store settings in LocalSettings, not settings.json
+            try
+            {
+                ApplicationData.Current.LocalSettings.Values.Clear();
+            }
+            catch (Exception ex)
+            {
+                Log.Warning(ex, "Failed to clear LocalSettings.");
+            }
+
+            // 2. Clear known settings and state files
+            SafelyDeleteFile(pathConfig.SettingsFilePath);
+            SafelyDeleteFile(pathConfig.PlaybackStateFilePath);
+
+            // 3. Delete the database
+            SafelyDeleteFile(pathConfig.DatabasePath);
+
+            // 4. Clear cache directories
+            SafelyDeleteDir(pathConfig.AlbumArtCachePath);
+            SafelyDeleteDir(pathConfig.ArtistImageCachePath);
+            SafelyDeleteDir(pathConfig.PlaylistImageCachePath);
+            SafelyDeleteDir(pathConfig.LrcCachePath);
+            SafelyDeleteDir(pathConfig.RomanizationPacksPath);
+
+            Log.Information("Manual file reset completed.");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Critical failure during manual file reset.");
+        }
+    }
+
+    private void SafelyDeleteFile(string path)
+    {
+        try
+        {
+            if (File.Exists(path)) File.Delete(path);
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "Failed to delete file: {Path}", path);
+        }
+    }
+
+    private void SafelyDeleteDir(string path)
+    {
+        try
+        {
+            if (Directory.Exists(path)) Directory.Delete(path, true);
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "Failed to delete directory: {Path}", path);
+        }
+    }
+
+    /// <summary>
+    ///     Sets the initial page of the application based on whether a music library has been configured.
+    /// </summary>
+    public async Task CheckAndNavigateToMainContent()
+    {
+        if (RootWindow is null || Services is null) return;
+
+        // Use pre-fetched result if available (set during InitializeCoreServicesAsync Services phase).
+        bool hasFolders;
+        if (_cachedHasAnyFolder.HasValue)
+        {
+            hasFolders = _cachedHasAnyFolder.Value;
+            _cachedHasAnyFolder = null;
+        }
+        else
+        {
+            var libraryService = Services.GetRequiredService<ILibraryService>();
+            hasFolders = await libraryService.HasAnyFolderAsync();
+        }
+
+        // This sequence is critical to prevent a theme flash on startup.
+        // 1. Set the content, which temporarily uses the OS theme.
+        if (hasFolders)
+        {
+            if (RootWindow.Content is not MainPage)
+            {
+                // Use the pre-built instance if available (built concurrently during core init).
+                MainPage mainPageInstance;
+                if (_prebuiltMainPageTask != null)
+                {
+                    mainPageInstance = await _prebuiltMainPageTask;
+                    _prebuiltMainPageTask = null;
+                }
+                else
+                {
+                    mainPageInstance = new MainPage();
+                }
+                RootWindow.Content = mainPageInstance;
+            }
+        }
+        else
+        {
+            _prebuiltMainPageTask = null; // discard pre-built instance if onboarding needed
+            if (RootWindow.Content is not OnboardingPage) RootWindow.Content = new OnboardingPage();
+        }
+
+        if (RootWindow is MainWindow mainWindow)
+        {
+            // 2. Fetch the user's saved theme and apply it to the root element.
+            var settingsService = Services.GetRequiredService<IUISettingsService>();
+            var themeService = Services.GetRequiredService<IThemeService>();
+            var savedTheme = await settingsService.GetThemeAsync();
+            themeService.ApplyTheme(savedTheme);
+
+            // 3. Notify the MainWindow that content is loaded and themed, so it can
+            //    update its custom title bar and backdrop to match.
+            mainWindow.NotifyContentLoaded();
+            mainWindow.InitializeCustomTitleBar();
+        }
+    }
+
+    internal void ApplyThemeInternal(ElementTheme themeToApply)
+    {
+        EnsureOnUIThread(() =>
+        {
+            if (RootWindow?.Content is not FrameworkElement rootElement) return;
+
+            rootElement.RequestedTheme = themeToApply;
+            Services?.GetRequiredService<IThemeService>().ReapplyCurrentDynamicThemeAsync();
+
+            if (RootWindow is MainWindow mainWindow) mainWindow.InitializeCustomTitleBar();
+        }, nameof(ApplyThemeInternal));
+    }
+
+    public void SetAppPrimaryColorBrushColor(Color newColor)
+    {
+        SetSolidColorBrushColor(
+            "AppPrimaryColorBrush",
+            newColor,
+            nameof(SetAppPrimaryColorBrushColor),
+            refreshTaskbarIcons: true);
+    }
+
+    public void SetPlayerColors(Color tintColor, Color backgroundColor, Color accentColor)
+    {
+        SetSolidColorBrushColor("PlayerTintColorBrush", tintColor, nameof(SetPlayerColors));
+        SetSolidColorBrushColor("PlayerBackgroundBrush", backgroundColor, nameof(SetPlayerColors));
+        SetSolidColorBrushColor("PlayerAccentBrush", accentColor, nameof(SetPlayerColors));
+    }
+
+    public void SetMediaOnImageAccentBrushColor(Color newColor)
+    {
+        SetSolidColorBrushColor("MediaOnImageAccentBrush", newColor, nameof(SetMediaOnImageAccentBrushColor));
+    }
+
+    private void SetSolidColorBrushColor(
+        string resourceKey,
+        Color newColor,
+        string methodName,
+        bool refreshTaskbarIcons = false)
+    {
+        EnsureOnUIThread(() =>
+        {
+            if (Resources.TryGetValue(resourceKey, out var brushObject) &&
+                brushObject is SolidColorBrush brush)
+            {
+                if (brush.Color == newColor) return;
+
+                brush.Color = newColor;
+                if (refreshTaskbarIcons)
+                {
+                    _ = (RootWindow as MainWindow)?.TaskbarService?.RefreshIconsAsync();
+                }
+            }
+            else
+            {
+                _logger?.LogCritical("{ResourceKey} resource not found", resourceKey);
+            }
+        }, methodName);
+    }
+
+    private void EnsureOnUIThread(Action action, string methodName)
+    {
+        if (RootWindow?.DispatcherQueue is { } dispatcher)
+        {
+            if (dispatcher.HasThreadAccess)
+            {
+                action();
+            }
+            else
+            {
+                dispatcher.TryEnqueue(action.Invoke);
+            }
+        }
+        else if (RootWindow != null)
+        {
+            _logger?.LogWarning("{Method}: RootWindow exists but DispatcherQueue is null. Skipping update.", methodName);
+        }
+        else
+        {
+            _logger?.LogDebug("{Method}: RootWindow is null. Skipping update.", methodName);
+        }
+    }
+
+    public bool TryParseHexColor(string hex, out Color color)
+    {
+        color = Colors.Transparent;
+        if (string.IsNullOrEmpty(hex)) return false;
+
+        hex = hex.TrimStart('#');
+        if (!uint.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var argb)) return false;
+
+        if (hex.Length == 8) // AARRGGBB
+        {
+            color = Color.FromArgb((byte)(argb >> 24), (byte)(argb >> 16), (byte)(argb >> 8), (byte)argb);
+            return true;
+        }
+
+        if (hex.Length == 6) // RRGGBB
+        {
+            color = Color.FromArgb(255, (byte)(argb >> 16), (byte)(argb >> 8), (byte)argb);
+            return true;
+        }
+
+        return false;
+    }
+
+    private async Task HandleWindowActivationAsync(bool isStartupLaunch = false)
+    {
+        if (_window is null || Services is null) return;
+
+        var settingsService = Services.GetRequiredService<IUISettingsService>();
+        var startMinimized = await settingsService.GetStartMinimizedEnabledAsync();
+        // Note: We intentionally await the mini-player setting inline in the condition below
+        // to keep the startup path simple and explicit about when the main window should
+        // be hidden from task switchers like Alt+Tab.
+
+        // Handle the special case where the app should start directly in compact/mini-player view.
+        // This avoids minimizing the main window before it's activated, which can cause instability.
+        if ((isStartupLaunch || startMinimized) && await settingsService.GetMinimizeToMiniPlayerEnabledAsync())
+        {
+            var windowService = Services.GetRequiredService<IWindowService>();
+            windowService.ShowMiniPlayer();
+            // Explicitly hide the main window from the task switcher (e.g., Alt+Tab).
+            if (_window?.AppWindow is not null) _window.AppWindow.IsShownInSwitchers = false;
+        }
+        else if (isStartupLaunch || startMinimized)
+        {
+            var hideToTray = await settingsService.GetHideToTrayEnabledAsync();
+            if (!hideToTray) WindowActivator.ShowMinimized(_window);
+        }
+        else
+        {
+            // Default behavior: activate and show the main window.
+            // Use ShowAndActivate to reliably bring the window to the foreground,
+            // bypassing Windows' focus-stealing prevention.
+            var win32Service = Services.GetRequiredService<IWin32InteropService>();
+            WindowActivator.ShowAndActivate(_window, win32Service);
+        }
+    }
+
+    private void EnqueuePostLaunchTasks()
+    {
+        MainDispatcherQueue?.TryEnqueue(DispatcherQueuePriority.Normal, () =>
+        {
+            try
+            {
+                if (Services is null) return;
+
+                var audioPlayerService = Services.GetRequiredService<IAudioPlayer>();
+                audioPlayerService.InitializeSmtc();
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Failed to initialize System Media Transport Controls");
+            }
+        });
+    }
+
+}

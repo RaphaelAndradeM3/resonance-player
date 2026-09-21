@@ -6,7 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Resonance.Core.Data;
 using Resonance.Core.Models;
 using Resonance.Core.Services.Abstractions;
 using Resonance.WinUI.Services.Abstractions;
@@ -16,7 +18,7 @@ namespace Resonance.WinUI.ViewModels;
 
 /// <summary>
 ///     ViewModel for the Track Inspector side panel, providing technical stream details,
-///     rich tags, artwork lightbox state, external IDs, and playback synchronization.
+///     rich tags, artwork lightbox state, external IDs, acoustic fingerprinting, and recognition.
 /// </summary>
 public partial class TrackInspectorViewModel : ObservableObject, ITrackInspectorViewModel, IDisposable
 {
@@ -25,10 +27,14 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
     private readonly IDispatcherService _dispatcherService;
     private readonly IUIService _uiService;
     private readonly IFileSystemService _fileSystem;
+    private readonly IFingerprintService _fingerprintService;
+    private readonly IAcoustIdService _acoustIdService;
+    private readonly IDbContextFactory<MusicDbContext> _dbContextFactory;
     private readonly ILogger<TrackInspectorViewModel> _logger;
 
     private IReadOnlyList<Song> _selectedSongs = Array.Empty<Song>();
     private int _currentSongIndex;
+    private Song? _currentSong;
     private CancellationTokenSource? _loadingCts;
     private bool _disposed;
 
@@ -38,6 +44,9 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
         IDispatcherService dispatcherService,
         IUIService uiService,
         IFileSystemService fileSystem,
+        IFingerprintService fingerprintService,
+        IAcoustIdService acoustIdService,
+        IDbContextFactory<MusicDbContext> dbContextFactory,
         ILogger<TrackInspectorViewModel> logger)
     {
         _metadataService = metadataService ?? throw new ArgumentNullException(nameof(metadataService));
@@ -45,6 +54,9 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
         _dispatcherService = dispatcherService ?? throw new ArgumentNullException(nameof(dispatcherService));
         _uiService = uiService ?? throw new ArgumentNullException(nameof(uiService));
         _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+        _fingerprintService = fingerprintService ?? throw new ArgumentNullException(nameof(fingerprintService));
+        _acoustIdService = acoustIdService ?? throw new ArgumentNullException(nameof(acoustIdService));
+        _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException(nameof(dbContextFactory));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         _playbackService.TrackChanged += OnPlaybackTrackChanged;
@@ -73,6 +85,21 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
 
     [ObservableProperty]
     public partial bool HasMultipleTracks { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsRecognizing { get; set; }
+
+    [ObservableProperty]
+    public partial string RecognitionStatusText { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial IReadOnlyList<RecognitionCandidate> RecognitionCandidates { get; set; } = Array.Empty<RecognitionCandidate>();
+
+    [ObservableProperty]
+    public partial string? FingerprintHash { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsAlreadyIdentified { get; set; }
 
     partial void OnIsOpenChanged(bool value)
     {
@@ -174,6 +201,7 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
         _loadingCts = new CancellationTokenSource();
         var token = _loadingCts.Token;
 
+        _currentSong = song;
         IsLoading = true;
         ErrorMessage = null;
         IsOpen = true;
@@ -185,11 +213,21 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
             data.CurrentTrackIndex = _currentSongIndex + 1;
             data.TotalSelectedTracks = _selectedSongs.Count;
 
+            bool identified = !string.IsNullOrEmpty(data.ExternalIds.AcoustId) ||
+                              !string.IsNullOrEmpty(data.ExternalIds.MusicBrainzTrackId) ||
+                              !string.IsNullOrEmpty(song.AcoustId) ||
+                              !string.IsNullOrEmpty(song.MusicBrainzTrackId);
+
             _dispatcherService.TryEnqueue(() =>
             {
                 CurrentData = data;
                 HasMultipleTracks = _selectedSongs.Count > 1;
                 PaginationText = $"{data.CurrentTrackIndex} de {data.TotalSelectedTracks}";
+                IsAlreadyIdentified = identified;
+                FingerprintHash = song.AcousticFingerprint;
+                RecognitionCandidates = Array.Empty<RecognitionCandidate>();
+                RecognitionStatusText = string.Empty;
+                IsRecognizing = false;
                 IsLoading = false;
             });
         }
@@ -206,6 +244,215 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
                 IsLoading = false;
             });
         }
+    }
+
+    [RelayCommand]
+    public async Task IdentifyTrackAsync()
+    {
+        if (IsRecognizing || _currentSong == null)
+            return;
+
+        await PerformTrackRecognitionAsync(forceRecomputeFingerprint: false);
+    }
+
+    [RelayCommand]
+    public async Task ReidentifyTrackAsync()
+    {
+        if (IsRecognizing || _currentSong == null)
+            return;
+
+        await PerformTrackRecognitionAsync(forceRecomputeFingerprint: true);
+    }
+
+    private async Task PerformTrackRecognitionAsync(bool forceRecomputeFingerprint)
+    {
+        if (_currentSong == null || string.IsNullOrWhiteSpace(_currentSong.FilePath))
+        {
+            RecognitionStatusText = "Nenhuma faixa selecionada ou caminho inválido.";
+            return;
+        }
+
+        IsRecognizing = true;
+        RecognitionCandidates = Array.Empty<RecognitionCandidate>();
+        RecognitionStatusText = "Iniciando análise acústica...";
+
+        try
+        {
+            AcousticFingerprint fingerprint;
+
+            if (!forceRecomputeFingerprint && !string.IsNullOrWhiteSpace(_currentSong.AcousticFingerprint))
+            {
+                var duration = (int)Math.Round(_currentSong.Duration.TotalSeconds);
+                if (duration <= 0) duration = 120;
+                fingerprint = new AcousticFingerprint(_currentSong.AcousticFingerprint, duration);
+                FingerprintHash = fingerprint.Hash;
+                RecognitionStatusText = "Impressão acústica local recuperada. Consultando AcoustID...";
+            }
+            else
+            {
+                RecognitionStatusText = "Calculando impressão acústica local (Chromaprint)...";
+                var fp = await _fingerprintService.GenerateFingerprintAsync(_currentSong.FilePath).ConfigureAwait(false);
+
+                if (fp == null || !fp.Value.IsValid)
+                {
+                    _dispatcherService.TryEnqueue(() =>
+                    {
+                        RecognitionStatusText = "Falha ao gerar fingerprint de áudio (arquivo inacessível ou formato incompatível).";
+                        IsRecognizing = false;
+                    });
+                    return;
+                }
+
+                fingerprint = fp.Value;
+
+                try
+                {
+                    await using var db = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
+                    var dbSong = await db.Songs.FindAsync(_currentSong.Id).ConfigureAwait(false);
+                    if (dbSong != null)
+                    {
+                        dbSong.AcousticFingerprint = fingerprint.Hash;
+                        await db.SaveChangesAsync().ConfigureAwait(false);
+                    }
+                    _currentSong.AcousticFingerprint = fingerprint.Hash;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Não foi possível salvar AcousticFingerprint para a música {SongId}", _currentSong.Id);
+                }
+
+                _dispatcherService.TryEnqueue(() =>
+                {
+                    FingerprintHash = fingerprint.Hash;
+                    RecognitionStatusText = "Impressão calculada. Consultando AcoustID & MusicBrainz...";
+                });
+            }
+
+            var result = await _acoustIdService.LookupAsync(fingerprint).ConfigureAwait(false);
+
+            _dispatcherService.TryEnqueue(() =>
+            {
+                IsRecognizing = false;
+                switch (result.Status)
+                {
+                    case RecognitionStatus.Success:
+                        RecognitionCandidates = result.Candidates;
+                        RecognitionStatusText = $"{result.Candidates.Count} correspondência(s) encontrada(s).";
+                        break;
+                    case RecognitionStatus.NoMatchFound:
+                        RecognitionCandidates = Array.Empty<RecognitionCandidate>();
+                        RecognitionStatusText = "Nenhuma correspondência encontrada no AcoustID para esta gravação.";
+                        break;
+                    case RecognitionStatus.AudioTooShort:
+                        RecognitionCandidates = Array.Empty<RecognitionCandidate>();
+                        RecognitionStatusText = "Áudio muito curto para identificação confiável (mínimo de 10s).";
+                        break;
+                    case RecognitionStatus.RateLimited:
+                        RecognitionCandidates = Array.Empty<RecognitionCandidate>();
+                        RecognitionStatusText = "Limite de requisições AcoustID atingido. Aguarde alguns instantes.";
+                        break;
+                    case RecognitionStatus.OfflineOrDisabled:
+                        RecognitionCandidates = Array.Empty<RecognitionCandidate>();
+                        RecognitionStatusText = "Serviço AcoustID desativado nas configurações do player.";
+                        break;
+                    default:
+                        RecognitionCandidates = Array.Empty<RecognitionCandidate>();
+                        RecognitionStatusText = result.ErrorMessage ?? "Erro ao consultar o serviço AcoustID.";
+                        break;
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro durante o reconhecimento acústico da faixa {SongId}", _currentSong.Id);
+            _dispatcherService.TryEnqueue(() =>
+            {
+                IsRecognizing = false;
+                RecognitionStatusText = "Ocorreu uma falha inesperada durante a identificação.";
+            });
+        }
+    }
+
+    [RelayCommand]
+    public async Task SelectCandidateAsync(RecognitionCandidate? candidate)
+    {
+        if (candidate == null || _currentSong == null)
+            return;
+
+        try
+        {
+            // 1. Atualizar banco de dados SQLite (Princípio VII: somente BD/memória, sem tocar no arquivo em disco)
+            await using var db = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
+            var dbSong = await db.Songs.FindAsync(_currentSong.Id).ConfigureAwait(false);
+            if (dbSong != null)
+            {
+                dbSong.AcoustId = candidate.AcoustId;
+                dbSong.MusicBrainzTrackId = candidate.MusicBrainzTrackId;
+                if (!string.IsNullOrEmpty(candidate.MusicBrainzReleaseId))
+                {
+                    dbSong.MusicBrainzReleaseId = candidate.MusicBrainzReleaseId;
+                }
+                await db.SaveChangesAsync().ConfigureAwait(false);
+            }
+
+            _currentSong.AcoustId = candidate.AcoustId;
+            _currentSong.MusicBrainzTrackId = candidate.MusicBrainzTrackId;
+            if (!string.IsNullOrEmpty(candidate.MusicBrainzReleaseId))
+            {
+                _currentSong.MusicBrainzReleaseId = candidate.MusicBrainzReleaseId;
+            }
+
+            // 2. Atualizar dados em memória no TrackInspectorViewData
+            _dispatcherService.TryEnqueue(() =>
+            {
+                if (CurrentData != null)
+                {
+                    CurrentData.ExternalIds.AcoustId = candidate.AcoustId;
+                    CurrentData.ExternalIds.MusicBrainzTrackId = candidate.MusicBrainzTrackId;
+                    CurrentData.ExternalIds.MusicBrainzReleaseId = candidate.MusicBrainzReleaseId;
+                    CurrentData.ExternalIds.MusicBrainzArtistId = candidate.MusicBrainzArtistId;
+
+                    // Sugestões de tags sem modificar arquivos físicos no disco (Princípio VII)
+                    if (!string.IsNullOrWhiteSpace(candidate.Title))
+                    {
+                        CurrentData.Tags.Title = candidate.Title;
+                    }
+                    if (!string.IsNullOrWhiteSpace(candidate.Artist))
+                    {
+                        CurrentData.Tags.Artists = new List<string> { candidate.Artist };
+                    }
+                    if (!string.IsNullOrWhiteSpace(candidate.Album))
+                    {
+                        CurrentData.Tags.Album = candidate.Album;
+                    }
+                    if (candidate.Year.HasValue && candidate.Year.Value > 0)
+                    {
+                        CurrentData.Tags.Year = candidate.Year;
+                    }
+
+                    OnPropertyChanged(nameof(CurrentData));
+                }
+
+                IsAlreadyIdentified = true;
+                RecognitionCandidates = Array.Empty<RecognitionCandidate>();
+                RecognitionStatusText = "Faixa vinculada com sucesso ao AcoustID & MusicBrainz!";
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao vincular candidato {CandidateTrackId} à música {SongId}", candidate.MusicBrainzTrackId, _currentSong.Id);
+            _dispatcherService.TryEnqueue(() =>
+            {
+                RecognitionStatusText = "Não foi possível vincular os identificadores à faixa.";
+            });
+        }
+    }
+
+    [RelayCommand]
+    public void DiscardCandidates()
+    {
+        RecognitionCandidates = Array.Empty<RecognitionCandidate>();
+        RecognitionStatusText = string.Empty;
     }
 
     [RelayCommand]

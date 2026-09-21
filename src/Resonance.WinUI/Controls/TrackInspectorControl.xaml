@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <UserControl
     x:Class="Resonance.WinUI.Controls.TrackInspectorControl"
+    x:Name="InspectorRoot"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Resonance.Core.Models"
     xmlns:viewmodels="using:Resonance.WinUI.ViewModels"
     mc:Ignorable="d"
     d:DesignWidth="360"
@@ -463,6 +465,238 @@
                                        TextWrapping="Wrap"
                                        Padding="4" />
                         </Expander>
+                    </StackPanel>
+                </Border>
+
+                <!-- Fingerprint & Acoustic Recognition Card (Feature 004) -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="14">
+                    <StackPanel Spacing="12">
+                        <!-- Card Header -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                <FontIcon Glyph="&#xE95B;" FontSize="14" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                <TextBlock Text="Reconhecimento Acústico"
+                                           FontWeight="SemiBold"
+                                           FontSize="13"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+
+                            <!-- Status Badge -->
+                            <Border Grid.Column="1"
+                                    Visibility="{x:Bind ViewModel.IsAlreadyIdentified, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                    Background="{ThemeResource AccentFillColorDefaultBrush}"
+                                    CornerRadius="4"
+                                    Padding="8,2">
+                                <TextBlock Text="Já Identificada"
+                                           FontSize="11"
+                                           FontWeight="Medium"
+                                           Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                            </Border>
+                            <Border Grid.Column="1"
+                                    Visibility="{x:Bind ViewModel.IsAlreadyIdentified, Mode=OneWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+                                    Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                                    CornerRadius="4"
+                                    Padding="8,2">
+                                <TextBlock Text="Não Identificada"
+                                           FontSize="11"
+                                           FontWeight="Medium"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </Border>
+                        </Grid>
+
+                        <MenuFlyoutSeparator Margin="-14,0,-14,0" />
+
+                        <!-- Fingerprint Hash display (if available) -->
+                        <Grid Visibility="{x:Bind ViewModel.FingerprintHash, Mode=OneWay, Converter={StaticResource NullOrEmptyStringToVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Chromaprint"
+                                       FontSize="11"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{x:Bind ViewModel.FingerprintHash, Mode=OneWay}"
+                                       FontSize="10"
+                                       FontFamily="Consolas, Cascadia Code, Courier New"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       Margin="4,0" />
+                            <Button Grid.Column="2"
+                                    Padding="4,2"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                    CommandParameter="{x:Bind ViewModel.FingerprintHash, Mode=OneWay}"
+                                    ToolTipService.ToolTip="Copiar Hash Chromaprint">
+                                <FontIcon Glyph="&#xE8C8;" FontSize="10" />
+                            </Button>
+                        </Grid>
+
+                        <!-- Action Buttons -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button HorizontalAlignment="Stretch"
+                                    Command="{x:Bind ViewModel.IdentifyTrackCommand}"
+                                    IsEnabled="{x:Bind ViewModel.IsRecognizing, Mode=OneWay, Converter={StaticResource BooleanToInverseBooleanConverter}}"
+                                    Style="{ThemeResource AccentButtonStyle}">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <FontIcon Glyph="&#xE95B;" FontSize="12" />
+                                    <TextBlock Text="Identificar via Áudio" FontSize="12" />
+                                </StackPanel>
+                            </Button>
+
+                            <Button Grid.Column="1"
+                                    Margin="6,0,0,0"
+                                    Command="{x:Bind ViewModel.ReidentifyTrackCommand}"
+                                    IsEnabled="{x:Bind ViewModel.IsRecognizing, Mode=OneWay, Converter={StaticResource BooleanToInverseBooleanConverter}}"
+                                    Visibility="{x:Bind ViewModel.IsAlreadyIdentified, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                    ToolTipService.ToolTip="Recalcular impressão e reidentificar">
+                                <FontIcon Glyph="&#xE72C;" FontSize="12" />
+                            </Button>
+                        </Grid>
+
+                        <!-- Indeterminate Progress Bar during recognition -->
+                        <StackPanel Spacing="6"
+                                    Visibility="{x:Bind ViewModel.IsRecognizing, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <ProgressBar IsIndeterminate="True" HorizontalAlignment="Stretch" />
+                            <TextBlock Text="{x:Bind ViewModel.RecognitionStatusText, Mode=OneWay}"
+                                       FontSize="11"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       HorizontalAlignment="Center"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+
+                        <!-- Status text when NOT recognizing -->
+                        <TextBlock Text="{x:Bind ViewModel.RecognitionStatusText, Mode=OneWay}"
+                                   Visibility="{x:Bind ViewModel.IsRecognizing, Mode=OneWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+                                   FontSize="11"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   TextWrapping="Wrap" />
+
+                        <!-- Recognition Candidates Section -->
+                        <StackPanel Spacing="8"
+                                    Visibility="{x:Bind ViewModel.RecognitionCandidates, Mode=OneWay, Converter={StaticResource CollectionToVisibilityConverter}}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Candidatos Encontrados"
+                                           FontWeight="SemiBold"
+                                           FontSize="12"
+                                           VerticalAlignment="Center" />
+                                <Button Grid.Column="1"
+                                        Padding="6,2"
+                                        Background="Transparent"
+                                        BorderBrush="Transparent"
+                                        Command="{x:Bind ViewModel.DiscardCandidatesCommand}"
+                                        ToolTipService.ToolTip="Descartar candidatos">
+                                    <TextBlock Text="Descartar" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                </Button>
+                            </Grid>
+
+                            <ItemsControl ItemsSource="{x:Bind ViewModel.RecognitionCandidates, Mode=OneWay}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="models:RecognitionCandidate">
+                                        <Border Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="6"
+                                                Padding="10"
+                                                Margin="0,0,0,6">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+
+                                                <!-- Title & Confidence Badge -->
+                                                <Grid Grid.Row="0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <TextBlock Text="{x:Bind Title}"
+                                                               FontWeight="SemiBold"
+                                                               FontSize="12"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               VerticalAlignment="Center" />
+
+                                                    <!-- High confidence badge (>= 80%) -->
+                                                    <Border Grid.Column="1"
+                                                            Visibility="{x:Bind IsHighConfidence, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                            Background="#7C4DFF"
+                                                            CornerRadius="4"
+                                                            Padding="6,1"
+                                                            Margin="4,0,0,0">
+                                                        <TextBlock Text="{x:Bind ConfidenceDisplay}"
+                                                                   FontSize="10"
+                                                                   FontWeight="Bold"
+                                                                   Foreground="White" />
+                                                    </Border>
+
+                                                    <!-- Regular confidence badge (< 80%) -->
+                                                    <Border Grid.Column="1"
+                                                            Visibility="{x:Bind IsHighConfidence, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+                                                            Background="{ThemeResource SubtleFillColorTertiaryBrush}"
+                                                            CornerRadius="4"
+                                                            Padding="6,1"
+                                                            Margin="4,0,0,0">
+                                                        <TextBlock Text="{x:Bind ConfidenceDisplay}"
+                                                                   FontSize="10"
+                                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                    </Border>
+                                                </Grid>
+
+                                                <!-- Artist & Album -->
+                                                <StackPanel Grid.Row="1" Spacing="2" Margin="0,4,0,6">
+                                                    <TextBlock Text="{x:Bind Artist}"
+                                                               FontSize="11"
+                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock Text="{x:Bind Album}"
+                                                               FontSize="10"
+                                                               Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               Visibility="{x:Bind Album, Converter={StaticResource NullOrEmptyStringToVisibilityConverter}}" />
+                                                </StackPanel>
+
+                                                <!-- Link Action Button -->
+                                                <Button Grid.Row="2"
+                                                        HorizontalAlignment="Right"
+                                                        Padding="10,4"
+                                                        Command="{Binding DataContext.SelectCandidateCommand, ElementName=InspectorRoot}"
+                                                        CommandParameter="{Binding}">
+                                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                                        <FontIcon Glyph="&#xE71B;" FontSize="10" />
+                                                        <TextBlock Text="Vincular à Faixa" FontSize="11" />
+                                                    </StackPanel>
+                                                </Button>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 

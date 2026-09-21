@@ -42,6 +42,7 @@ public class SettingsService : IUISettingsService, IDisposable
     private const string ShowQueueButtonEnabledKey = "ShowQueueButtonEnabled";
     private const string ShowCoverArtInTrayFlyoutKey = "ShowCoverArtInTrayFlyout";
     private const string FetchOnlineMetadataKey = "FetchOnlineMetadataEnabled";
+    private const string AcoustIdUserApiKeyKey = "AcoustIdUserApiKey";
     private const string FetchOnlineLyricsEnabledKey = "FetchOnlineLyricsEnabled";
     private const string LyricsRomanizationEnabledKey = "LyricsRomanizationEnabled";
     private const string DiscordRichPresenceEnabledKey = "DiscordRichPresenceEnabled";
@@ -185,6 +186,7 @@ public class SettingsService : IUISettingsService, IDisposable
     public event Action<int>? SongsPerPageChanged;
     public event Action? GenreSplitCharactersChanged;
     public event Action<bool>? IgnoreLeadingArticlesOnSortEnabledChanged;
+    public event Action? AcoustIdUserApiKeyChanged;
 
     public bool IsTransparencyEffectsEnabled()
     {
@@ -940,10 +942,30 @@ public class SettingsService : IUISettingsService, IDisposable
                     IsEnabled = true,
                     Order = 3,
                     Description = Resources.Strings.Settings_Provider_LastFm_Desc
+                },
+                new()
+                {
+                    Id = ServiceProviderIds.AcoustId,
+                    DisplayName = "AcoustID",
+                    Category = ServiceCategory.Metadata,
+                    IsEnabled = true,
+                    Order = 4,
+                    Description = "Reconhecimento acústico e consulta de identificadores musicais via Chromaprint."
                 }
             },
             _ => new List<ServiceProviderSetting>()
         };
+    }
+
+    public Task<string> GetAcoustIdUserApiKeyAsync()
+    {
+        return Task.FromResult(GetValue(AcoustIdUserApiKeyKey, string.Empty));
+    }
+
+    public async Task SetAcoustIdUserApiKeyAsync(string apiKey)
+    {
+        await SetValueAsync(AcoustIdUserApiKeyKey, apiKey ?? string.Empty).ConfigureAwait(false);
+        AcoustIdUserApiKeyChanged?.Invoke();
     }
 
     #endregion

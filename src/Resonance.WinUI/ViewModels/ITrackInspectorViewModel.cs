@@ -19,6 +19,13 @@ public interface ITrackInspectorViewModel
     // Cover Art LightBox State
     bool IsLightBoxOpen { get; set; }
 
+    // Recognition / Fingerprint State
+    bool IsRecognizing { get; }
+    string RecognitionStatusText { get; }
+    IReadOnlyList<RecognitionCandidate> RecognitionCandidates { get; }
+    string? FingerprintHash { get; }
+    bool IsAlreadyIdentified { get; }
+
     // Control Commands
     IAsyncRelayCommand ToggleInspectorCommand { get; }
     IAsyncRelayCommand CloseInspectorCommand { get; }
@@ -28,4 +35,10 @@ public interface ITrackInspectorViewModel
     IAsyncRelayCommand PreviousSelectedTrackCommand { get; }
     IAsyncRelayCommand ExportArtworkCommand { get; }
     IRelayCommand<string> CopyToClipboardCommand { get; }
+
+    // Recognition Commands
+    IAsyncRelayCommand IdentifyTrackCommand { get; }
+    IAsyncRelayCommand ReidentifyTrackCommand { get; }
+    IAsyncRelayCommand<RecognitionCandidate> SelectCandidateCommand { get; }
+    IRelayCommand DiscardCandidatesCommand { get; }
 }

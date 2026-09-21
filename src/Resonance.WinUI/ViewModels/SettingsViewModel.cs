@@ -351,6 +351,7 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
     [ObservableProperty] public partial string ListenBrainzServerUrl { get; set; } = string.Empty;
     [ObservableProperty] public partial string? ListenBrainzConnectionStatus { get; set; }
     [ObservableProperty] public partial bool ListenBrainzIsConnected { get; set; }
+    [ObservableProperty] public partial string AcoustIdUserApiKey { get; set; } = string.Empty;
 
     public ObservableCollection<EqualizerBandViewModel> EqualizerBands { get; } = new();
     public ObservableRangeCollection<PlayerButtonSetting> PlayerButtons { get; } = new();
@@ -546,6 +547,7 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
 
             var playerMaterialTask = _settingsService.GetPlayerBackgroundMaterialAsync();
             var playerTintTask = _settingsService.GetPlayerTintIntensityAsync();
+            var acoustIdKeyTask = _settingsService.GetAcoustIdUserApiKeyAsync();
 
             await Task.WhenAll(
                 navItemsTask, playerButtonsTask, themeTask, backdropTask, dynamicThemingTask,
@@ -556,7 +558,7 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
                 scrobblingTask, nowPlayingTask, accentColorTask, artistSplitTask, genreSplitTask, languageTask, lyricsProvidersTask, metadataProvidersTask,
                 playerMaterialTask, playerTintTask,
                 lbTokenTask, lbScrobblingTask, lbNowPlayingTask, lbServerUrlTask,
-                ignoreArticlesTask);
+                ignoreArticlesTask, acoustIdKeyTask);
 
             foreach (var item in navItemsTask.Result)
             {
@@ -597,6 +599,7 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
 
             SelectedPlayerBackgroundMaterial = playerMaterialTask.Result;
             PlayerTintIntensity = playerTintTask.Result;
+            AcoustIdUserApiKey = acoustIdKeyTask.Result;
 
             var lastFmCredentials = lastFmCredsTask.Result;
             LastFmUsername = lastFmCredentials?.Username;
@@ -1721,6 +1724,12 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
     {
         if (_isInitializing) return;
         _ = _settingsService.SetFetchOnlineMetadataEnabledAsync(value);
+    }
+
+    partial void OnAcoustIdUserApiKeyChanged(string value)
+    {
+        if (_isInitializing) return;
+        _ = _settingsService.SetAcoustIdUserApiKeyAsync(value);
     }
 
     partial void OnIsIgnoreLeadingArticlesOnSortEnabledChanged(bool value)

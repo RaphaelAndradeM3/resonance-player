@@ -18,6 +18,9 @@ public static class ServiceProviderIds
 
     #region Metadata Providers
 
+    /// <summary>AcoustID - Community audio fingerprint database linked to MusicBrainz.</summary>
+    public const string AcoustId = "acoustid";
+
     /// <summary>MusicBrainz - Open music encyclopedia, provides artist/release IDs.</summary>
     public const string MusicBrainz = "musicbrainz";
 

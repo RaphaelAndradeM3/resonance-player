@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
@@ -19,13 +19,28 @@ public class AppInfoService : IAppInfoService
 
     public string GetAppName()
     {
-        return Package.Current.DisplayName;
+        try
+        {
+            return Package.Current.DisplayName;
+        }
+        catch
+        {
+            return "Resonance";
+        }
     }
 
     public string GetAppVersion()
     {
-        var version = Package.Current.Id.Version;
-        return $"{version.Major}.{version.Minor}.{version.Build}";
+        try
+        {
+            var version = Package.Current.Id.Version;
+            return $"{version.Major}.{version.Minor}.{version.Build}";
+        }
+        catch
+        {
+            var asmVersion = Assembly.GetEntryAssembly()?.GetName().Version;
+            return asmVersion != null ? $"{asmVersion.Major}.{asmVersion.Minor}.{asmVersion.Build}" : "2.3.0";
+        }
     }
 
 
@@ -44,27 +59,35 @@ public class AppInfoService : IAppInfoService
                 return _cachedAvailableLanguages;
 
             // Discover supported languages by scanning package subdirectories for satellite assemblies.
-            // ManifestLanguages only reflects WinRT (.resw) resources; this app uses .resx satellite
-            // assemblies. StorageFolder is used instead of Directory.EnumerateFiles because MSIX's VFS
-            // blocks Win32 filesystem enumeration inside WindowsApps install directories.
             var satelliteName = Assembly.GetEntryAssembly()?.GetName().Name + ".resources.dll";
-            var installFolder = Package.Current.InstalledLocation;
-            _logger.LogDebug("Language scan: installFolder={Path}, satellite={Satellite}", installFolder.Path, satelliteName);
-
             var results = new List<string>();
-            var subFolders = await installFolder.GetFoldersAsync();
-            _logger.LogDebug("Language scan: {Count} subfolders found", subFolders.Count);
 
-            foreach (var folder in subFolders)
+            string? installPath = null;
+            try
             {
-                try { _ = new CultureInfo(folder.Name); }
-                catch (CultureNotFoundException) { continue; }
+                installPath = Package.Current.InstalledLocation.Path;
+            }
+            catch
+            {
+                installPath = AppContext.BaseDirectory;
+            }
 
-                var item = await folder.TryGetItemAsync(satelliteName);
-                _logger.LogDebug("Language scan: {Folder}/{Satellite} -> {Found}", folder.Name, satelliteName, item != null ? "found" : "missing");
-                if (item == null) continue;
+            _logger.LogDebug("Language scan: installFolder={Path}, satellite={Satellite}", installPath, satelliteName);
 
-                results.Add(folder.Name);
+            if (System.IO.Directory.Exists(installPath))
+            {
+                foreach (var dir in System.IO.Directory.EnumerateDirectories(installPath))
+                {
+                    var dirName = System.IO.Path.GetFileName(dir);
+                    try { _ = new CultureInfo(dirName); }
+                    catch (CultureNotFoundException) { continue; }
+
+                    var satellitePath = System.IO.Path.Combine(dir, satelliteName);
+                    if (System.IO.File.Exists(satellitePath))
+                    {
+                        results.Add(dirName);
+                    }
+                }
             }
 
             _logger.LogDebug("Language scan: completed with {Count} languages", results.Count);
@@ -73,7 +96,7 @@ public class AppInfoService : IAppInfoService
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Failed to enumerate available languages from package.");
+            _logger.LogWarning(ex, "Failed to enumerate available languages.");
             return Array.Empty<string>();
         }
         finally

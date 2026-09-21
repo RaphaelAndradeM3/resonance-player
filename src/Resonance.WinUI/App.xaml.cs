@@ -98,7 +98,7 @@ public partial class App : Application
     /// <summary>
     ///     Gets Resonance's default brand accent color, derived from the app logo.
     /// </summary>
-    public static Color DefaultAccentColor { get; } = Color.FromArgb(255, 0x21, 0x94, 0x4B);
+    public static Color DefaultAccentColor { get; } = Color.FromArgb(255, 0x78, 0x1C, 0x99);
 
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {

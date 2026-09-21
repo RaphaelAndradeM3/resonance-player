@@ -13,6 +13,12 @@
     <Grid Background="{ThemeResource LayerFillColorDefaultBrush}"
           BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
           BorderThickness="1,0,0,0">
+        <Grid.Transitions>
+            <TransitionCollection>
+                <EntranceThemeTransition FromHorizontalOffset="120" IsStaggeringEnabled="False" />
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </Grid.Transitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />

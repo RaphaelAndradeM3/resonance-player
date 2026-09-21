@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Resonance.WinUI.MainPage"
     x:Name="MainPageRoot"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -183,6 +183,11 @@
                                                         VolumeButtonTemplate="{StaticResource VolumeButtonTemplate}" />
         </ResourceDictionary>
     </UserControl.Resources>
+
+    <UserControl.KeyboardAccelerators>
+        <KeyboardAccelerator Key="Enter" Modifiers="Menu" Invoked="OnInspectorKeyboardAcceleratorInvoked" />
+        <KeyboardAccelerator Key="Escape" Invoked="OnEscapeKeyboardAcceleratorInvoked" />
+    </UserControl.KeyboardAccelerators>
 
     <Grid x:Name="OverlayContainerGrid">
         <VisualStateManager.VisualStateGroups>
@@ -407,7 +412,20 @@
                 Background="Transparent">
 
                 <Grid>
-                    <Frame x:Name="ContentFrame" Padding="12,0,12,0" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Frame x:Name="ContentFrame" Grid.Column="0" Padding="12,0,12,0" />
+
+                        <localControls:TrackInspectorControl
+                            x:Name="TrackInspectorPanel"
+                            Grid.Column="1"
+                            Width="360"
+                            Visibility="{x:Bind TrackInspectorVm.IsOpen, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    </Grid>
 
                     <Grid
                         x:Name="PlayerHitBox"
@@ -526,6 +544,25 @@
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
                                     </ItemsControl>
+
+                                    <Button
+                                        x:Name="InspectorToggleButton"
+                                        Command="{x:Bind TrackInspectorVm.ToggleInspectorCommand}"
+                                        ToolTipService.ToolTip="Propriedades da Faixa (Alt+Enter)"
+                                        Style="{StaticResource LyricsButtonStyle}"
+                                        Foreground="{StaticResource PlayerAccentBrush}">
+                                        <Grid Width="40" Height="40" Margin="-8">
+                                            <Border
+                                                Background="{ThemeResource ControlFillColorSecondaryBrush}"
+                                                CornerRadius="{ThemeResource ControlCornerRadius}"
+                                                Visibility="{x:Bind TrackInspectorVm.IsOpen, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                            <FontIcon
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                                Glyph="&#xE946;" />
+                                        </Grid>
+                                    </Button>
 
                                     <Grid
                                         Height="72"

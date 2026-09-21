@@ -105,12 +105,12 @@ Regra de Ouro: Reutilizar o mecanismo atual de leitura de metadata (AtlMetadataS
 
 ### Implementation for User Story 4
 
-- [ ] T024 [US4] Integrate `TrackInspectorControl` into `src/Resonance.WinUI/MainPage.xaml` inside a dedicated right-hand column adjacent to `ContentFrame`, bound to `TrackInspectorVm.IsOpen` with smooth slide/fade animation.
-- [ ] T025 [US4] Add global `KeyboardAccelerator` (`Key="Enter"`, `Modifiers="Menu"` / Alt) to `src/Resonance.WinUI/MainPage.xaml` connected to `TrackInspectorVm.ToggleInspectorCommand`.
-- [ ] T026 [US4] Add context menu item "Inspecionar Faixa / Propriedades" to song list DataTemplates across `src/Resonance.WinUI/Pages/LibraryPage.xaml`, `src/Resonance.WinUI/Pages/AlbumViewPage.xaml`, and `src/Resonance.WinUI/Pages/PlaylistSongViewPage.xaml`.
-- [ ] T027 [US4] Add an Inspector toggle button to secondary controls in `FloatingPlayerContainer` in `src/Resonance.WinUI/MainPage.xaml`.
-- [ ] T028 [US4] Implement dynamic "Seguir reprodução" subscription in `src/Resonance.WinUI/ViewModels/TrackInspectorViewModel.cs` listening to `IMusicPlaybackService.CurrentSongChanged` when enabled.
-- [ ] T029 [US4] Implement multi-track pagination controls (`< Anterior` / `Próxima >` with `CurrentTrackIndex` of `TotalSelectedTracks`) in `src/Resonance.WinUI/ViewModels/TrackInspectorViewModel.cs` and the header of `src/Resonance.WinUI/Controls/TrackInspectorControl.xaml`.
+- [X] T024 [US4] Integrate `TrackInspectorControl` into `src/Resonance.WinUI/MainPage.xaml` inside a dedicated right-hand column adjacent to `ContentFrame`, bound to `TrackInspectorVm.IsOpen` with smooth slide/fade animation.
+- [X] T025 [US4] Add global `KeyboardAccelerator` (`Key="Enter"`, `Modifiers="Menu"` / Alt) to `src/Resonance.WinUI/MainPage.xaml` connected to `TrackInspectorVm.ToggleInspectorCommand`.
+- [X] T026 [US4] Add context menu item "Inspecionar Faixa / Propriedades" to song list DataTemplates across `src/Resonance.WinUI/Pages/LibraryPage.xaml`, `src/Resonance.WinUI/Pages/AlbumViewPage.xaml`, and `src/Resonance.WinUI/Pages/PlaylistSongViewPage.xaml`.
+- [X] T027 [US4] Add an Inspector toggle button to secondary controls in `FloatingPlayerContainer` in `src/Resonance.WinUI/MainPage.xaml`.
+- [X] T028 [US4] Implement dynamic "Seguir reprodução" subscription in `src/Resonance.WinUI/ViewModels/TrackInspectorViewModel.cs` listening to `IMusicPlaybackService.CurrentSongChanged` when enabled.
+- [X] T029 [US4] Implement multi-track pagination controls (`< Anterior` / `Próxima >` with `CurrentTrackIndex` of `TotalSelectedTracks`) in `src/Resonance.WinUI/ViewModels/TrackInspectorViewModel.cs` and the header of `src/Resonance.WinUI/Controls/TrackInspectorControl.xaml`.
 
 **Checkpoint**: Todas as quatro User Stories estão implementadas e conectadas de ponta a ponta na interface do aplicativo.
 

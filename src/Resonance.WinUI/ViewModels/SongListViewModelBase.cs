@@ -15,6 +15,7 @@ using Resonance.WinUI.Navigation;
 using Resonance.WinUI.Pages;
 using Resonance.WinUI.Services.Abstractions;
 using Resonance.WinUI.Helpers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Resonance.WinUI.ViewModels;
 
@@ -526,6 +527,30 @@ public abstract partial class SongListViewModelBase : PagedListViewModelBase<Son
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to show file in explorer for path {FilePath}", targetSong.FilePath);
+        }
+    }
+
+    [RelayCommand]
+    private async Task InspectSongAsync(Song? song)
+    {
+        var inspectorVm = App.Services?.GetService<TrackInspectorViewModel>();
+        if (inspectorVm == null) return;
+
+        if (SelectedSongs.Count > 1 && (song == null || SelectedSongs.Contains(song)))
+        {
+            await inspectorVm.InspectMultipleSongsAsync(SelectedSongs.ToList());
+        }
+        else
+        {
+            var target = song ?? SelectedSongs.FirstOrDefault();
+            if (target != null)
+            {
+                await inspectorVm.InspectSongAsync(target);
+            }
+            else if (_playbackService.CurrentTrack != null)
+            {
+                await inspectorVm.InspectSongAsync(_playbackService.CurrentTrack);
+            }
         }
     }
 

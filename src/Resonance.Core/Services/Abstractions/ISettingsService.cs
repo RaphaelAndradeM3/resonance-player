@@ -1,4 +1,4 @@
-﻿using Resonance.Core.Models;
+using Resonance.Core.Models;
 using Resonance.Core.Services.Data;
 
 namespace Resonance.Core.Services.Abstractions;
@@ -416,6 +416,21 @@ public interface ISettingsService
     /// <param name="category">The service category to retrieve.</param>
     /// <returns>A list of enabled service providers, sorted by priority.</returns>
     Task<List<ServiceProviderSetting>> GetEnabledServiceProvidersAsync(ServiceCategory category);
+    /// <summary>
+    ///     Gets the custom user AcoustID API key if configured.
+    /// </summary>
+    Task<string> GetAcoustIdUserApiKeyAsync();
+
+    /// <summary>
+    ///     Sets the custom user AcoustID API key.
+    /// </summary>
+    Task SetAcoustIdUserApiKeyAsync(string apiKey);
+
+    /// <summary>
+    ///     Occurs when the AcoustID user API key setting has changed.
+    /// </summary>
+    event Action? AcoustIdUserApiKeyChanged;
+
     /// <summary>
     ///     Ensures all pending settings changes are written to persistent storage.
     /// </summary>

@@ -458,9 +458,25 @@ public partial class App : Application
 
         services.AddSingleton<IApiKeyService, ApiKeyService>();
         services.AddSingleton<IFingerprintService, FFmpegFingerprintService>();
+        services.AddSingleton<IAcoustIdService, AcoustIdService>();
 
         services.AddProviderPipelines(builder =>
         {
+            // AcoustID: public API requests strict max 3 RPS per client.
+            builder.AddProvider(new ProviderPolicy
+            {
+                ProviderId = ServiceProviderIds.AcoustId,
+                Channel = new ChannelPolicy
+                {
+                    PermitsPerWindow = 3,
+                    Window = TimeSpan.FromSeconds(1),
+                    MaxConcurrent = 2,
+                    MaxRetries = 3,
+                    BaseRetryDelay = TimeSpan.FromSeconds(2),
+                    MaxRetryDelay = TimeSpan.FromSeconds(10),
+                },
+            });
+
             builder.AddProvider(new ProviderPolicy
             {
                 ProviderId = ServiceProviderIds.MusicBrainz,

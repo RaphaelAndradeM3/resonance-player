@@ -15,4 +15,9 @@ public readonly record struct AcousticFingerprint(
     ///     Indica se o fingerprint é válido (hash preenchido e duração positiva).
     /// </summary>
     public bool IsValid => !string.IsNullOrWhiteSpace(Hash) && DurationSeconds > 0;
+
+    /// <summary>
+    ///     Representa uma impressão digital vazia ou não calculada.
+    /// </summary>
+    public static AcousticFingerprint Empty => new(string.Empty, 0);
 }

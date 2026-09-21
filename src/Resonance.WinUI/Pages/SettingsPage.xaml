@@ -931,6 +931,16 @@
                                     ItemTemplate="{StaticResource ServiceProviderItemTemplate}"
                                     SelectionMode="Single" />
                         </controls:SettingsCard>
+                        <controls:SettingsCard Header="Chave de API do AcoustID (Opcional)" Description="Chave de cliente personalizada do AcoustID. Se não informada, o aplicativo utiliza a chave oficial do Resonance.">
+                            <controls:SettingsCard.HeaderIcon>
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8D7;" />
+                            </controls:SettingsCard.HeaderIcon>
+                            <TextBox
+                                Width="300"
+                                HorizontalAlignment="Right"
+                                PlaceholderText="Insira sua API Key do AcoustID"
+                                Text="{x:Bind ViewModel.AcoustIdUserApiKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 

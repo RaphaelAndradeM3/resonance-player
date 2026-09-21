@@ -37,8 +37,8 @@ Regra de Ouro: Reutilizar o mecanismo atual de leitura de metadata (AtlMetadataS
 
 **Purpose**: Extensão da interface e do serviço de leitura de metadados existente (`AtlMetadataService`) para suportar a montagem do `TrackInspectorViewData`.
 
-- [ ] T006 Extend `IMetadataService` in `src/Resonance.Core/Services/Abstractions/IMetadataService.cs` adding `Task<TrackInspectorViewData> GetTrackInspectorViewDataAsync(string filePath, CancellationToken cancellationToken = default)` and `Task<TrackInspectorViewData> GetTrackInspectorViewDataAsync(Song song, CancellationToken cancellationToken = default)`.
-- [ ] T007 Implement base extraction scaffolding in `src/Resonance.Core/Services/Implementations/AtlMetadataService.cs` connecting `ATL.Track` to `TrackInspectorViewData` with file existence checks, timeout protection and fallback title generation from file name when tags are missing.
+- [X] T006 Extend `IMetadataService` in `src/Resonance.Core/Services/Abstractions/IMetadataService.cs` adding `Task<TrackInspectorViewData> GetTrackInspectorViewDataAsync(string filePath, CancellationToken cancellationToken = default)` and `Task<TrackInspectorViewData> GetTrackInspectorViewDataAsync(Song song, CancellationToken cancellationToken = default)`.
+- [X] T007 Implement base extraction scaffolding in `src/Resonance.Core/Services/Implementations/AtlMetadataService.cs` connecting `ATL.Track` to `TrackInspectorViewData` with file existence checks, timeout protection and fallback title generation from file name when tags are missing.
 
 ---
 

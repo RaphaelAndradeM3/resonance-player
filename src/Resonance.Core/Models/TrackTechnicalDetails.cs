@@ -19,4 +19,5 @@ public class TrackTechnicalDetails
     public string ChannelsDescription { get; set; } = string.Empty;
     public DateTime? FileCreatedDate { get; set; }
     public DateTime? FileModifiedDate { get; set; }
+    public bool IsAccessible { get; set; } = true;
 }

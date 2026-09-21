@@ -120,9 +120,9 @@ Regra de Ouro: Reutilizar o mecanismo atual de leitura de metadata (AtlMetadataS
 
 **Purpose**: Verificação de casos de borda, execução de cenários do quickstart e validação dos gates obrigatórios da Constituição.
 
-- [ ] T030 Handle edge cases in `src/Resonance.Core/Services/Implementations/AtlMetadataService.cs` and `src/Resonance.WinUI/ViewModels/TrackInspectorViewModel.cs`: graceful handling of raw files without tags, background protected decoding for oversized covers (>20MB), and offline removable media error handling without unhandled exceptions.
-- [ ] T031 Execute manual and automated quickstart validation scenarios defined in `specs/003-track-inspector-local-metadata/quickstart.md` (Hi-Res FLAC inspection, ReplayGain, LightBox cover export, multi-selection pagination, and Now Playing follow).
-- [ ] T032 Execute whole-solution quality gates: `dotnet restore Resonance.slnx`, `dotnet build Resonance.slnx --configuration Release --warnaserror`, and `dotnet test Resonance.slnx --configuration Release --no-build`.
+- [X] T030 Handle edge cases in `src/Resonance.Core/Services/Implementations/AtlMetadataService.cs` and `src/Resonance.WinUI/ViewModels/TrackInspectorViewModel.cs`: graceful handling of raw files without tags, background protected decoding for oversized covers (>20MB), and offline removable media error handling without unhandled exceptions.
+- [X] T031 Execute manual and automated quickstart validation scenarios defined in `specs/003-track-inspector-local-metadata/quickstart.md` (Hi-Res FLAC inspection, ReplayGain, LightBox cover export, multi-selection pagination, and Now Playing follow).
+- [X] T032 Execute whole-solution quality gates: `dotnet restore Resonance.slnx`, `dotnet build Resonance.slnx --configuration Release --warnaserror`, and `dotnet test Resonance.slnx --configuration Release --no-build`.
 
 ---
 

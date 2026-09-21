@@ -197,9 +197,30 @@ public class AtlMetadataService : IMetadataService, IDisposable
         if (string.IsNullOrWhiteSpace(filePath))
             throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
 
-        var fileInfo = _fileSystem.GetFileInfo(filePath);
-        if (!fileInfo.Exists)
+        FileInfo? fileInfo = null;
+        try
         {
+            fileInfo = _fileSystem.GetFileInfo(filePath);
+            if (fileInfo == null || !fileInfo.Exists)
+            {
+                return new TrackInspectorViewData
+                {
+                    Technical = new TrackTechnicalDetails
+                    {
+                        FilePath = filePath,
+                        IsAccessible = false
+                    },
+                    Tags = new TrackTagDetails
+                    {
+                        Title = _fileSystem.GetFileNameWithoutExtension(filePath)
+                    },
+                    ProvenanceLabel = "Arquivo Inacessível"
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Removable media or file offline/inaccessible: '{FilePath}'.", filePath);
             return new TrackInspectorViewData
             {
                 Technical = new TrackTechnicalDetails
@@ -231,10 +252,10 @@ public class AtlMetadataService : IMetadataService, IDisposable
                 Technical = new TrackTechnicalDetails
                 {
                     FilePath = filePath,
-                    FileSizeBytes = fileInfo.Length,
-                    FileSizeFormatted = FormatFileSize(fileInfo.Length),
-                    FileCreatedDate = fileInfo.CreationTimeUtc,
-                    FileModifiedDate = fileInfo.LastWriteTimeUtc,
+                    FileSizeBytes = fileInfo?.Length ?? 0,
+                    FileSizeFormatted = fileInfo != null ? FormatFileSize(fileInfo.Length) : "0 B",
+                    FileCreatedDate = fileInfo?.CreationTimeUtc,
+                    FileModifiedDate = fileInfo?.LastWriteTimeUtc,
                     IsAccessible = false
                 },
                 Tags = new TrackTagDetails
@@ -248,7 +269,7 @@ public class AtlMetadataService : IMetadataService, IDisposable
         var splitCharacters = await GetCachedSplitCharactersAsync().ConfigureAwait(false);
         var genreSplitCharacters = await GetCachedGenreSplitCharactersAsync().ConfigureAwait(false);
 
-        var technical = ExtractTechnicalDetails(filePath, fileInfo, track);
+        var technical = ExtractTechnicalDetails(filePath, fileInfo!, track);
         var tags = ExtractTagDetails(filePath, track, splitCharacters, genreSplitCharacters);
         var artwork = await ExtractArtworkDetailsAsync(filePath, track, cts.Token).ConfigureAwait(false);
         var externalIds = ExtractExternalIds(track);
@@ -478,9 +499,22 @@ public class AtlMetadataService : IMetadataService, IDisposable
             }
         }
 
+        const int MaxCoverSizeAllowed = 20 * 1024 * 1024; // 20 MB safety threshold
+
         var pic = track.EmbeddedPictures?.FirstOrDefault();
         if (pic?.PictureData is { Length: > 0 } picData)
         {
+            if (picData.Length > MaxCoverSizeAllowed)
+            {
+                _logger.LogWarning("Embedded cover art in '{FilePath}' exceeds 20MB ({Size} bytes). Skipping full decode.", filePath, picData.Length);
+                return new TrackArtworkDetails
+                {
+                    Source = ArtworkSource.Embedded,
+                    FileSizeBytes = picData.Length,
+                    MimeType = pic.MimeType
+                };
+            }
+
             var (width, height, mime) = InspectImageMetadata(picData);
             string? uri = null;
             try

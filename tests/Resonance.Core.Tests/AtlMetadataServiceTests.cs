@@ -993,4 +993,74 @@ public class AtlMetadataServiceTests : IDisposable
         result.ExternalIds.HasAnyExternalId.Should().BeTrue();
         result.ProvenanceLabel.Should().Be("Arquivo Local");
     }
+
+    /// <summary>
+    ///     Verifies that when a file is missing or on an offline removable drive,
+    ///     GetTrackInspectorViewDataAsync returns an inaccessible result without throwing unhandled exceptions.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WhenFileInaccessibleOrDriveOffline_ReturnsGracefulViewData()
+    {
+        // Arrange
+        var missingPath = @"X:\OfflineDrive\nonexistent.flac";
+        _fileSystem.GetFileInfo(missingPath).Throws(new IOException("Device not ready"));
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(missingPath);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Technical.IsAccessible.Should().BeFalse();
+        result.Technical.FilePath.Should().Be(missingPath);
+        result.ProvenanceLabel.Should().Be("Arquivo Inacessível");
+    }
+
+    /// <summary>
+    ///     Verifies that when an embedded cover exceeds 20MB, the service safely limits decoding
+    ///     and returns artwork metadata without out-of-memory or crash.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WithOversizedCover_SkipsDecodingGracefully()
+    {
+        // Arrange
+        var oversizedBytes = new byte[21 * 1024 * 1024]; // 21 MB
+        var filePath = CreateTestAudioFile("oversized_art.mp3", track =>
+        {
+            track.Title = "Oversized Art Song";
+            track.EmbeddedPictures.Add(PictureInfo.fromBinaryData(oversizedBytes));
+        });
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(filePath);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Artwork.Should().NotBeNull();
+        result.Artwork.Source.Should().Be(ArtworkSource.Embedded);
+        result.Artwork.FileSizeBytes.Should().Be(oversizedBytes.Length);
+        result.Artwork.CoverArtUri.Should().BeNull(); // Skipped saving/decoding
+    }
+
+    /// <summary>
+    ///     Verifies that raw audio files without tags fallback gracefully to filename and defaults.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WithRawFileWithoutTags_ProvidesFilenameFallback()
+    {
+        // Arrange
+        var filePath = CreateTestAudioFile("raw_recording.mp3", track =>
+        {
+            // Empty tags
+            track.Title = "";
+            track.Artist = "";
+        });
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(filePath);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Tags.Title.Should().Be("raw_recording");
+        result.Tags.Artists.Should().Contain(Artist.UnknownArtistName);
+    }
 }

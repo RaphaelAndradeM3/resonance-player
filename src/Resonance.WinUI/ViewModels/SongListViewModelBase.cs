@@ -555,6 +555,20 @@ public abstract partial class SongListViewModelBase : PagedListViewModelBase<Son
     }
 
     [RelayCommand]
+    private async Task IdentifySongViaAudioAsync(Song? song)
+    {
+        var inspectorVm = App.Services?.GetService<TrackInspectorViewModel>();
+        if (inspectorVm == null) return;
+
+        var target = song ?? SelectedSongs.FirstOrDefault() ?? _playbackService.CurrentTrack;
+        if (target != null)
+        {
+            await inspectorVm.InspectSongAsync(target);
+            await inspectorVm.IdentifyTrackCommand.ExecuteAsync(null);
+        }
+    }
+
+    [RelayCommand]
     private async Task GoToAlbumAsync(object? parameter)
     {
         if (_isNavigatingToAlbum) return;

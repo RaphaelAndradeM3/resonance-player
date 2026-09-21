@@ -28,6 +28,11 @@ public class RecognitionCandidate
     public int ConfidencePercentage => (int)Math.Round(ConfidenceScore * 100);
 
     /// <summary>
+    ///     Texto formatado da porcentagem de confiança para exibição na interface.
+    /// </summary>
+    public string ConfidenceDisplay => $"{ConfidencePercentage}%";
+
+    /// <summary>
     ///     Indica se o candidato atende ao critério de alta relevância (>= 80%).
     /// </summary>
     public bool IsHighConfidence => ConfidenceScore >= 0.80;

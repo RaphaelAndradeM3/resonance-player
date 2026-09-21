@@ -1380,7 +1380,14 @@ public class LibraryService : ILibraryService, ILibraryReader, IDisposable
         finally
         {
             _isMetadataFetchRunning = false;
-            _metadataFetchSemaphore.Release();
+            try
+            {
+                _metadataFetchSemaphore.Release();
+            }
+            catch (ObjectDisposedException)
+            {
+                // Ignored when service is disposed during background fetch
+            }
         }
     }
 

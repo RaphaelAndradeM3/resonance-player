@@ -188,6 +188,19 @@ public class AtlMetadataService : IMetadataService, IDisposable
             viewData.Artwork.Source = ArtworkSource.RemoteCache;
         }
 
+        if (string.IsNullOrEmpty(viewData.ExternalIds.AcoustId) && !string.IsNullOrEmpty(song.AcoustId))
+        {
+            viewData.ExternalIds.AcoustId = song.AcoustId;
+        }
+        if (string.IsNullOrEmpty(viewData.ExternalIds.MusicBrainzTrackId) && !string.IsNullOrEmpty(song.MusicBrainzTrackId))
+        {
+            viewData.ExternalIds.MusicBrainzTrackId = song.MusicBrainzTrackId;
+        }
+        if (string.IsNullOrEmpty(viewData.ExternalIds.MusicBrainzReleaseId) && !string.IsNullOrEmpty(song.MusicBrainzReleaseId))
+        {
+            viewData.ExternalIds.MusicBrainzReleaseId = song.MusicBrainzReleaseId;
+        }
+
         return viewData;
     }
 
@@ -343,6 +356,7 @@ public class AtlMetadataService : IMetadataService, IDisposable
             },
             ExternalIds = new TrackExternalIds
             {
+                AcoustId = song.AcoustId,
                 MusicBrainzTrackId = song.MusicBrainzTrackId,
                 MusicBrainzReleaseId = song.MusicBrainzReleaseId
             },

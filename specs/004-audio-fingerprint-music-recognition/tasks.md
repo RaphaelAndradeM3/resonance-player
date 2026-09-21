@@ -76,17 +76,17 @@ Problem: O usuário precisa disparar o reconhecimento de áudio no Track Inspect
 Definition of Success: O Track Inspector exibe card de "Fingerprint & Reconhecimento Acústico" com indicador de progresso, status da faixa, lista de candidatos com percentuais de confiança, ação de vincular identificadores (MusicBrainz e AcoustID) à faixa e persistir no banco, além de opção no menu de contexto das listas de músicas.
 ```
 
-- [ ] T020 [P] [Slice3] Expand `src/Resonance.WinUI/ViewModels/TrackInspectorViewModel.cs` adding observable properties (`IsRecognizing`, `RecognitionStatusText`, `RecognitionCandidates`, `FingerprintHash`, `IsAlreadyIdentified`) and commands (`IdentifyTrackCommand`, `ReidentifyTrackCommand`, `SelectCandidateCommand`, `DiscardCandidatesCommand`).
-- [ ] T021 [Slice3] Implement identification workflow in `TrackInspectorViewModel.cs`: check if `Song.AcousticFingerprint` already exists in database before invoking FFmpeg; execute `IFingerprintService` if null and persist `Song.AcousticFingerprint` immediately via `MusicDbContext`; then invoke `IAcoustIdService` and populate `RecognitionCandidates`.
-- [ ] T022 [Slice3] Implement `SelectCandidateCommand` and `DiscardCandidatesCommand` in `TrackInspectorViewModel.cs`: associate `MusicBrainzTrackId` and `AcoustId` to `CurrentData.ExternalIds`, update `Song.AcoustId` in `MusicDbContext`, and update suggested tags in `CurrentData.Tags` without modifying physical files on disk.
-- [ ] T023 [Slice3] Update `src/Resonance.WinUI/Controls/TrackInspectorControl.xaml` adding the "Fingerprint & Reconhecimento Acústico" Expander card with track status badge ("Já Identificada" / "Não Identificada"), copy hash button, progress bar (`ProgressBar IsIndeterminate="True"`), candidate list with confidence badges (purple highlight for >= 80%), and "Vincular" buttons.
-- [ ] T024 [Slice3] Add "Identificar Música via Áudio" menu flyout item in library song list context menus in `src/Resonance.WinUI/Views/SongsView.xaml` linking to `IdentifyTrackCommand`.
-- [ ] T025 [P] [Slice3] Verify documentation integrity and cross-references across `spec.md`, `plan.md`, `data-model.md`, `contracts/`, and `quickstart.md`.
-- [ ] T026 [Slice3] Execute quickstart validation scenarios described in `specs/004-audio-fingerprint-music-recognition/quickstart.md`.
-- [ ] T027 [Slice3] Final Solution Gate: Validate whole-solution build and test gates:
+- [X] T020 [P] [Slice3] Expand `src/Resonance.WinUI/ViewModels/TrackInspectorViewModel.cs` adding observable properties (`IsRecognizing`, `RecognitionStatusText`, `RecognitionCandidates`, `FingerprintHash`, `IsAlreadyIdentified`) and commands (`IdentifyTrackCommand`, `ReidentifyTrackCommand`, `SelectCandidateCommand`, `DiscardCandidatesCommand`).
+- [X] T021 [Slice3] Implement identification workflow in `TrackInspectorViewModel.cs`: check if `Song.AcousticFingerprint` already exists in database before invoking FFmpeg; execute `IFingerprintService` if null and persist `Song.AcousticFingerprint` immediately via `MusicDbContext`; then invoke `IAcoustIdService` and populate `RecognitionCandidates`.
+- [X] T022 [Slice3] Implement `SelectCandidateCommand` and `DiscardCandidatesCommand` in `TrackInspectorViewModel.cs`: associate `MusicBrainzTrackId` and `AcoustId` to `CurrentData.ExternalIds`, update `Song.AcoustId` in `MusicDbContext`, and update suggested tags in `CurrentData.Tags` without modifying physical files on disk.
+- [X] T023 [Slice3] Update `src/Resonance.WinUI/Controls/TrackInspectorControl.xaml` adding the "Fingerprint & Reconhecimento Acústico" Expander card with track status badge ("Já Identificada" / "Não Identificada"), copy hash button, progress bar (`ProgressBar IsIndeterminate="True"`), candidate list with confidence badges (purple highlight for >= 80%), and "Vincular" buttons.
+- [X] T024 [Slice3] Add "Identificar Música via Áudio" menu flyout item in library song list context menus in `src/Resonance.WinUI/Views/SongsView.xaml` linking to `IdentifyTrackCommand`.
+- [X] T025 [P] [Slice3] Verify documentation integrity and cross-references across `spec.md`, `plan.md`, `data-model.md`, `contracts/`, and `quickstart.md`.
+- [X] T026 [Slice3] Execute quickstart validation scenarios described in `specs/004-audio-fingerprint-music-recognition/quickstart.md`.
+- [X] T027 [Slice3] Final Solution Gate: Validate whole-solution build and test gates:
   ```powershell
   dotnet restore Resonance.slnx
-  dotnet build Resonance.slnx --configuration Release
+  dotnet build Resonance.slnx --configuration Release -p:Platform=x64
   dotnet test Resonance.slnx --configuration Release --no-build
   ```
 

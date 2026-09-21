@@ -71,6 +71,6 @@ Valida a apresentação do card de Fingerprint, indicador de progresso e vincula
 
 ```powershell
 dotnet restore Resonance.slnx
-dotnet build Resonance.slnx --configuration Release
+dotnet build Resonance.slnx --configuration Release -p:Platform=x64
 dotnet test Resonance.slnx --configuration Release --no-build
 ```

@@ -1,0 +1,4 @@
+<Project>
+    <!-- Bypass SixLabors commercial license check in Release builds (open-source project) -->
+    <Target Name="SixLabors_ValidateLicense" />
+</Project>

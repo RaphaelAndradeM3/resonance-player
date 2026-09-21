@@ -5,7 +5,7 @@
     xmlns:animation="using:Microsoft.UI.Xaml.Media.Animation">
 
     <!-- App Primary Color Brush - used throughout the app for accent color -->
-    <SolidColorBrush x:Key="AppPrimaryColorBrush" Color="#FF21944B" />
+    <SolidColorBrush x:Key="AppPrimaryColorBrush" Color="#FF781C99" />
 
     <!-- Accent color adjusted for controls displayed on cover art or dark media overlays. -->
     <SolidColorBrush x:Key="MediaOnImageAccentBrush" Color="#FFFFFFFF" />
@@ -73,7 +73,7 @@
     <x:Double x:Key="AlbumCardMinHeightLarge">170</x:Double>
 
     <!-- Specific brush for the player background tint. Defaults to primary color but can be overridden. -->
-    <SolidColorBrush x:Key="PlayerTintColorBrush" Color="#FF21944B" />
+    <SolidColorBrush x:Key="PlayerTintColorBrush" Color="#FF781C99" />
     <SolidColorBrush x:Key="PlayerBackgroundBrush" Color="#FF242424" />
     <SolidColorBrush x:Key="PlayerAccentBrush" Color="#FFFFFFFF" />
 

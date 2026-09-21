@@ -1,54 +1,55 @@
 <svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
     <title>AppLogo</title>
     <style>
-        .s0 { fill: #97dda9 }
-        .s1 { fill: #a9e6c3 }
-        .s2 { fill: #70cf85 }
-        .s3 { fill: #91d9a2 }
-        .s4 { fill: #69c88a }
-        .s5 { fill: #9de2b8 }
-        .s6 { fill: #58ba7c }
-        .s7 { fill: #9bdaa9 }
-        .s8 { fill: #4caf72 }
-        .s9 { fill: #9bdeae }
-        .s10 { fill: #4fb478 }
-        .s11 { fill: #63c68a }
-        .s12 { fill: #5cbe80 }
-        .s13 { fill: #369b61 }
-        .s14 { fill: #60c689 }
-        .s15 { fill: #88d59a }
-        .s16 { fill: #75cb8c }
-        .s17 { fill: #45a96e }
-        .s18 { fill: #30975b }
-        .s19 { fill: #4bad72 }
-        .s20 { fill: #44aa6f }
-        .s21 { fill: #51b778 }
-        .s22 { fill: #52b677 }
-        .s23 { fill: #38a365 }
-        .s24 { fill: #3aa166 }
-        .s25 { fill: #65c589 }
-        .s26 { fill: #21944b }
-        .s27 { fill: #46a86d }
-        .s28 { fill: #4aae73 }
-        .s29 { fill: #339f5f }
-        .s30 { fill: #359d60 }
-        .s31 { fill: #92dba4 }
-        .s32 { fill: #71ce86 }
-        .s33 { fill: #a2e0b6 }
-        .s34 { fill: #45a86d }
-        .s35 { fill: #5dbd80 }
-        .s36 { fill: #3fa469 }
-        .s37 { fill: #67ca86 }
-        .s38 { fill: #42ac6e }
-        .s39 { fill: #5dc883 }
-        .s40 { fill: #86d798 }
-        .s41 { fill: #6cc98f }
-        .s42 { fill: #4aae75 }
-        .s43 { fill: #379e62 }
-        .s44 { fill: #61be82 }
-        .s45 { fill: #62c788 }
-        .s46 { fill: #57bb7d }
+        .s0 { fill: #c694e0 }
+        .s1 { fill: #daa7e8 }
+        .s2 { fill: #ae6cd3 }
+        .s3 { fill: #c18edc }
+        .s4 { fill: #b065cc }
+        .s5 { fill: #d39ae5 }
+        .s6 { fill: #a354be }
+        .s7 { fill: #c498dd }
+        .s8 { fill: #9948b3 }
+        .s9 { fill: #ca98e1 }
+        .s10 { fill: #9f4bb8 }
+        .s11 { fill: #b05fca }
+        .s12 { fill: #a758c2 }
+        .s13 { fill: #87329f }
+        .s14 { fill: #b05cca }
+        .s15 { fill: #bb85d8 }
+        .s16 { fill: #b072ce }
+        .s17 { fill: #9441ad }
+        .s18 { fill: #822c9b }
+        .s19 { fill: #9847b1 }
+        .s20 { fill: #9640ae }
+        .s21 { fill: #a04dbb }
+        .s22 { fill: #9e4eba }
+        .s23 { fill: #8e34a7 }
+        .s24 { fill: #8d36a5 }
+        .s25 { fill: #af61c9 }
+        .s26 { fill: #781c99 }
+        .s27 { fill: #9342ac }
+        .s28 { fill: #9946b2 }
+        .s29 { fill: #882fa3 }
+        .s30 { fill: #8831a1 }
+        .s31 { fill: #c38fde }
+        .s32 { fill: #ae6dd2 }
+        .s33 { fill: #cfa0e2 }
+        .s34 { fill: #9341ac }
+        .s35 { fill: #a659c1 }
+        .s36 { fill: #903ba8 }
+        .s37 { fill: #ae63ce }
+        .s38 { fill: #963eb0 }
+        .s39 { fill: #ad59cc }
+        .s40 { fill: #bb83da }
+        .s41 { fill: #b368cd }
+        .s42 { fill: #9b46b2 }
+        .s43 { fill: #8933a2 }
+        .s44 { fill: #a75dc2 }
+        .s45 { fill: #af5ecb }
+        .s46 { fill: #a453bf }
     </style>
+    <g transform="translate(1024, 0) scale(-1, 1)">
     <g id="#ffffffff">
     </g>
     <g id="#97dda9ff">
@@ -254,5 +255,6 @@
     <g id="#4bad72ff">
         <path class="s19"
               d="m259.2 846.1c-1-2.5-2-4.9-2.4-7.5 4.9 0.8 9.8 1.7 14.7 2.5 28.3 5.4 57.1 5.8 85.5 9.8 4.7 2 9.7 3.3 14.6 4.6-10.8 18.6-30.8 29-45.1 44.5-0.4 9.2-3.7 17.9-4 27.2-35.2-11.9-69.5-26.5-101.7-45 6.8-6.6 13.9-13.5 16.6-23 4.9-7.2 14.7-8.6 21.8-13.1z"/>
+    </g>
     </g>
 </svg>

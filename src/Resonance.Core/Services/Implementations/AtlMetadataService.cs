@@ -157,6 +157,482 @@ public class AtlMetadataService : IMetadataService, IDisposable
         return metadata;
     }
 
+    /// <inheritdoc />
+    public async Task<TrackInspectorViewData> GetTrackInspectorViewDataAsync(Song song, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(song);
+
+        TrackInspectorViewData viewData;
+        if (!string.IsNullOrWhiteSpace(song.FilePath) && _fileSystem.FileExists(song.FilePath))
+        {
+            viewData = await GetTrackInspectorViewDataAsync(song.FilePath, cancellationToken).ConfigureAwait(false);
+        }
+        else
+        {
+            viewData = CreateInaccessibleViewDataFromSong(song);
+        }
+
+        if (viewData.Technical.IsAccessible)
+        {
+            viewData.ProvenanceLabel = "Biblioteca Local & Arquivo";
+        }
+
+        if (string.IsNullOrEmpty(viewData.Artwork.CoverArtUri) && !string.IsNullOrEmpty(song.AlbumArtUriFromTrack))
+        {
+            viewData.Artwork.CoverArtUri = song.AlbumArtUriFromTrack;
+            viewData.Artwork.Source = ArtworkSource.RemoteCache;
+        }
+        else if (string.IsNullOrEmpty(viewData.Artwork.CoverArtUri) && !string.IsNullOrEmpty(song.Album?.CoverArtUri))
+        {
+            viewData.Artwork.CoverArtUri = song.Album.CoverArtUri;
+            viewData.Artwork.Source = ArtworkSource.RemoteCache;
+        }
+
+        return viewData;
+    }
+
+    /// <inheritdoc />
+    public async Task<TrackInspectorViewData> GetTrackInspectorViewDataAsync(string filePath, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(filePath))
+            throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
+
+        FileInfo? fileInfo = null;
+        try
+        {
+            fileInfo = _fileSystem.GetFileInfo(filePath);
+            if (fileInfo == null || !fileInfo.Exists)
+            {
+                return new TrackInspectorViewData
+                {
+                    Technical = new TrackTechnicalDetails
+                    {
+                        FilePath = filePath,
+                        IsAccessible = false
+                    },
+                    Tags = new TrackTagDetails
+                    {
+                        Title = _fileSystem.GetFileNameWithoutExtension(filePath)
+                    },
+                    ProvenanceLabel = "Arquivo Inacessível"
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Removable media or file offline/inaccessible: '{FilePath}'.", filePath);
+            return new TrackInspectorViewData
+            {
+                Technical = new TrackTechnicalDetails
+                {
+                    FilePath = filePath,
+                    IsAccessible = false
+                },
+                Tags = new TrackTagDetails
+                {
+                    Title = _fileSystem.GetFileNameWithoutExtension(filePath)
+                },
+                ProvenanceLabel = "Arquivo Inacessível"
+            };
+        }
+
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        cts.CancelAfter(TimeSpan.FromSeconds(30));
+
+        Track track;
+        try
+        {
+            track = await Task.Run(() => new Track(filePath), cts.Token).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to read track metadata for inspector: '{FilePath}'.", filePath);
+            return new TrackInspectorViewData
+            {
+                Technical = new TrackTechnicalDetails
+                {
+                    FilePath = filePath,
+                    FileSizeBytes = fileInfo?.Length ?? 0,
+                    FileSizeFormatted = fileInfo != null ? FormatFileSize(fileInfo.Length) : "0 B",
+                    FileCreatedDate = fileInfo?.CreationTimeUtc,
+                    FileModifiedDate = fileInfo?.LastWriteTimeUtc,
+                    IsAccessible = false
+                },
+                Tags = new TrackTagDetails
+                {
+                    Title = _fileSystem.GetFileNameWithoutExtension(filePath)
+                },
+                ProvenanceLabel = "Erro de Leitura"
+            };
+        }
+
+        var splitCharacters = await GetCachedSplitCharactersAsync().ConfigureAwait(false);
+        var genreSplitCharacters = await GetCachedGenreSplitCharactersAsync().ConfigureAwait(false);
+
+        var technical = ExtractTechnicalDetails(filePath, fileInfo!, track);
+        var tags = ExtractTagDetails(filePath, track, splitCharacters, genreSplitCharacters);
+        var artwork = await ExtractArtworkDetailsAsync(filePath, track, cts.Token).ConfigureAwait(false);
+        var externalIds = ExtractExternalIds(track);
+
+        return new TrackInspectorViewData
+        {
+            Technical = technical,
+            Tags = tags,
+            Artwork = artwork,
+            ExternalIds = externalIds,
+            ProvenanceLabel = "Arquivo Local"
+        };
+    }
+
+    private TrackInspectorViewData CreateInaccessibleViewDataFromSong(Song song)
+    {
+        var artists = song.SongArtists?.Select(sa => sa.Artist?.Name).Where(n => !string.IsNullOrEmpty(n)).Select(n => n!).ToList() ?? [];
+        if (artists.Count == 0 && !string.IsNullOrWhiteSpace(song.Composer))
+        {
+            artists.Add(song.Composer);
+        }
+
+        var ext = _fileSystem.GetExtension(song.FilePath);
+        var container = AudioFormatRegistry.GetDisplayName(ext);
+
+        return new TrackInspectorViewData
+        {
+            Technical = new TrackTechnicalDetails
+            {
+                FilePath = song.FilePath ?? string.Empty,
+                Duration = song.Duration,
+                ContainerFormat = container,
+                AudioCodec = ext.TrimStart('.').ToUpperInvariant(),
+                BitrateKbps = song.Bitrate,
+                BitrateMode = "Desconhecido",
+                SampleRateHz = song.SampleRate,
+                Channels = song.Channels,
+                ChannelsDescription = GetChannelsDescription(song.Channels),
+                FileCreatedDate = song.FileCreatedDate,
+                FileModifiedDate = song.FileModifiedDate,
+                IsAccessible = false
+            },
+            Tags = new TrackTagDetails
+            {
+                Title = !string.IsNullOrWhiteSpace(song.Title) ? song.Title : _fileSystem.GetFileNameWithoutExtension(song.FilePath ?? string.Empty),
+                Artists = artists,
+                Album = song.Album?.Title,
+                TrackNumber = song.TrackNumber,
+                TrackCount = song.TrackCount,
+                DiscNumber = song.DiscNumber,
+                DiscCount = song.DiscCount,
+                Year = song.Year,
+                Composer = song.Composer,
+                Conductor = song.Conductor,
+                Grouping = song.Grouping,
+                Copyright = song.Copyright,
+                Comment = song.Comment,
+                Bpm = song.Bpm,
+                ReplayGainTrackGain = song.ReplayGainTrackGain,
+                ReplayGainTrackPeak = song.ReplayGainTrackPeak,
+                HasLyrics = !string.IsNullOrWhiteSpace(song.Lyrics),
+                HasSynchronizedLyrics = !string.IsNullOrWhiteSpace(song.LrcFilePath),
+                LyricsPreview = !string.IsNullOrWhiteSpace(song.Lyrics) ? GetLyricsPreview(song.Lyrics) : null
+            },
+            Artwork = new TrackArtworkDetails
+            {
+                CoverArtUri = song.AlbumArtUriFromTrack ?? song.Album?.CoverArtUri,
+                Source = !string.IsNullOrEmpty(song.AlbumArtUriFromTrack ?? song.Album?.CoverArtUri)
+                    ? ArtworkSource.RemoteCache
+                    : ArtworkSource.None
+            },
+            ExternalIds = new TrackExternalIds
+            {
+                MusicBrainzTrackId = song.MusicBrainzTrackId,
+                MusicBrainzReleaseId = song.MusicBrainzReleaseId
+            },
+            ProvenanceLabel = "Biblioteca Local (Arquivo Inacessível)"
+        };
+    }
+
+    private TrackTechnicalDetails ExtractTechnicalDetails(string filePath, FileInfo fileInfo, Track track)
+    {
+        var ext = _fileSystem.GetExtension(filePath);
+        var container = !string.IsNullOrWhiteSpace(track.AudioFormat?.Name) && !track.AudioFormat.Name.Equals("Unknown", StringComparison.OrdinalIgnoreCase)
+            ? track.AudioFormat.Name
+            : AudioFormatRegistry.GetDisplayName(ext);
+
+        var codec = !string.IsNullOrWhiteSpace(track.AudioFormat?.ShortName)
+            ? track.AudioFormat.ShortName
+            : (!string.IsNullOrWhiteSpace(track.AudioFormat?.Name) ? track.AudioFormat.Name : ext.TrimStart('.').ToUpperInvariant());
+
+        var isLossless = AudioFormatRegistry.IsLossless(ext);
+        int? bitDepth = (isLossless && track.BitDepth > 0) ? track.BitDepth : null;
+
+        return new TrackTechnicalDetails
+        {
+            FilePath = filePath,
+            FileSizeBytes = fileInfo.Length,
+            FileSizeFormatted = FormatFileSize(fileInfo.Length),
+            Duration = TimeSpan.FromSeconds(track.Duration),
+            ContainerFormat = container,
+            AudioCodec = codec,
+            BitrateKbps = track.Bitrate > 0 ? track.Bitrate : null,
+            BitrateMode = DetermineBitrateMode(track),
+            SampleRateHz = track.SampleRate > 0 ? (int)track.SampleRate : null,
+            BitDepth = bitDepth,
+            Channels = track.ChannelsArrangement?.NbChannels > 0 ? track.ChannelsArrangement.NbChannels : null,
+            ChannelsDescription = GetChannelsDescription(track.ChannelsArrangement?.NbChannels),
+            FileCreatedDate = fileInfo.CreationTimeUtc,
+            FileModifiedDate = fileInfo.LastWriteTimeUtc,
+            IsAccessible = true
+        };
+    }
+
+    private TrackTagDetails ExtractTagDetails(string filePath, Track track, string splitCharacters, string genreSplitCharacters)
+    {
+        var rawArtist = SanitizeString(track.Artist) ?? Artist.UnknownArtistName;
+        var rawAlbumArtist = SanitizeString(track.AlbumArtist) ?? rawArtist;
+
+        var artists = SplitMetadataList(rawArtist, splitCharacters);
+        var albumArtists = SplitMetadataList(rawAlbumArtist, splitCharacters);
+
+        var album = SanitizeString(track.Album);
+        var fileName = _fileSystem.GetFileNameWithoutExtension(filePath);
+        var title = SanitizeString(track.Title) ?? fileName;
+
+        var genres = SplitMetadataList(SanitizeString(track.Genre), genreSplitCharacters);
+
+        string? grouping = null;
+        if (track.AdditionalFields.TryGetValue("GRP1", out var g) ||
+            track.AdditionalFields.TryGetValue("CONTENTGROUP", out g) ||
+            track.AdditionalFields.TryGetValue("GROUPING", out g) ||
+            track.AdditionalFields.TryGetValue("TIT1", out g))
+        {
+            grouping = SanitizeString(g);
+        }
+
+        double? trackGain = null;
+        var gainKey = track.AdditionalFields.Keys
+            .FirstOrDefault(k => k.Equals("REPLAYGAIN_TRACK_GAIN", StringComparison.OrdinalIgnoreCase));
+        if (gainKey != null && track.AdditionalFields.TryGetValue(gainKey, out var gainStr))
+            trackGain = ParseReplayGainValue(gainStr);
+
+        double? trackPeak = null;
+        var peakKey = track.AdditionalFields.Keys
+            .FirstOrDefault(k => k.Equals("REPLAYGAIN_TRACK_PEAK", StringComparison.OrdinalIgnoreCase));
+        if (peakKey != null && track.AdditionalFields.TryGetValue(peakKey, out var peakStr))
+            trackPeak = ParseReplayGainValue(peakStr);
+
+        double? albumGain = null;
+        var albumGainKey = track.AdditionalFields.Keys
+            .FirstOrDefault(k => k.Equals("REPLAYGAIN_ALBUM_GAIN", StringComparison.OrdinalIgnoreCase));
+        if (albumGainKey != null && track.AdditionalFields.TryGetValue(albumGainKey, out var albumGainStr))
+            albumGain = ParseReplayGainValue(albumGainStr);
+
+        double? albumPeak = null;
+        var albumPeakKey = track.AdditionalFields.Keys
+            .FirstOrDefault(k => k.Equals("REPLAYGAIN_ALBUM_PEAK", StringComparison.OrdinalIgnoreCase));
+        if (albumPeakKey != null && track.AdditionalFields.TryGetValue(albumPeakKey, out var albumPeakStr))
+            albumPeak = ParseReplayGainValue(albumPeakStr);
+
+        var lyricsInfo = track.Lyrics?.FirstOrDefault();
+        var hasLyrics = !string.IsNullOrWhiteSpace(lyricsInfo?.UnsynchronizedLyrics);
+        var hasSync = lyricsInfo?.SynchronizedLyrics?.Count > 0;
+        var lyricsPreview = hasLyrics ? GetLyricsPreview(lyricsInfo!.UnsynchronizedLyrics) : null;
+
+        string? isrc = null;
+        if (track.AdditionalFields.TryGetValue("ISRC", out var isrcStr))
+        {
+            isrc = SanitizeString(isrcStr);
+        }
+
+        return new TrackTagDetails
+        {
+            Title = title,
+            Artists = artists,
+            Album = album,
+            AlbumArtists = albumArtists,
+            TrackNumber = track.TrackNumber > 0 ? track.TrackNumber : null,
+            TrackCount = track.TrackTotal > 0 ? track.TrackTotal : null,
+            DiscNumber = track.DiscNumber > 0 ? track.DiscNumber : null,
+            DiscCount = track.DiscTotal > 0 ? track.DiscTotal : null,
+            Year = track.Year > 0 ? track.Year : null,
+            Genres = genres,
+            Composer = SanitizeString(track.Composer),
+            Conductor = SanitizeString(track.Conductor),
+            Grouping = grouping,
+            Copyright = SanitizeString(track.Copyright),
+            Comment = SanitizeString(track.Comment),
+            Isrc = isrc,
+            Bpm = track.BPM > 0 ? track.BPM : null,
+            ReplayGainTrackGain = trackGain,
+            ReplayGainTrackPeak = trackPeak,
+            ReplayGainAlbumGain = albumGain,
+            ReplayGainAlbumPeak = albumPeak,
+            HasLyrics = hasLyrics,
+            HasSynchronizedLyrics = hasSync,
+            LyricsPreview = lyricsPreview
+        };
+    }
+
+    private async Task<TrackArtworkDetails> ExtractArtworkDetailsAsync(string filePath, Track track, CancellationToken cancellationToken)
+    {
+        var dirCover = FindCoverArtInDirectoryHierarchy(filePath, null);
+        if (!string.IsNullOrEmpty(dirCover) && _fileSystem.FileExists(dirCover))
+        {
+            try
+            {
+                var bytes = await _fileSystem.ReadAllBytesAsync(dirCover).ConfigureAwait(false);
+                if (bytes.Length > 0)
+                {
+                    var (width, height, mime) = InspectImageMetadata(bytes);
+                    return new TrackArtworkDetails
+                    {
+                        CoverArtUri = dirCover,
+                        Source = ArtworkSource.AdjacentFolder,
+                        FileSizeBytes = bytes.Length,
+                        Width = width,
+                        Height = height,
+                        MimeType = mime
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug(ex, "Failed to read adjacent cover art at '{DirCover}'.", dirCover);
+            }
+        }
+
+        const int MaxCoverSizeAllowed = 20 * 1024 * 1024; // 20 MB safety threshold
+
+        var pic = track.EmbeddedPictures?.FirstOrDefault();
+        if (pic?.PictureData is { Length: > 0 } picData)
+        {
+            if (picData.Length > MaxCoverSizeAllowed)
+            {
+                _logger.LogWarning("Embedded cover art in '{FilePath}' exceeds 20MB ({Size} bytes). Skipping full decode.", filePath, picData.Length);
+                return new TrackArtworkDetails
+                {
+                    Source = ArtworkSource.Embedded,
+                    FileSizeBytes = picData.Length,
+                    MimeType = pic.MimeType
+                };
+            }
+
+            var (width, height, mime) = InspectImageMetadata(picData);
+            string? uri = null;
+            try
+            {
+                var (savedUri, _, _) = await _imageProcessor.SaveCoverArtAndExtractColorsAsync(picData).ConfigureAwait(false);
+                uri = savedUri;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug(ex, "Failed to cache embedded cover art for inspector.");
+            }
+
+            return new TrackArtworkDetails
+            {
+                CoverArtUri = uri,
+                Source = ArtworkSource.Embedded,
+                FileSizeBytes = picData.Length,
+                Width = width,
+                Height = height,
+                MimeType = mime ?? pic.MimeType
+            };
+        }
+
+        return new TrackArtworkDetails
+        {
+            Source = ArtworkSource.None
+        };
+    }
+
+    private static (int? width, int? height, string? mime) InspectImageMetadata(byte[] bytes)
+    {
+        try
+        {
+            var info = SixLabors.ImageSharp.Image.Identify(bytes);
+            if (info != null)
+            {
+                return (info.Width, info.Height, info.Metadata?.DecodedImageFormat?.DefaultMimeType);
+            }
+        }
+        catch
+        {
+            // Ignore format parsing issues
+        }
+        return (null, null, null);
+    }
+
+    private static TrackExternalIds ExtractExternalIds(Track track)
+    {
+        string? acoustId = null;
+        if (track.AdditionalFields.TryGetValue("ACOUSTID_ID", out var aid))
+            acoustId = ArtistNameHelper.NormalizeStringCore(aid);
+
+        string? mbTrackId = null;
+        if (track.AdditionalFields.TryGetValue("MUSICBRAINZ_TRACKID", out var tid))
+            mbTrackId = ArtistNameHelper.NormalizeStringCore(tid);
+
+        string? mbReleaseId = null;
+        if (track.AdditionalFields.TryGetValue("MUSICBRAINZ_RELEASEID", out var rid) ||
+            track.AdditionalFields.TryGetValue("MUSICBRAINZ_ALBUMID", out rid))
+            mbReleaseId = ArtistNameHelper.NormalizeStringCore(rid);
+
+        string? mbArtistId = null;
+        if (track.AdditionalFields.TryGetValue("MUSICBRAINZ_ARTISTID", out var arid))
+            mbArtistId = ArtistNameHelper.NormalizeStringCore(arid);
+
+        return new TrackExternalIds
+        {
+            AcoustId = acoustId,
+            MusicBrainzTrackId = mbTrackId,
+            MusicBrainzReleaseId = mbReleaseId,
+            MusicBrainzArtistId = mbArtistId
+        };
+    }
+
+    private static string DetermineBitrateMode(Track track)
+    {
+        return track.IsVBR ? "VBR" : "CBR";
+    }
+
+    private static string GetChannelsDescription(int? channels) => channels switch
+    {
+        1 => "Mono (1 canal)",
+        2 => "Estéreo (2 canais)",
+        3 => "2.1 Surround (3 canais)",
+        4 => "Quadrafônico (4 canais)",
+        5 => "5.0 Surround (5 canais)",
+        6 => "5.1 Surround (6 canais)",
+        7 => "6.1 Surround (7 canais)",
+        8 => "7.1 Surround (8 canais)",
+        _ when channels > 0 => $"{channels} canais",
+        _ => "Desconhecido"
+    };
+
+    private static string FormatFileSize(long bytes)
+    {
+        if (bytes <= 0) return "0 B";
+        string[] suffixes = ["B", "KB", "MB", "GB", "TB"];
+        int counter = 0;
+        decimal number = bytes;
+        while (Math.Round(number / 1024) >= 1 && counter < suffixes.Length - 1)
+        {
+            number /= 1024;
+            counter++;
+        }
+        return $"{number:n1} {suffixes[counter]}";
+    }
+
+    private static string? GetLyricsPreview(string lyrics, int maxLines = 4)
+    {
+        if (string.IsNullOrWhiteSpace(lyrics)) return null;
+        var lines = lyrics.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
+                          .Select(l => l.Trim())
+                          .Where(l => !string.IsNullOrEmpty(l))
+                          .Take(maxLines)
+                          .ToList();
+        return lines.Count > 0 ? string.Join(Environment.NewLine, lines) : null;
+    }
+
     /// <summary>
     ///     Populates the metadata object from the ATL track, providing sane defaults for missing values.
     /// </summary>

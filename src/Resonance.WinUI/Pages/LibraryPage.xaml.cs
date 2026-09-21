@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Windows.System;
 using Microsoft.Extensions.DependencyInjection;
@@ -280,6 +280,15 @@ public sealed partial class LibraryPage : Page
         }
 
         args.Handled = true;
+    }
+
+    private void OnInspectorAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        if (ViewModel.HasSelectedSongs)
+        {
+            ViewModel.InspectSongCommand.Execute(ViewModel.SelectedSongs.FirstOrDefault());
+            args.Handled = true;
+        }
     }
 
     /// <summary>

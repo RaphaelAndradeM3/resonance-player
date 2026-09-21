@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Resonance.WinUI.Pages.PlaylistSongViewPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -21,6 +21,7 @@
     <Grid KeyboardAcceleratorPlacementMode="Hidden" Padding="0,0,0,24">
         <Grid.KeyboardAccelerators>
             <KeyboardAccelerator Key="A" Modifiers="Control" Invoked="OnSelectAllAcceleratorInvoked" />
+            <KeyboardAccelerator Key="Enter" Modifiers="Menu" Invoked="OnInspectorAcceleratorInvoked" />
         </Grid.KeyboardAccelerators>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="SearchStates">
@@ -280,6 +281,15 @@
                                 <MenuFlyoutItem Text="{x:Bind resources:Strings.PlaylistSongViewPage_Context_RemoveFromPlaylist, Mode=OneTime}"
                                                 Command="{Binding DataContext.RemoveSelectedSongsFromPlaylistCommand, ElementName=pageRoot}"
                                                 Visibility="{Binding DataContext.IsCurrentViewAPlaylist, ElementName=pageRoot, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem
+                                    Command="{Binding DataContext.InspectSongCommand, ElementName=pageRoot}"
+                                    CommandParameter="{x:Bind}"
+                                    Text="Propriedades da Faixa">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE946;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
                             </MenuFlyout>
                         </Grid.ContextFlyout>
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using Windows.System;
 using System.Collections.Generic;
@@ -94,6 +94,7 @@ public sealed partial class MainPage : UserControl, ICustomTitleBarProvider
     {
         ViewModel = App.Services!.GetRequiredService<PlayerViewModel>();
         InsightsVm = App.Services!.GetRequiredService<InsightsViewModel>();
+        TrackInspectorVm = App.Services!.GetRequiredService<TrackInspectorViewModel>();
         _settingsService = App.Services!.GetRequiredService<IUISettingsService>();
         _themeService = App.Services!.GetRequiredService<IThemeService>();
         _dispatcherService = App.Services!.GetRequiredService<IDispatcherService>();
@@ -111,6 +112,7 @@ public sealed partial class MainPage : UserControl, ICustomTitleBarProvider
 
     public PlayerViewModel ViewModel { get; }
     public InsightsViewModel InsightsVm { get; }
+    public TrackInspectorViewModel TrackInspectorVm { get; }
 
     public TitleBar GetAppTitleBarElement()
     {
@@ -802,4 +804,18 @@ public sealed partial class MainPage : UserControl, ICustomTitleBarProvider
         }
     }
 
+    private void OnInspectorKeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        TrackInspectorVm.ToggleInspectorCommand.Execute(null);
+        args.Handled = true;
+    }
+
+    private void OnEscapeKeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        if (TrackInspectorVm.IsOpen)
+        {
+            TrackInspectorVm.CloseInspectorCommand.Execute(null);
+            args.Handled = true;
+        }
+    }
 }

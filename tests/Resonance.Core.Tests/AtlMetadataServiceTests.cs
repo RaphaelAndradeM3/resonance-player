@@ -1,7 +1,8 @@
-﻿using ATL;
+using ATL;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Resonance.Core.Helpers;
+using Resonance.Core.Models;
 using Resonance.Core.Services.Abstractions;
 using Resonance.Core.Services.Implementations;
 using NSubstitute;
@@ -793,5 +794,273 @@ public class AtlMetadataServiceTests : IDisposable
 
         // Assert
         result.Artists.Should().ContainSingle().Which.Should().Be("Artist A / Artist B");
+    }
+
+    /// <summary>
+    ///     Verifies that GetTrackInspectorViewDataAsync correctly extracts deep technical details
+    ///     such as container format, codec, bitrate mode, channels description and file size.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WithValidFile_ExtractsTechnicalDetails()
+    {
+        // Arrange
+        var filePath = CreateTestAudioFile("inspector_tech.mp3", track =>
+        {
+            track.Title = "Inspector Test Song";
+            track.Artist = "Tech Artist";
+            track.Album = "Tech Album";
+        });
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(filePath);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Technical.Should().NotBeNull();
+        result.Technical.FilePath.Should().Be(filePath);
+        result.Technical.IsAccessible.Should().BeTrue();
+        result.Technical.FileSizeBytes.Should().BeGreaterThan(0);
+        result.Technical.FileSizeFormatted.Should().NotBeNullOrWhiteSpace();
+        result.Technical.ContainerFormat.Should().NotBeNullOrWhiteSpace();
+        result.Technical.AudioCodec.Should().NotBeNullOrWhiteSpace();
+        result.Technical.BitrateMode.Should().BeOneOf("CBR", "VBR", "ABR");
+        result.Tags.Title.Should().Be("Inspector Test Song");
+        result.ProvenanceLabel.Should().Be("Arquivo Local");
+    }
+
+    /// <summary>
+    ///     Verifies that GetTrackInspectorViewDataAsync gracefully handles non-existent or inaccessible
+    ///     files by returning IsAccessible = false without throwing exceptions.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WithInaccessibleFile_ReturnsGracefulInaccessibleState()
+    {
+        // Arrange
+        var missingPath = Path.Combine(_tempDirectory, "non_existent_track.mp3");
+        _fileSystem.FileExists(missingPath).Returns(false);
+        _fileSystem.GetFileInfo(missingPath).Returns(new FileInfo(missingPath));
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(missingPath);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Technical.IsAccessible.Should().BeFalse();
+        result.Technical.FilePath.Should().Be(missingPath);
+        result.ProvenanceLabel.Should().Be("Arquivo Inacessível");
+    }
+
+    /// <summary>
+    ///     Verifies that GetTrackInspectorViewDataAsync from a Song entity populates tags and technical details,
+    ///     and enriches the provenance label.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_FromSongEntity_IntegratesLibraryData()
+    {
+        // Arrange
+        var filePath = CreateTestAudioFile("song_entity_test.mp3", track =>
+        {
+            track.Title = "Entity Song";
+            track.Artist = "Entity Artist";
+        });
+
+        var song = new Song
+        {
+            Id = Guid.NewGuid(),
+            Title = "Entity Song",
+            FilePath = filePath,
+            Duration = TimeSpan.FromSeconds(180),
+            Bitrate = 320,
+            SampleRate = 44100,
+            Channels = 2,
+            Album = new Album { Title = "Entity Album", CoverArtUri = "file:///album.jpg" }
+        };
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(song);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Technical.IsAccessible.Should().BeTrue();
+        result.ProvenanceLabel.Should().Be("Biblioteca Local & Arquivo");
+        result.Tags.Title.Should().Be("Entity Song");
+    }
+
+    /// <summary>
+    ///     Verifies that for lossy formats like MP3, BitDepth is reported as null according to specification.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WithLossyFormat_EnsuresBitDepthIsNull()
+    {
+        // Arrange
+        var filePath = CreateTestAudioFile("lossy_test.mp3", track =>
+        {
+            track.Title = "Lossy Track";
+        });
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(filePath);
+
+        // Assert
+        result.Technical.BitDepth.Should().BeNull();
+    }
+
+    /// <summary>
+    ///     Verifies that GetTrackInspectorViewDataAsync extracts ReplayGain metadata and embedded lyrics.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WithReplayGainAndLyrics_ExtractsTagsCorrectly()
+    {
+        // Arrange
+        var filePath = CreateTestAudioFile("replaygain_inspector.mp3", track =>
+        {
+            track.Title = "ReplayGain Song";
+            track.Artist = "RG Artist";
+            track.AdditionalFields.Add("REPLAYGAIN_TRACK_GAIN", "-5.50 dB");
+            track.AdditionalFields.Add("REPLAYGAIN_TRACK_PEAK", "0.981234");
+            track.AdditionalFields.Add("REPLAYGAIN_ALBUM_GAIN", "-4.20 dB");
+            track.AdditionalFields.Add("REPLAYGAIN_ALBUM_PEAK", "0.995000");
+            track.Lyrics.Add(new LyricsInfo { UnsynchronizedLyrics = "Line 1\nLine 2\nLine 3\nLine 4\nLine 5" });
+        });
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(filePath);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Tags.ReplayGainTrackGain.Should().Be(-5.50);
+        result.Tags.ReplayGainTrackPeak.Should().Be(0.981234);
+        result.Tags.ReplayGainAlbumGain.Should().Be(-4.20);
+        result.Tags.ReplayGainAlbumPeak.Should().Be(0.995000);
+        result.Tags.HasLyrics.Should().BeTrue();
+        result.Tags.LyricsPreview.Should().Contain("Line 1");
+    }
+
+    /// <summary>
+    ///     Verifies that GetTrackInspectorViewDataAsync detects embedded artwork and extracts its dimensions and source.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WithEmbeddedArtwork_ExtractsArtworkDetails()
+    {
+        // Arrange
+        var pictureData = new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
+        var filePath = CreateTestAudioFile("artwork_inspector.mp3", track =>
+        {
+            track.Title = "Artwork Song";
+            track.EmbeddedPictures.Add(PictureInfo.fromBinaryData(pictureData));
+        });
+
+        _imageProcessor.SaveCoverArtAndExtractColorsAsync(Arg.Any<byte[]>())
+            .Returns(Task.FromResult<(string?, string?, string?)>(("C:/art/test.jpg", "light", "dark")));
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(filePath);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Artwork.Should().NotBeNull();
+        result.Artwork.Source.Should().Be(ArtworkSource.Embedded);
+        result.Artwork.FileSizeBytes.Should().Be(pictureData.Length);
+    }
+
+    /// <summary>
+    ///     Verifies that GetTrackInspectorViewDataAsync extracts external identifiers (MusicBrainz, AcoustID)
+    ///     and correctly sets the provenance label.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WithExternalIds_ExtractsExternalIdsAndProvenance()
+    {
+        // Arrange
+        var filePath = CreateTestAudioFile("external_ids_inspector.mp3", track =>
+        {
+            track.Title = "Identified Song";
+            track.AdditionalFields.Add("ACOUSTID_ID", "a1b2c3d4-test");
+            track.AdditionalFields.Add("MUSICBRAINZ_TRACKID", "mb-track-1234");
+            track.AdditionalFields.Add("MUSICBRAINZ_RELEASEID", "mb-release-5678");
+            track.AdditionalFields.Add("MUSICBRAINZ_ARTISTID", "mb-artist-9012");
+        });
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(filePath);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.ExternalIds.Should().NotBeNull();
+        result.ExternalIds.AcoustId.Should().Be("a1b2c3d4-test");
+        result.ExternalIds.MusicBrainzTrackId.Should().Be("mb-track-1234");
+        result.ExternalIds.MusicBrainzReleaseId.Should().Be("mb-release-5678");
+        result.ExternalIds.MusicBrainzArtistId.Should().Be("mb-artist-9012");
+        result.ExternalIds.HasAnyExternalId.Should().BeTrue();
+        result.ProvenanceLabel.Should().Be("Arquivo Local");
+    }
+
+    /// <summary>
+    ///     Verifies that when a file is missing or on an offline removable drive,
+    ///     GetTrackInspectorViewDataAsync returns an inaccessible result without throwing unhandled exceptions.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WhenFileInaccessibleOrDriveOffline_ReturnsGracefulViewData()
+    {
+        // Arrange
+        var missingPath = @"X:\OfflineDrive\nonexistent.flac";
+        _fileSystem.GetFileInfo(missingPath).Throws(new IOException("Device not ready"));
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(missingPath);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Technical.IsAccessible.Should().BeFalse();
+        result.Technical.FilePath.Should().Be(missingPath);
+        result.ProvenanceLabel.Should().Be("Arquivo Inacessível");
+    }
+
+    /// <summary>
+    ///     Verifies that when an embedded cover exceeds 20MB, the service safely limits decoding
+    ///     and returns artwork metadata without out-of-memory or crash.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WithOversizedCover_SkipsDecodingGracefully()
+    {
+        // Arrange
+        var oversizedBytes = new byte[21 * 1024 * 1024]; // 21 MB
+        var filePath = CreateTestAudioFile("oversized_art.mp3", track =>
+        {
+            track.Title = "Oversized Art Song";
+            track.EmbeddedPictures.Add(PictureInfo.fromBinaryData(oversizedBytes));
+        });
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(filePath);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Artwork.Should().NotBeNull();
+        result.Artwork.Source.Should().Be(ArtworkSource.Embedded);
+        result.Artwork.FileSizeBytes.Should().Be(oversizedBytes.Length);
+        result.Artwork.CoverArtUri.Should().BeNull(); // Skipped saving/decoding
+    }
+
+    /// <summary>
+    ///     Verifies that raw audio files without tags fallback gracefully to filename and defaults.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WithRawFileWithoutTags_ProvidesFilenameFallback()
+    {
+        // Arrange
+        var filePath = CreateTestAudioFile("raw_recording.mp3", track =>
+        {
+            // Empty tags
+            track.Title = "";
+            track.Artist = "";
+        });
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(filePath);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Tags.Title.Should().Be("raw_recording");
+        result.Tags.Artists.Should().Contain(Artist.UnknownArtistName);
     }
 }

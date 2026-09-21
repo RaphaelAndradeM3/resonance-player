@@ -69,12 +69,12 @@ Regra de Ouro: Reutilizar o mecanismo atual de leitura de metadata (AtlMetadataS
 
 ### Implementation for User Story 2
 
-- [ ] T014 [P] [US2] Add unit tests in `tests/Resonance.Core.Tests/Services/AtlMetadataServiceTests.cs` for ReplayGain (track/album gain and peak), embedded lyrics presence, and artwork metadata extraction (MIME type, width, height).
-- [ ] T015 [US2] Implement comprehensive tag, ReplayGain, and embedded picture extraction in `src/Resonance.Core/Services/Implementations/AtlMetadataService.cs` reading from `track.AdditionalFields` and `track.EmbeddedPictures` with safe memory constraints.
-- [ ] T016 [US2] Create `ArtworkLightBoxDialog.xaml` and `ArtworkLightBoxDialog.xaml.cs` in `src/Resonance.WinUI/Dialogs/ArtworkLightBoxDialog.xaml` implementing modal zoom for full-size cover art and a "Salvar Imagem..." button using `Windows.Storage.Pickers.FileSavePicker`.
-- [ ] T017 [US2] Update `src/Resonance.WinUI/ViewModels/TrackInspectorViewModel.cs` adding `ExportArtworkCommand`, `IsLightBoxOpen`, and lyrics preview expander state.
-- [ ] T018 [US2] Update `src/Resonance.WinUI/Controls/TrackInspectorControl.xaml` adding the Musical Tags section, ReplayGain card, lyrics expander, and clickable Cover Art card with dimensions label and LightBox trigger.
-- [ ] T019 [US2] Validate User Story 2 compilation and view model integrity via `dotnet build Resonance.slnx --configuration Release`.
+- [X] T014 [P] [US2] Add unit tests in `tests/Resonance.Core.Tests/Services/AtlMetadataServiceTests.cs` for ReplayGain (track/album gain and peak), embedded lyrics presence, and artwork metadata extraction (MIME type, width, height).
+- [X] T015 [US2] Implement comprehensive tag, ReplayGain, and embedded picture extraction in `src/Resonance.Core/Services/Implementations/AtlMetadataService.cs` reading from `track.AdditionalFields` and `track.EmbeddedPictures` with safe memory constraints.
+- [X] T016 [US2] Create `ArtworkLightBoxDialog.xaml` and `ArtworkLightBoxDialog.xaml.cs` in `src/Resonance.WinUI/Dialogs/ArtworkLightBoxDialog.xaml` implementing modal zoom for full-size cover art and a "Salvar Imagem..." button using `Windows.Storage.Pickers.FileSavePicker`.
+- [X] T017 [US2] Update `src/Resonance.WinUI/ViewModels/TrackInspectorViewModel.cs` adding `ExportArtworkCommand`, `IsLightBoxOpen`, and lyrics preview expander state.
+- [X] T018 [US2] Update `src/Resonance.WinUI/Controls/TrackInspectorControl.xaml` adding the Musical Tags section, ReplayGain card, lyrics expander, and clickable Cover Art card with dimensions label and LightBox trigger.
+- [X] T019 [US2] Validate User Story 2 compilation and view model integrity via `dotnet build Resonance.slnx --configuration Release`.
 
 **Checkpoint**: User Stories 1 e 2 funcionam de forma integrada. O usuário visualiza tanto a ficha técnica quanto a catalogação artística com capa em alta definição.
 

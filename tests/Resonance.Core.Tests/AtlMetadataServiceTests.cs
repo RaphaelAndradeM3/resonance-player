@@ -904,4 +904,62 @@ public class AtlMetadataServiceTests : IDisposable
         // Assert
         result.Technical.BitDepth.Should().BeNull();
     }
+
+    /// <summary>
+    ///     Verifies that GetTrackInspectorViewDataAsync extracts ReplayGain metadata and embedded lyrics.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WithReplayGainAndLyrics_ExtractsTagsCorrectly()
+    {
+        // Arrange
+        var filePath = CreateTestAudioFile("replaygain_inspector.mp3", track =>
+        {
+            track.Title = "ReplayGain Song";
+            track.Artist = "RG Artist";
+            track.AdditionalFields.Add("REPLAYGAIN_TRACK_GAIN", "-5.50 dB");
+            track.AdditionalFields.Add("REPLAYGAIN_TRACK_PEAK", "0.981234");
+            track.AdditionalFields.Add("REPLAYGAIN_ALBUM_GAIN", "-4.20 dB");
+            track.AdditionalFields.Add("REPLAYGAIN_ALBUM_PEAK", "0.995000");
+            track.Lyrics.Add(new LyricsInfo { UnsynchronizedLyrics = "Line 1\nLine 2\nLine 3\nLine 4\nLine 5" });
+        });
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(filePath);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Tags.ReplayGainTrackGain.Should().Be(-5.50);
+        result.Tags.ReplayGainTrackPeak.Should().Be(0.981234);
+        result.Tags.ReplayGainAlbumGain.Should().Be(-4.20);
+        result.Tags.ReplayGainAlbumPeak.Should().Be(0.995000);
+        result.Tags.HasLyrics.Should().BeTrue();
+        result.Tags.LyricsPreview.Should().Contain("Line 1");
+    }
+
+    /// <summary>
+    ///     Verifies that GetTrackInspectorViewDataAsync detects embedded artwork and extracts its dimensions and source.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WithEmbeddedArtwork_ExtractsArtworkDetails()
+    {
+        // Arrange
+        var pictureData = new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
+        var filePath = CreateTestAudioFile("artwork_inspector.mp3", track =>
+        {
+            track.Title = "Artwork Song";
+            track.EmbeddedPictures.Add(PictureInfo.fromBinaryData(pictureData));
+        });
+
+        _imageProcessor.SaveCoverArtAndExtractColorsAsync(Arg.Any<byte[]>())
+            .Returns(Task.FromResult<(string?, string?, string?)>(("C:/art/test.jpg", "light", "dark")));
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(filePath);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Artwork.Should().NotBeNull();
+        result.Artwork.Source.Should().Be(ArtworkSource.Embedded);
+        result.Artwork.FileSizeBytes.Should().Be(pictureData.Length);
+    }
 }

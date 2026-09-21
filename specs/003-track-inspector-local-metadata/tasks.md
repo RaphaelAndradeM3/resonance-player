@@ -88,10 +88,10 @@ Regra de Ouro: Reutilizar o mecanismo atual de leitura de metadata (AtlMetadataS
 
 ### Implementation for User Story 3
 
-- [ ] T020 [P] [US3] Add unit tests in `tests/Resonance.Core.Tests/Services/AtlMetadataServiceTests.cs` validating external IDs extraction (`MUSICBRAINZ_TRACKID`, `MUSICBRAINZ_RELEASEID`, `MUSICBRAINZ_ARTISTID`, `ACOUSTID_ID`) and provenance determination.
-- [ ] T021 [US3] Implement external IDs extraction and provenance flag assignment in `src/Resonance.Core/Services/Implementations/AtlMetadataService.cs`.
-- [ ] T022 [US3] Implement `CopyToClipboardCommand` in `src/Resonance.WinUI/ViewModels/TrackInspectorViewModel.cs` using `Windows.ApplicationModel.DataTransfer.DataPackage` and `DataTransfer.Clipboard.SetContent`.
-- [ ] T023 [US3] Add External IDs card and Provenance Badges in `src/Resonance.WinUI/Controls/TrackInspectorControl.xaml` displaying AcoustID and MusicBrainz IDs with quick copy buttons.
+- [X] T020 [P] [US3] Add unit tests in `tests/Resonance.Core.Tests/Services/AtlMetadataServiceTests.cs` validating external IDs extraction (`MUSICBRAINZ_TRACKID`, `MUSICBRAINZ_RELEASEID`, `MUSICBRAINZ_ARTISTID`, `ACOUSTID_ID`) and provenance determination.
+- [X] T021 [US3] Implement external IDs extraction and provenance flag assignment in `src/Resonance.Core/Services/Implementations/AtlMetadataService.cs`.
+- [X] T022 [US3] Implement `CopyToClipboardCommand` in `src/Resonance.WinUI/ViewModels/TrackInspectorViewModel.cs` using `Windows.ApplicationModel.DataTransfer.DataPackage` and `DataTransfer.Clipboard.SetContent`.
+- [X] T023 [US3] Add External IDs card and Provenance Badges in `src/Resonance.WinUI/Controls/TrackInspectorControl.xaml` displaying AcoustID and MusicBrainz IDs with quick copy buttons.
 
 **Checkpoint**: User Stories 1, 2 e 3 estão completas. A integridade dos dados e transparência de origem estão garantidas.
 

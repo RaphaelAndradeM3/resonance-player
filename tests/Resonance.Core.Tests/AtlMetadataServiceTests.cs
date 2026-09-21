@@ -962,4 +962,35 @@ public class AtlMetadataServiceTests : IDisposable
         result.Artwork.Source.Should().Be(ArtworkSource.Embedded);
         result.Artwork.FileSizeBytes.Should().Be(pictureData.Length);
     }
+
+    /// <summary>
+    ///     Verifies that GetTrackInspectorViewDataAsync extracts external identifiers (MusicBrainz, AcoustID)
+    ///     and correctly sets the provenance label.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WithExternalIds_ExtractsExternalIdsAndProvenance()
+    {
+        // Arrange
+        var filePath = CreateTestAudioFile("external_ids_inspector.mp3", track =>
+        {
+            track.Title = "Identified Song";
+            track.AdditionalFields.Add("ACOUSTID_ID", "a1b2c3d4-test");
+            track.AdditionalFields.Add("MUSICBRAINZ_TRACKID", "mb-track-1234");
+            track.AdditionalFields.Add("MUSICBRAINZ_RELEASEID", "mb-release-5678");
+            track.AdditionalFields.Add("MUSICBRAINZ_ARTISTID", "mb-artist-9012");
+        });
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(filePath);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.ExternalIds.Should().NotBeNull();
+        result.ExternalIds.AcoustId.Should().Be("a1b2c3d4-test");
+        result.ExternalIds.MusicBrainzTrackId.Should().Be("mb-track-1234");
+        result.ExternalIds.MusicBrainzReleaseId.Should().Be("mb-release-5678");
+        result.ExternalIds.MusicBrainzArtistId.Should().Be("mb-artist-9012");
+        result.ExternalIds.HasAnyExternalId.Should().BeTrue();
+        result.ProvenanceLabel.Should().Be("Arquivo Local");
+    }
 }

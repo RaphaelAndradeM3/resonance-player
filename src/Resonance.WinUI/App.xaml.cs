@@ -457,6 +457,7 @@ public partial class App : Application
         services.AddSingleton<ILrcService, LrcService>();
 
         services.AddSingleton<IApiKeyService, ApiKeyService>();
+        services.AddSingleton<IFingerprintService, FFmpegFingerprintService>();
 
         services.AddProviderPipelines(builder =>
         {

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Resonance.Core.Helpers;
 
@@ -180,6 +180,17 @@ public class Song
     /// </summary>
     [MaxLength(100)]
     public string? MusicBrainzReleaseId { get; set; }
+
+    /// <summary>
+    ///     The unique identifier for the recording from the AcoustID database.
+    /// </summary>
+    [MaxLength(100)]
+    public string? AcoustId { get; set; }
+
+    /// <summary>
+    ///     The acoustic fingerprint calculated locally by Chromaprint in Base64 format.
+    /// </summary>
+    public string? AcousticFingerprint { get; set; }
 
     [NotMapped] public double Order { get; set; }
     [NotMapped] public bool IsArtworkAvailable => !string.IsNullOrEmpty(AlbumArtUriFromTrack);

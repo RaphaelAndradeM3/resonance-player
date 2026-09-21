@@ -29,14 +29,14 @@ Problem: Arquivos de áudio na biblioteca frequentemente estão sem tags ou com 
 Definition of Success: A aplicação executa o muxer chromaprint nativo do FFmpeg localmente, gera o hash Base64 e duração da faixa em menos de 1,5s, persiste o valor no SQLite local (Song.AcousticFingerprint) para evitar redecodificação futura, e opera sem enviar nenhum dado sonoro pela rede.
 ```
 
-- [ ] T001 [P] [Slice1] Create `AcousticFingerprint.cs` in `src/Resonance.Core/Models/AcousticFingerprint.cs` with properties: `Hash` (string Base64), `DurationSeconds` (int), `Algorithm` (int, default 1), and `IsValid` (bool).
-- [ ] T002 [Slice1] Add `AcousticFingerprint` (string?, null) and `AcoustId` (string?, MaxLength 100) properties in `src/Resonance.Core/Models/Song.cs`.
-- [ ] T003 [Slice1] Create EF Core migration `20260921_AddAcousticFingerprintAndAcoustIdToSong.cs` and update model snapshot in `src/Resonance.Core/Data/Migrations/` adding columns `AcousticFingerprint` and `AcoustId` to table `Songs`.
-- [ ] T004 [P] [Slice1] Create `IFingerprintService.cs` in `src/Resonance.Core/Services/Abstractions/IFingerprintService.cs` declaring `Task<AcousticFingerprint?> GenerateFingerprintAsync(string filePath, CancellationToken cancellationToken = default)`.
-- [ ] T005 [P] [Slice1] Create unit tests in `tests/Resonance.Core.Tests/Services/FingerprintServiceTests.cs` verifying FFmpeg chromaprint extraction with synthetic audio, silent audio handling, short audio handling (< 10s), and cancellation handling.
-- [ ] T006 [Slice1] Implement `FFmpegFingerprintService.cs` in `src/Resonance.Core/Services/Implementations/FFmpegFingerprintService.cs` executing `ffmpeg -v error -nostdin -i <file> -t 120 -f chromaprint -fp_format base64 pipe:1` asynchronously with process cancellation, duration parsing, and detection of short audio (< 10s).
-- [ ] T007 [Slice1] Register `IFingerprintService` singleton in `src/Resonance.WinUI/App.xaml.cs`.
-- [ ] T008 [Slice1] Gate Slice 1: Validate build and test execution of the local fingerprint engine:
+- [X] T001 [P] [Slice1] Create `AcousticFingerprint.cs` in `src/Resonance.Core/Models/AcousticFingerprint.cs` with properties: `Hash` (string Base64), `DurationSeconds` (int), `Algorithm` (int, default 1), and `IsValid` (bool).
+- [X] T002 [Slice1] Add `AcousticFingerprint` (string?, null) and `AcoustId` (string?, MaxLength 100) properties in `src/Resonance.Core/Models/Song.cs`.
+- [X] T003 [Slice1] Create EF Core migration `20260921_AddAcousticFingerprintAndAcoustIdToSong.cs` and update model snapshot in `src/Resonance.Core/Data/Migrations/` adding columns `AcousticFingerprint` and `AcoustId` to table `Songs`.
+- [X] T004 [P] [Slice1] Create `IFingerprintService.cs` in `src/Resonance.Core/Services/Abstractions/IFingerprintService.cs` declaring `Task<AcousticFingerprint?> GenerateFingerprintAsync(string filePath, CancellationToken cancellationToken = default)`.
+- [X] T005 [P] [Slice1] Create unit tests in `tests/Resonance.Core.Tests/Services/FingerprintServiceTests.cs` verifying FFmpeg chromaprint extraction with synthetic audio, silent audio handling, short audio handling (< 10s), and cancellation handling.
+- [X] T006 [Slice1] Implement `FFmpegFingerprintService.cs` in `src/Resonance.Core/Services/Implementations/FFmpegFingerprintService.cs` executing `ffmpeg -v error -nostdin -i <file> -t 120 -f chromaprint -fp_format base64 pipe:1` asynchronously with process cancellation, duration parsing, and detection of short audio (< 10s).
+- [X] T007 [Slice1] Register `IFingerprintService` singleton in `src/Resonance.WinUI/App.xaml.cs`.
+- [X] T008 [Slice1] Gate Slice 1: Validate build and test execution of the local fingerprint engine:
   ```powershell
   dotnet test tests/Resonance.Core.Tests --filter FullyQualifiedName~FingerprintServiceTests
   ```

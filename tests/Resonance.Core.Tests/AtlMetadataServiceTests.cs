@@ -1,7 +1,8 @@
-﻿using ATL;
+using ATL;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Resonance.Core.Helpers;
+using Resonance.Core.Models;
 using Resonance.Core.Services.Abstractions;
 using Resonance.Core.Services.Implementations;
 using NSubstitute;
@@ -793,5 +794,114 @@ public class AtlMetadataServiceTests : IDisposable
 
         // Assert
         result.Artists.Should().ContainSingle().Which.Should().Be("Artist A / Artist B");
+    }
+
+    /// <summary>
+    ///     Verifies that GetTrackInspectorViewDataAsync correctly extracts deep technical details
+    ///     such as container format, codec, bitrate mode, channels description and file size.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WithValidFile_ExtractsTechnicalDetails()
+    {
+        // Arrange
+        var filePath = CreateTestAudioFile("inspector_tech.mp3", track =>
+        {
+            track.Title = "Inspector Test Song";
+            track.Artist = "Tech Artist";
+            track.Album = "Tech Album";
+        });
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(filePath);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Technical.Should().NotBeNull();
+        result.Technical.FilePath.Should().Be(filePath);
+        result.Technical.IsAccessible.Should().BeTrue();
+        result.Technical.FileSizeBytes.Should().BeGreaterThan(0);
+        result.Technical.FileSizeFormatted.Should().NotBeNullOrWhiteSpace();
+        result.Technical.ContainerFormat.Should().NotBeNullOrWhiteSpace();
+        result.Technical.AudioCodec.Should().NotBeNullOrWhiteSpace();
+        result.Technical.BitrateMode.Should().BeOneOf("CBR", "VBR", "ABR");
+        result.Tags.Title.Should().Be("Inspector Test Song");
+        result.ProvenanceLabel.Should().Be("Arquivo Local");
+    }
+
+    /// <summary>
+    ///     Verifies that GetTrackInspectorViewDataAsync gracefully handles non-existent or inaccessible
+    ///     files by returning IsAccessible = false without throwing exceptions.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WithInaccessibleFile_ReturnsGracefulInaccessibleState()
+    {
+        // Arrange
+        var missingPath = Path.Combine(_tempDirectory, "non_existent_track.mp3");
+        _fileSystem.FileExists(missingPath).Returns(false);
+        _fileSystem.GetFileInfo(missingPath).Returns(new FileInfo(missingPath));
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(missingPath);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Technical.IsAccessible.Should().BeFalse();
+        result.Technical.FilePath.Should().Be(missingPath);
+        result.ProvenanceLabel.Should().Be("Arquivo Inacessível");
+    }
+
+    /// <summary>
+    ///     Verifies that GetTrackInspectorViewDataAsync from a Song entity populates tags and technical details,
+    ///     and enriches the provenance label.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_FromSongEntity_IntegratesLibraryData()
+    {
+        // Arrange
+        var filePath = CreateTestAudioFile("song_entity_test.mp3", track =>
+        {
+            track.Title = "Entity Song";
+            track.Artist = "Entity Artist";
+        });
+
+        var song = new Song
+        {
+            Id = Guid.NewGuid(),
+            Title = "Entity Song",
+            FilePath = filePath,
+            Duration = TimeSpan.FromSeconds(180),
+            Bitrate = 320,
+            SampleRate = 44100,
+            Channels = 2,
+            Album = new Album { Title = "Entity Album", CoverArtUri = "file:///album.jpg" }
+        };
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(song);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Technical.IsAccessible.Should().BeTrue();
+        result.ProvenanceLabel.Should().Be("Biblioteca Local & Arquivo");
+        result.Tags.Title.Should().Be("Entity Song");
+    }
+
+    /// <summary>
+    ///     Verifies that for lossy formats like MP3, BitDepth is reported as null according to specification.
+    /// </summary>
+    [Fact]
+    public async Task GetTrackInspectorViewDataAsync_WithLossyFormat_EnsuresBitDepthIsNull()
+    {
+        // Arrange
+        var filePath = CreateTestAudioFile("lossy_test.mp3", track =>
+        {
+            track.Title = "Lossy Track";
+        });
+
+        // Act
+        var result = await _metadataService.GetTrackInspectorViewDataAsync(filePath);
+
+        // Assert
+        result.Technical.BitDepth.Should().BeNull();
     }
 }

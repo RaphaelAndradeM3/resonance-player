@@ -50,12 +50,12 @@ Regra de Ouro: Reutilizar o mecanismo atual de leitura de metadata (AtlMetadataS
 
 ### Implementation for User Story 1
 
-- [ ] T008 [P] [US1] Create unit tests in `tests/Resonance.Core.Tests/Services/AtlMetadataServiceTests.cs` verifying extraction of container format, audio codec, CBR vs VBR bitrate modes, sample rates (44.1kHz up to 192kHz), bit depth (16/24/32-bit and null for lossy), channel layouts and formatted file sizes.
-- [ ] T009 [US1] Implement deep technical property extraction in `src/Resonance.Core/Services/Implementations/AtlMetadataService.cs` mapping `track.AudioFormat.Name`, `track.AudioFormat.ShortName`, `track.BitrateType`, `track.BitDepth`, `track.SampleRate`, and `track.ChannelsArrangement.NbChannels` into `TrackTechnicalDetails`.
-- [ ] T010 [US1] Create `TrackInspectorViewModel.cs` in `src/Resonance.WinUI/ViewModels/TrackInspectorViewModel.cs` implementing `ITrackInspectorViewModel`, managing `IsOpen`, `IsLoading`, `CurrentData`, and `InspectSongCommand` with asynchronous background loading.
-- [ ] T011 [US1] Create `TrackInspectorControl.xaml` and `TrackInspectorControl.xaml.cs` in `src/Resonance.WinUI/Controls/TrackInspectorControl.xaml` defining the Technical Details card displaying container format, codec, sample rate, bit depth, channel configuration, bitrate mode, and file size.
-- [ ] T012 [US1] Register `TrackInspectorViewModel` as a singleton in `src/Resonance.WinUI/App.xaml.cs` inside `ConfigureViewModels(services)`.
-- [ ] T013 [US1] Validate User Story 1 execution via `dotnet test tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj --filter FullyQualifiedName~AtlMetadataService`.
+- [X] T008 [P] [US1] Create unit tests in `tests/Resonance.Core.Tests/Services/AtlMetadataServiceTests.cs` verifying extraction of container format, audio codec, CBR vs VBR bitrate modes, sample rates (44.1kHz up to 192kHz), bit depth (16/24/32-bit and null for lossy), channel layouts and formatted file sizes.
+- [X] T009 [US1] Implement deep technical property extraction in `src/Resonance.Core/Services/Implementations/AtlMetadataService.cs` mapping `track.AudioFormat.Name`, `track.AudioFormat.ShortName`, `track.BitrateType`, `track.BitDepth`, `track.SampleRate`, and `track.ChannelsArrangement.NbChannels` into `TrackTechnicalDetails`.
+- [X] T010 [US1] Create `TrackInspectorViewModel.cs` in `src/Resonance.WinUI/ViewModels/TrackInspectorViewModel.cs` implementing `ITrackInspectorViewModel`, managing `IsOpen`, `IsLoading`, `CurrentData`, and `InspectSongCommand` with asynchronous background loading.
+- [X] T011 [US1] Create `TrackInspectorControl.xaml` and `TrackInspectorControl.xaml.cs` in `src/Resonance.WinUI/Controls/TrackInspectorControl.xaml` defining the Technical Details card displaying container format, codec, sample rate, bit depth, channel configuration, bitrate mode, and file size.
+- [X] T012 [US1] Register `TrackInspectorViewModel` as a singleton in `src/Resonance.WinUI/App.xaml.cs` inside `ConfigureViewModels(services)`.
+- [X] T013 [US1] Validate User Story 1 execution via `dotnet test tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj --filter FullyQualifiedName~AtlMetadataService`.
 
 **Checkpoint**: User Story 1 (MVP) está concluída. As grandezas técnicas são extraídas pelo Core e podem ser renderizadas no controle do Inspector.
 

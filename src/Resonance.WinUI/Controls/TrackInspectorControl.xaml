@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Resonance.WinUI.Controls.TrackInspectorControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="using:Resonance.WinUI.ViewModels"
+    mc:Ignorable="d"
+    d:DesignWidth="360"
+    d:DesignHeight="800">
+
+    <Grid Background="{ThemeResource LayerFillColorDefaultBrush}"
+          BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+          BorderThickness="1,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Top Header: Title, Follow-Playback Toggle, and Close Button -->
+        <Grid Grid.Row="0" Padding="16,14,12,12" Background="{ThemeResource LayerOnAcrylicFillColorDefault}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                <FontIcon Glyph="&#xE946;" FontSize="16" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                <TextBlock Text="Propriedades da Faixa"
+                           Style="{StaticResource SubtitleTextBlockStyle}"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+            </StackPanel>
+
+            <ToggleButton Grid.Column="1"
+                          IsChecked="{x:Bind ViewModel.FollowPlayback, Mode=TwoWay}"
+                          ToolTipService.ToolTip="Seguir faixa em reprodução"
+                          Margin="0,0,4,0"
+                          Padding="6,4"
+                          Background="Transparent"
+                          BorderBrush="Transparent">
+                <FontIcon Glyph="&#xE8D6;" FontSize="14" />
+            </ToggleButton>
+
+            <Button Grid.Column="2"
+                    Command="{x:Bind ViewModel.CloseInspectorCommand}"
+                    ToolTipService.ToolTip="Fechar painel (Esc)"
+                    Padding="6,4"
+                    Background="Transparent"
+                    BorderBrush="Transparent">
+                <FontIcon Glyph="&#xE711;" FontSize="14" />
+            </Button>
+        </Grid>
+
+        <!-- Multi-Track Pagination Bar -->
+        <Grid Grid.Row="1"
+              Padding="16,6"
+              Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+              Visibility="{x:Bind ViewModel.HasMultipleTracks, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                    Command="{x:Bind ViewModel.PreviousSelectedTrackCommand}"
+                    IsEnabled="{x:Bind ViewModel.CurrentData.HasPreviousTrack, Mode=OneWay}"
+                    Padding="8,4"
+                    ToolTipService.ToolTip="Faixa anterior">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <FontIcon Glyph="&#xE76B;" FontSize="11" />
+                    <TextBlock Text="Anterior" FontSize="12" />
+                </StackPanel>
+            </Button>
+
+            <TextBlock Grid.Column="1"
+                       Text="{x:Bind ViewModel.PaginationText, Mode=OneWay}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="12"
+                       FontWeight="Medium"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+            <Button Grid.Column="2"
+                    Command="{x:Bind ViewModel.NextSelectedTrackCommand}"
+                    IsEnabled="{x:Bind ViewModel.CurrentData.HasNextTrack, Mode=OneWay}"
+                    Padding="8,4"
+                    ToolTipService.ToolTip="Próxima faixa">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBlock Text="Próxima" FontSize="12" />
+                    <FontIcon Glyph="&#xE76C;" FontSize="11" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <!-- Loading Progress Bar -->
+        <ProgressBar Grid.Row="2"
+                     IsIndeterminate="True"
+                     Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+        <!-- Main Content Area -->
+        <ScrollViewer Grid.Row="3"
+                      Padding="16,12"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Spacing="16">
+
+                <!-- Inaccessible Warning Banner -->
+                <Border Background="{ThemeResource SystemFillColorCautionBackgroundBrush}"
+                        BorderBrush="{ThemeResource SystemFillColorCautionBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="12"
+                        Visibility="{x:Bind ViewModel.CurrentData.Technical.IsAccessible, Mode=OneWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                    <StackPanel Spacing="6">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE7BA;" Foreground="{ThemeResource SystemFillColorCautionBrush}" FontSize="16" />
+                            <TextBlock Text="Arquivo Inacessível" FontWeight="SemiBold" Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
+                        </StackPanel>
+                        <TextBlock Text="O arquivo original não foi encontrado no disco. Os metadados exibidos abaixo foram recuperados da biblioteca local."
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Track Header & Thumbnail Summary -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="72" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Artwork Thumbnail with LightBox Trigger -->
+                        <Button Grid.Column="0"
+                                Padding="0"
+                                Margin="0,0,12,0"
+                                Width="72"
+                                Height="72"
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                CornerRadius="6"
+                                Click="OnArtworkThumbnailClick"
+                                ToolTipService.ToolTip="Clique para ver a capa em tamanho real">
+                            <Grid CornerRadius="6">
+                                <Image Source="{x:Bind ViewModel.CurrentData.Artwork.CoverArtUri, Mode=OneWay, Converter={StaticResource StringToDecodedImageSourceConverter}, ConverterParameter=200}"
+                                       Stretch="UniformToFill"
+                                       Width="72"
+                                       Height="72" />
+                                <Border Background="#40000000"
+                                        Opacity="0"
+                                        PointerEntered="OnThumbnailOverlayPointerEntered"
+                                        PointerExited="OnThumbnailOverlayPointerExited"
+                                        x:Name="ThumbnailOverlay">
+                                    <FontIcon Glyph="&#xE721;" Foreground="White" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </Grid>
+                        </Button>
+
+                        <!-- Title and Artist Summary -->
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                            <TextBlock Text="{x:Bind ViewModel.CurrentData.Tags.Title, Mode=OneWay}"
+                                       FontWeight="SemiBold"
+                                       FontSize="14"
+                                       MaxLines="2"
+                                       TextWrapping="Wrap"
+                                       TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{x:Bind ViewModel.CurrentData.Tags.ArtistsFormatted, Mode=OneWay}"
+                                       FontSize="12"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{x:Bind ViewModel.CurrentData.Tags.Album, Mode=OneWay}"
+                                       FontSize="11"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                       TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Technical Details Card (User Story 1 - MVP) -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="14">
+                    <StackPanel Spacing="10">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <FontIcon Glyph="&#xE946;" FontSize="13" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                            <TextBlock Text="Propriedades Técnicas de Áudio"
+                                       FontWeight="SemiBold"
+                                       FontSize="13" />
+                        </StackPanel>
+
+                        <MenuFlyoutSeparator Margin="-14,0,-14,0" />
+
+                        <!-- Format & Codec -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Formato / Codec" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{x:Bind ViewModel.CurrentData.Technical.FormatSummary, Mode=OneWay}"
+                                       FontSize="12"
+                                       FontWeight="Medium"
+                                       TextAlignment="Right" />
+                        </Grid>
+
+                        <!-- Bitrate -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Taxa de Bits" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{x:Bind ViewModel.CurrentData.Technical.BitrateFormatted, Mode=OneWay}"
+                                       FontSize="12"
+                                       FontWeight="Medium"
+                                       TextAlignment="Right" />
+                        </Grid>
+
+                        <!-- Sample Rate -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Taxa de Amostragem" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{x:Bind ViewModel.CurrentData.Technical.SampleRateFormatted, Mode=OneWay}"
+                                       FontSize="12"
+                                       FontWeight="Medium"
+                                       TextAlignment="Right" />
+                        </Grid>
+
+                        <!-- Bit Depth -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Profundidade" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{x:Bind ViewModel.CurrentData.Technical.BitDepthFormatted, Mode=OneWay}"
+                                       FontSize="12"
+                                       FontWeight="Medium"
+                                       TextAlignment="Right" />
+                        </Grid>
+
+                        <!-- Channels -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Canais" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{x:Bind ViewModel.CurrentData.Technical.ChannelsDescription, Mode=OneWay}"
+                                       FontSize="12"
+                                       FontWeight="Medium"
+                                       TextAlignment="Right" />
+                        </Grid>
+
+                        <!-- Duration -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Duração" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{x:Bind ViewModel.CurrentData.Technical.DurationFormatted, Mode=OneWay}"
+                                       FontSize="12"
+                                       FontWeight="Medium"
+                                       TextAlignment="Right" />
+                        </Grid>
+
+                        <!-- File Size -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Tamanho em Disco" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{x:Bind ViewModel.CurrentData.Technical.FileSizeFormatted, Mode=OneWay}"
+                                       FontSize="12"
+                                       FontWeight="Medium"
+                                       TextAlignment="Right" />
+                        </Grid>
+
+                        <!-- Physical File Path with Copy Button -->
+                        <StackPanel Spacing="4" Margin="0,4,0,0">
+                            <Grid>
+                                <TextBlock Text="Caminho do Arquivo" FontSize="11" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                                <Button HorizontalAlignment="Right"
+                                        Padding="4,2"
+                                        Background="Transparent"
+                                        BorderBrush="Transparent"
+                                        Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                        CommandParameter="{x:Bind ViewModel.CurrentData.Technical.FilePath, Mode=OneWay}"
+                                        ToolTipService.ToolTip="Copiar caminho completo">
+                                    <FontIcon Glyph="&#xE8C8;" FontSize="11" />
+                                </Button>
+                            </Grid>
+                            <TextBlock Text="{x:Bind ViewModel.CurrentData.Technical.FilePath, Mode=OneWay}"
+                                       FontSize="11"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       TextWrapping="Wrap"
+                                       IsTextSelectionEnabled="True" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Tags & Editorial Metadata Card (Phase 4) -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="14">
+                    <StackPanel Spacing="10">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <FontIcon Glyph="&#xE8EC;" FontSize="13" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                            <TextBlock Text="Metadados &amp; Tags"
+                                       FontWeight="SemiBold"
+                                       FontSize="13" />
+                        </StackPanel>
+
+                        <MenuFlyoutSeparator Margin="-14,0,-14,0" />
+
+                        <!-- Track and Disc Number -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Faixa / Disco" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{x:Bind ViewModel.CurrentData.Tags.TrackAndDiscSummary, Mode=OneWay}"
+                                       FontSize="12"
+                                       TextAlignment="Right" />
+                        </Grid>
+
+                        <!-- Year -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Ano" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{x:Bind ViewModel.CurrentData.Tags.YearSummary, Mode=OneWay}"
+                                       FontSize="12"
+                                       TextAlignment="Right" />
+                        </Grid>
+
+                        <!-- Genres -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Gênero(s)" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{x:Bind ViewModel.CurrentData.Tags.GenresFormatted, Mode=OneWay}"
+                                       FontSize="12"
+                                       TextAlignment="Right"
+                                       TextWrapping="Wrap" />
+                        </Grid>
+
+                        <!-- Composer -->
+                        <Grid Visibility="{x:Bind ViewModel.CurrentData.Tags.Composer, Mode=OneWay, Converter={StaticResource NullOrEmptyStringToVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Compositor" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{x:Bind ViewModel.CurrentData.Tags.Composer, Mode=OneWay}"
+                                       FontSize="12"
+                                       TextAlignment="Right"
+                                       TextWrapping="Wrap" />
+                        </Grid>
+
+                        <!-- ReplayGain Expander / Card -->
+                        <Expander Header="ReplayGain"
+                                  HorizontalAlignment="Stretch"
+                                  HorizontalContentAlignment="Stretch"
+                                  Padding="8,4"
+                                  Margin="0,4,0,0">
+                            <StackPanel Spacing="6" Padding="4">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Ganho da Faixa" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{x:Bind ViewModel.CurrentData.Tags.ReplayGainTrackGainFormatted, Mode=OneWay}"
+                                               FontSize="11" />
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Pico da Faixa" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{x:Bind ViewModel.CurrentData.Tags.ReplayGainTrackPeakFormatted, Mode=OneWay}"
+                                               FontSize="11" />
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Ganho do Álbum" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{x:Bind ViewModel.CurrentData.Tags.ReplayGainAlbumGainFormatted, Mode=OneWay}"
+                                               FontSize="11" />
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Pico do Álbum" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{x:Bind ViewModel.CurrentData.Tags.ReplayGainAlbumPeakFormatted, Mode=OneWay}"
+                                               FontSize="11" />
+                                </Grid>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- Lyrics Expander -->
+                        <Expander Header="Letras Locais"
+                                  HorizontalAlignment="Stretch"
+                                  HorizontalContentAlignment="Stretch"
+                                  Padding="8,4"
+                                  Visibility="{x:Bind ViewModel.CurrentData.Tags.HasLyrics, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Text="{x:Bind ViewModel.CurrentData.Tags.LyricsPreview, Mode=OneWay}"
+                                       FontSize="11"
+                                       FontStyle="Italic"
+                                       TextWrapping="Wrap"
+                                       Padding="4" />
+                        </Expander>
+                    </StackPanel>
+                </Border>
+
+                <!-- Identifiers & Provenance Card (Phase 5) -->
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="14">
+                    <StackPanel Spacing="10">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <FontIcon Glyph="&#xE8B9;" FontSize="13" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                            <TextBlock Text="Proveniência &amp; Identificadores"
+                                       FontWeight="SemiBold"
+                                       FontSize="13" />
+                        </StackPanel>
+
+                        <MenuFlyoutSeparator Margin="-14,0,-14,0" />
+
+                        <!-- Provenance Badge -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Origem" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <Border Grid.Column="1"
+                                    HorizontalAlignment="Right"
+                                    Background="{ThemeResource AccentFillColorDefaultBrush}"
+                                    CornerRadius="4"
+                                    Padding="8,2">
+                                <TextBlock Text="{x:Bind ViewModel.CurrentData.ProvenanceLabel, Mode=OneWay}"
+                                           FontSize="11"
+                                           FontWeight="Medium"
+                                           Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                            </Border>
+                        </Grid>
+
+                        <!-- ISRC -->
+                        <Grid Visibility="{x:Bind ViewModel.CurrentData.Tags.Isrc, Mode=OneWay, Converter={StaticResource NullOrEmptyStringToVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="90" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="ISRC" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{x:Bind ViewModel.CurrentData.Tags.Isrc, Mode=OneWay}"
+                                       FontSize="11"
+                                       TextAlignment="Right"
+                                       VerticalAlignment="Center" />
+                            <Button Grid.Column="2"
+                                    Padding="4,2"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                    CommandParameter="{x:Bind ViewModel.CurrentData.Tags.Isrc, Mode=OneWay}"
+                                    ToolTipService.ToolTip="Copiar ISRC">
+                                <FontIcon Glyph="&#xE8C8;" FontSize="10" />
+                            </Button>
+                        </Grid>
+
+                        <!-- MusicBrainz Track ID -->
+                        <Grid Visibility="{x:Bind ViewModel.CurrentData.ExternalIds.MusicBrainzTrackId, Mode=OneWay, Converter={StaticResource NullOrEmptyStringToVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="90" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="MB Track ID" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{x:Bind ViewModel.CurrentData.ExternalIds.MusicBrainzTrackId, Mode=OneWay}"
+                                       FontSize="10"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextAlignment="Right"
+                                       VerticalAlignment="Center" />
+                            <Button Grid.Column="2"
+                                    Padding="4,2"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                    CommandParameter="{x:Bind ViewModel.CurrentData.ExternalIds.MusicBrainzTrackId, Mode=OneWay}"
+                                    ToolTipService.ToolTip="Copiar MusicBrainz Track ID">
+                                <FontIcon Glyph="&#xE8C8;" FontSize="10" />
+                            </Button>
+                        </Grid>
+
+                        <!-- MusicBrainz Release ID -->
+                        <Grid Visibility="{x:Bind ViewModel.CurrentData.ExternalIds.MusicBrainzReleaseId, Mode=OneWay, Converter={StaticResource NullOrEmptyStringToVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="90" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="MB Release" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{x:Bind ViewModel.CurrentData.ExternalIds.MusicBrainzReleaseId, Mode=OneWay}"
+                                       FontSize="10"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextAlignment="Right"
+                                       VerticalAlignment="Center" />
+                            <Button Grid.Column="2"
+                                    Padding="4,2"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                    CommandParameter="{x:Bind ViewModel.CurrentData.ExternalIds.MusicBrainzReleaseId, Mode=OneWay}"
+                                    ToolTipService.ToolTip="Copiar MusicBrainz Release ID">
+                                <FontIcon Glyph="&#xE8C8;" FontSize="10" />
+                            </Button>
+                        </Grid>
+
+                        <!-- AcoustID -->
+                        <Grid Visibility="{x:Bind ViewModel.CurrentData.ExternalIds.AcoustId, Mode=OneWay, Converter={StaticResource NullOrEmptyStringToVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="90" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="AcoustID" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{x:Bind ViewModel.CurrentData.ExternalIds.AcoustId, Mode=OneWay}"
+                                       FontSize="10"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextAlignment="Right"
+                                       VerticalAlignment="Center" />
+                            <Button Grid.Column="2"
+                                    Padding="4,2"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    Command="{x:Bind ViewModel.CopyToClipboardCommand}"
+                                    CommandParameter="{x:Bind ViewModel.CurrentData.ExternalIds.AcoustId, Mode=OneWay}"
+                                    ToolTipService.ToolTip="Copiar AcoustID">
+                                <FontIcon Glyph="&#xE8C8;" FontSize="10" />
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

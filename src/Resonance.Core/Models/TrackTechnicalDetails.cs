@@ -20,4 +20,41 @@ public class TrackTechnicalDetails
     public DateTime? FileCreatedDate { get; set; }
     public DateTime? FileModifiedDate { get; set; }
     public bool IsAccessible { get; set; } = true;
+
+    public string FormatSummary => !string.IsNullOrWhiteSpace(AudioCodec) && !AudioCodec.Equals(ContainerFormat, StringComparison.OrdinalIgnoreCase)
+        ? $"{ContainerFormat} ({AudioCodec})"
+        : ContainerFormat;
+
+    public string SampleRateFormatted => SampleRateHz.HasValue ? $"{SampleRateHz.Value / 1000.0:0.#} kHz" : "—";
+
+    public string BitDepthFormatted
+    {
+        get
+        {
+            if (BitDepth.HasValue && BitDepth.Value > 0)
+                return $"{BitDepth.Value}-bit";
+            if (AudioCodec.Contains("MP3", StringComparison.OrdinalIgnoreCase) ||
+                AudioCodec.Contains("AAC", StringComparison.OrdinalIgnoreCase) ||
+                AudioCodec.Contains("Opus", StringComparison.OrdinalIgnoreCase) ||
+                AudioCodec.Contains("Ogg", StringComparison.OrdinalIgnoreCase) ||
+                ContainerFormat.Contains("MPEG", StringComparison.OrdinalIgnoreCase))
+                return "N/A (Lossy)";
+            return "—";
+        }
+    }
+
+    public string BitrateFormatted
+    {
+        get
+        {
+            if (!BitrateKbps.HasValue || BitrateKbps.Value <= 0) return "—";
+            return !string.IsNullOrWhiteSpace(BitrateMode) && BitrateMode != "Desconhecido"
+                ? $"{BitrateKbps.Value} kbps ({BitrateMode})"
+                : $"{BitrateKbps.Value} kbps";
+        }
+    }
+
+    public string DurationFormatted => Duration.TotalHours >= 1
+        ? Duration.ToString(@"h\:mm\:ss")
+        : Duration.ToString(@"m\:ss");
 }

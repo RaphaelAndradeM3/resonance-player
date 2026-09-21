@@ -23,4 +23,25 @@ public class TrackArtworkDetails
     public long? FileSizeBytes { get; set; }
     public ArtworkSource Source { get; set; } = ArtworkSource.None;
     public string DimensionsFormatted => Width.HasValue && Height.HasValue ? $"{Width} x {Height}" : "N/A";
+
+    public string DimensionsSummary
+    {
+        get
+        {
+            if (Width.HasValue && Height.HasValue)
+            {
+                var sizePart = FileSizeBytes.HasValue ? $" ({FileSizeBytes.Value / 1024.0:F1} KB)" : "";
+                return $"{Width} x {Height} px{sizePart}";
+            }
+            return "Dimensões Indisponíveis";
+        }
+    }
+
+    public string SourceSummary => Source switch
+    {
+        ArtworkSource.Embedded => "Capa Embutida no Arquivo",
+        ArtworkSource.AdjacentFolder => "Imagem na Pasta Local",
+        ArtworkSource.RemoteCache => "Cache da Biblioteca",
+        _ => "Sem Imagem de Capa"
+    };
 }

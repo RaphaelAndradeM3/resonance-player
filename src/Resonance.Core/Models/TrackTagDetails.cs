@@ -33,4 +33,28 @@ public class TrackTagDetails
     public bool HasLyrics { get; set; }
     public bool HasSynchronizedLyrics { get; set; }
     public string? LyricsPreview { get; set; }
+
+    public string ArtistsFormatted => Artists.Count > 0 ? string.Join(", ", Artists) : "—";
+    public string GenresFormatted => Genres.Count > 0 ? string.Join(", ", Genres) : "—";
+
+    public string TrackAndDiscSummary
+    {
+        get
+        {
+            var trackStr = TrackNumber.HasValue
+                ? (TrackCount.HasValue ? $"{TrackNumber}/{TrackCount}" : $"{TrackNumber}")
+                : "—";
+            var discStr = DiscNumber.HasValue
+                ? (DiscCount.HasValue ? $"{DiscNumber}/{DiscCount}" : $"{DiscNumber}")
+                : null;
+            return discStr != null ? $"Faixa {trackStr} (Disco {discStr})" : $"Faixa {trackStr}";
+        }
+    }
+
+    public string YearSummary => Year.HasValue && Year.Value > 0 ? Year.Value.ToString() : "—";
+
+    public string ReplayGainTrackGainFormatted => ReplayGainTrackGain.HasValue ? $"{ReplayGainTrackGain.Value:+0.00;-0.00;0.00} dB" : "—";
+    public string ReplayGainTrackPeakFormatted => ReplayGainTrackPeak.HasValue ? $"{ReplayGainTrackPeak.Value:F6}" : "—";
+    public string ReplayGainAlbumGainFormatted => ReplayGainAlbumGain.HasValue ? $"{ReplayGainAlbumGain.Value:+0.00;-0.00;0.00} dB" : "—";
+    public string ReplayGainAlbumPeakFormatted => ReplayGainAlbumPeak.HasValue ? $"{ReplayGainAlbumPeak.Value:F6}" : "—";
 }

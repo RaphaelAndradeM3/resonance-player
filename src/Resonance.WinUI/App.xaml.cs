@@ -680,6 +680,8 @@ public partial class App : Application
         // Detail/Context ViewModels
         services.AddSingleton<SettingsViewModel>();
         services.AddTransient<OnboardingViewModel>();
+        services.AddSingleton<TrackInspectorViewModel>();
+        services.AddSingleton<ITrackInspectorViewModel>(sp => sp.GetRequiredService<TrackInspectorViewModel>());
     }
 
     /// <summary>

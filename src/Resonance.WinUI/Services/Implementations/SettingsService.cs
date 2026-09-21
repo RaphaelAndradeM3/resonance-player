@@ -81,6 +81,7 @@ public class SettingsService : IUISettingsService, IDisposable
     private static readonly JsonSerializerOptions _serializerOptions = new() { WriteIndented = true };
     private readonly ICredentialLockerService _credentialLockerService;
     private readonly ApplicationDataContainer? _localSettings;
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, object> _fallbackSettings = new();
     private readonly ILogger<SettingsService> _logger;
     private readonly IPathConfiguration _pathConfig;
     private readonly UISettings _uiSettings = new();
@@ -96,9 +97,65 @@ public class SettingsService : IUISettingsService, IDisposable
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _dispatcherService = dispatcherService ?? throw new ArgumentNullException(nameof(dispatcherService));
 
-        _localSettings = ApplicationData.Current.LocalSettings;
+        try
+        {
+            _localSettings = ApplicationData.Current.LocalSettings;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "ApplicationData.Current is not available (unpackaged execution). Using fallback file settings.");
+            _localSettings = null;
+            LoadFallbackSettings();
+        }
 
         _uiSettings.AdvancedEffectsEnabledChanged += OnAdvancedEffectsEnabledChanged;
+    }
+
+    private void LoadFallbackSettings()
+    {
+        try
+        {
+            if (File.Exists(_pathConfig.SettingsFilePath))
+            {
+                var json = File.ReadAllText(_pathConfig.SettingsFilePath);
+                var dict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
+                if (dict != null)
+                {
+                    foreach (var kvp in dict)
+                    {
+                        if (kvp.Value.ValueKind == JsonValueKind.String)
+                            _fallbackSettings[kvp.Key] = kvp.Value.GetString()!;
+                        else if (kvp.Value.ValueKind == JsonValueKind.True)
+                            _fallbackSettings[kvp.Key] = true;
+                        else if (kvp.Value.ValueKind == JsonValueKind.False)
+                            _fallbackSettings[kvp.Key] = false;
+                        else if (kvp.Value.ValueKind == JsonValueKind.Number && kvp.Value.TryGetInt32(out var i))
+                            _fallbackSettings[kvp.Key] = i;
+                        else if (kvp.Value.ValueKind == JsonValueKind.Number && kvp.Value.TryGetDouble(out var d))
+                            _fallbackSettings[kvp.Key] = d;
+                        else
+                            _fallbackSettings[kvp.Key] = kvp.Value.GetRawText();
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to load fallback settings from {Path}", _pathConfig.SettingsFilePath);
+        }
+    }
+
+    private void SaveFallbackSettings()
+    {
+        try
+        {
+            var json = JsonSerializer.Serialize(_fallbackSettings, _serializerOptions);
+            File.WriteAllText(_pathConfig.SettingsFilePath, json);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to save fallback settings to {Path}", _pathConfig.SettingsFilePath);
+        }
     }
 
 
@@ -136,7 +193,15 @@ public class SettingsService : IUISettingsService, IDisposable
 
     public async Task ResetToDefaultsAsync()
     {
-        _localSettings!.Values.Clear();
+        if (_localSettings != null)
+        {
+            _localSettings.Values.Clear();
+        }
+        else
+        {
+            _fallbackSettings.Clear();
+            SaveFallbackSettings();
+        }
 
 
         var tasks = new List<Task>
@@ -205,14 +270,45 @@ public class SettingsService : IUISettingsService, IDisposable
 
     private T GetValue<T>(string key, T defaultValue)
     {
-        return _localSettings!.Values.TryGetValue(key, out var value) && value is T v ? v : defaultValue;
+        if (_localSettings != null)
+        {
+            return _localSettings.Values.TryGetValue(key, out var value) && value is T v ? v : defaultValue;
+        }
+
+        if (_fallbackSettings.TryGetValue(key, out var fallbackValue))
+        {
+            if (fallbackValue is T typed) return typed;
+            if (fallbackValue is IConvertible)
+            {
+                try
+                {
+                    return (T)Convert.ChangeType(fallbackValue, typeof(T));
+                }
+                catch
+                {
+                    // Ignore conversion failures and fall back to default
+                }
+            }
+        }
+
+        return defaultValue;
     }
 
     private async Task<T?> GetComplexValueAsync<T>(string key) where T : class
     {
         string? json = null;
 
-        if (_localSettings!.Values.TryGetValue(key, out var value) && value is string jsonString) json = jsonString;
+        if (_localSettings != null)
+        {
+            if (_localSettings.Values.TryGetValue(key, out var value) && value is string jsonString) json = jsonString;
+        }
+        else
+        {
+            if (_fallbackSettings.TryGetValue(key, out var fallbackValue))
+            {
+                json = fallbackValue as string ?? fallbackValue?.ToString();
+            }
+        }
 
         if (json != null)
             try
@@ -232,8 +328,16 @@ public class SettingsService : IUISettingsService, IDisposable
     {
         string? name = null;
 
-        if (_localSettings!.Values.TryGetValue(key, out var value) && value is string stringValue)
-            name = stringValue;
+        if (_localSettings != null)
+        {
+            if (_localSettings.Values.TryGetValue(key, out var value) && value is string stringValue)
+                name = stringValue;
+        }
+        else
+        {
+            if (_fallbackSettings.TryGetValue(key, out var fallbackValue))
+                name = fallbackValue as string ?? fallbackValue?.ToString();
+        }
 
         if (name != null && Enum.TryParse(name, out TEnum result)) return result;
 
@@ -244,14 +348,43 @@ public class SettingsService : IUISettingsService, IDisposable
     {
         if (value is null)
         {
-            _localSettings!.Values.Remove(key);
+            if (_localSettings != null)
+            {
+                _localSettings.Values.Remove(key);
+            }
+            else
+            {
+                _fallbackSettings.TryRemove(key, out _);
+                SaveFallbackSettings();
+            }
             return Task.CompletedTask;
         }
 
         if (typeof(T).IsClass && typeof(T) != typeof(string))
-            _localSettings!.Values[key] = JsonSerializer.Serialize(value, _serializerOptions);
+        {
+            var serialized = JsonSerializer.Serialize(value, _serializerOptions);
+            if (_localSettings != null)
+            {
+                _localSettings.Values[key] = serialized;
+            }
+            else
+            {
+                _fallbackSettings[key] = serialized;
+                SaveFallbackSettings();
+            }
+        }
         else
-            _localSettings!.Values[key] = value!;
+        {
+            if (_localSettings != null)
+            {
+                _localSettings.Values[key] = value!;
+            }
+            else
+            {
+                _fallbackSettings[key] = value!;
+                SaveFallbackSettings();
+            }
+        }
 
         return Task.CompletedTask;
     }
@@ -397,9 +530,22 @@ public class SettingsService : IUISettingsService, IDisposable
 
         var jsonState = JsonSerializer.Serialize(state, _serializerOptions);
 
-        var stateFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(
-            Path.GetFileName(_pathConfig.PlaybackStateFilePath), CreationCollisionOption.ReplaceExisting).AsTask().ConfigureAwait(false);
-        await FileIO.WriteTextAsync(stateFile, jsonState).AsTask().ConfigureAwait(false);
+        if (_localSettings != null)
+        {
+            try
+            {
+                var stateFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(
+                    Path.GetFileName(_pathConfig.PlaybackStateFilePath), CreationCollisionOption.ReplaceExisting).AsTask().ConfigureAwait(false);
+                await FileIO.WriteTextAsync(stateFile, jsonState).AsTask().ConfigureAwait(false);
+                return;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to save PlaybackState via ApplicationData. Falling back to File IO.");
+            }
+        }
+
+        await File.WriteAllTextAsync(_pathConfig.PlaybackStateFilePath, jsonState).ConfigureAwait(false);
     }
 
     public async Task<PlaybackState?> GetPlaybackStateAsync()
@@ -407,9 +553,24 @@ public class SettingsService : IUISettingsService, IDisposable
         try
         {
             string? jsonState = null;
-            var item = await ApplicationData.Current.LocalFolder.TryGetItemAsync(
-                Path.GetFileName(_pathConfig.PlaybackStateFilePath)).AsTask().ConfigureAwait(false);
-            if (item is IStorageFile stateFile) jsonState = await FileIO.ReadTextAsync(stateFile).AsTask().ConfigureAwait(false);
+            if (_localSettings != null)
+            {
+                try
+                {
+                    var item = await ApplicationData.Current.LocalFolder.TryGetItemAsync(
+                        Path.GetFileName(_pathConfig.PlaybackStateFilePath)).AsTask().ConfigureAwait(false);
+                    if (item is IStorageFile stateFile) jsonState = await FileIO.ReadTextAsync(stateFile).AsTask().ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to read PlaybackState via ApplicationData. Falling back to File IO.");
+                }
+            }
+
+            if (jsonState == null && File.Exists(_pathConfig.PlaybackStateFilePath))
+            {
+                jsonState = await File.ReadAllTextAsync(_pathConfig.PlaybackStateFilePath).ConfigureAwait(false);
+            }
 
             if (string.IsNullOrEmpty(jsonState)) return null;
             return JsonSerializer.Deserialize<PlaybackState>(jsonState);
@@ -430,9 +591,24 @@ public class SettingsService : IUISettingsService, IDisposable
     {
         try
         {
-            var item = await ApplicationData.Current.LocalFolder.TryGetItemAsync(
-                Path.GetFileName(_pathConfig.PlaybackStateFilePath)).AsTask().ConfigureAwait(false);
-            if (item != null) await item.DeleteAsync().AsTask().ConfigureAwait(false);
+            if (_localSettings != null)
+            {
+                try
+                {
+                    var item = await ApplicationData.Current.LocalFolder.TryGetItemAsync(
+                        Path.GetFileName(_pathConfig.PlaybackStateFilePath)).AsTask().ConfigureAwait(false);
+                    if (item != null) await item.DeleteAsync().AsTask().ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to clear PlaybackState via ApplicationData. Falling back to File IO.");
+                }
+            }
+
+            if (File.Exists(_pathConfig.PlaybackStateFilePath))
+            {
+                File.Delete(_pathConfig.PlaybackStateFilePath);
+            }
         }
         catch (Exception ex)
         {

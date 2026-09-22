@@ -917,7 +917,7 @@
                                         <StackPanel Grid.Column="0" Spacing="4" HorizontalAlignment="Center">
                                             <TextBlock Text="Capa Local" FontSize="10" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Center" />
                                             <Border Width="88" Height="88" CornerRadius="4" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
-                                                <Image Source="{x:Bind ViewModel.CurrentData.Artwork.CoverArtUri, Mode=OneWay}"
+                                                <Image Source="{x:Bind ViewModel.CurrentData.Artwork.CoverArtUri, Mode=OneWay, Converter={StaticResource StringToDecodedImageSourceConverter}, ConverterParameter=200}"
                                                        Stretch="UniformToFill" />
                                             </Border>
                                         </StackPanel>
@@ -926,7 +926,7 @@
                                         <StackPanel Grid.Column="1" Spacing="4" HorizontalAlignment="Center">
                                             <TextBlock Text="Sugerida (CAA 500px)" FontSize="10" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Center" />
                                             <Border Width="88" Height="88" CornerRadius="4" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
-                                                <Image Source="{x:Bind ViewModel.CurrentProposal.ProposedCoverUrl, Mode=OneWay}"
+                                                <Image Source="{x:Bind ViewModel.CurrentProposal.ProposedCoverUrl, Mode=OneWay, Converter={StaticResource StringToDecodedImageSourceConverter}, ConverterParameter=200}"
                                                        Stretch="UniformToFill" />
                                             </Border>
                                         </StackPanel>

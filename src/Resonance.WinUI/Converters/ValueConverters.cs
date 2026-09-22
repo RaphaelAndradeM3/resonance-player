@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -415,7 +415,20 @@ public class StringToImageSourceConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, string language)
     {
-        return Helpers.ImageUriHelper.SafeGetImageSource(value as string);
+        try
+        {
+            var str = value switch
+            {
+                string s => s,
+                Uri u => u.ToString(),
+                _ => value?.ToString(),
+            };
+            return Helpers.ImageUriHelper.SafeGetImageSource(str);
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)
@@ -434,14 +447,27 @@ public class StringToDecodedImageSourceConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, string language)
     {
-        var decodePixelWidth = parameter switch
+        try
         {
-            int i => i,
-            double d => (int)d,
-            string s when int.TryParse(s, out var n) => n,
-            _ => 0,
-        };
-        return Helpers.ImageUriHelper.GetDecodedBitmap(value as string, decodePixelWidth);
+            var decodePixelWidth = parameter switch
+            {
+                int i => i,
+                double d => (int)d,
+                string s when int.TryParse(s, out var n) => n,
+                _ => 0,
+            };
+            var str = value switch
+            {
+                string s => s,
+                Uri u => u.ToString(),
+                _ => value?.ToString(),
+            };
+            return Helpers.ImageUriHelper.GetDecodedBitmap(str, decodePixelWidth);
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)

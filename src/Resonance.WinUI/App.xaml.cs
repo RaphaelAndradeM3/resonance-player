@@ -612,6 +612,8 @@ public partial class App : Application
         services.AddSingleton<ILastFmAuthService, LastFmAuthService>();
         services.AddSingleton<IMusicBrainzService, MusicBrainzService>();
         services.AddSingleton<IMetadataEnrichmentService, MetadataEnrichmentService>();
+        services.AddSingleton<ITagDiffService, TagDiffService>();
+        services.AddSingleton<ITagWriterService, SafeTagWriterService>();
         services.AddSingleton<IFanartTvService, FanartTvService>();
         services.AddSingleton<ITheAudioDbService, TheAudioDbService>();
         services.AddSingleton<INetEaseLyricsService, NetEaseLyricsService>();
@@ -656,6 +658,7 @@ public partial class App : Application
             sp.GetRequiredService<ILogger<WindowService>>()
         ));
         services.AddSingleton<IUIService, UIService>();
+        services.AddSingleton<IFilePickerService>(sp => sp.GetRequiredService<IUIService>());
         services.AddSingleton(dispatcherQueue);
         services.AddSingleton<IDispatcherService, DispatcherService>();
         services.AddSingleton<IThemeService>(sp =>
@@ -700,6 +703,7 @@ public partial class App : Application
         services.AddTransient<OnboardingViewModel>();
         services.AddSingleton<TrackInspectorViewModel>();
         services.AddSingleton<ITrackInspectorViewModel>(sp => sp.GetRequiredService<TrackInspectorViewModel>());
+        services.AddTransient<TagEditorViewModel>();
     }
 
     /// <summary>

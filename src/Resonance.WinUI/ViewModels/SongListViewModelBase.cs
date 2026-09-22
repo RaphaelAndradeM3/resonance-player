@@ -583,6 +583,85 @@ public abstract partial class SongListViewModelBase : PagedListViewModelBase<Son
     }
 
     [RelayCommand]
+    private async Task EditTagsAsync(Song? song)
+    {
+        var target = song ?? SelectedSongs.FirstOrDefault() ?? _playbackService.CurrentTrack;
+        if (target == null) return;
+
+        var metadataService = App.Services?.GetService<IMetadataService>();
+        TrackAudioTags currentTags;
+
+        if (metadataService != null && !string.IsNullOrWhiteSpace(target.FilePath) && System.IO.File.Exists(target.FilePath))
+        {
+            try
+            {
+                var extracted = await metadataService.ExtractMetadataAsync(target.FilePath, includeMediaAssets: true);
+                currentTags = new TrackAudioTags
+                {
+                    Title = extracted.Title,
+                    Artist = extracted.Artists.Count > 0 ? string.Join(" & ", extracted.Artists) : target.ArtistName,
+                    Album = extracted.Album ?? target.Album?.Title,
+                    AlbumArtist = extracted.AlbumArtists.Count > 0 ? string.Join(" & ", extracted.AlbumArtists) : null,
+                    Year = extracted.Year,
+                    TrackNumber = extracted.TrackNumber,
+                    TotalTracks = extracted.TrackCount,
+                    DiscNumber = extracted.DiscNumber,
+                    TotalDiscs = extracted.DiscCount,
+                    Genre = extracted.Genres.Count > 0 ? string.Join(", ", extracted.Genres) : null,
+                    Comment = extracted.Comment
+                };
+            }
+            catch
+            {
+                currentTags = new TrackAudioTags
+                {
+                    Title = target.Title,
+                    Artist = target.ArtistName,
+                    Album = target.Album?.Title,
+                    Year = target.Year,
+                    TrackNumber = target.TrackNumber,
+                    TotalTracks = target.TrackCount,
+                    DiscNumber = target.DiscNumber,
+                    TotalDiscs = target.DiscCount
+                };
+            }
+        }
+        else
+        {
+            currentTags = new TrackAudioTags
+            {
+                Title = target.Title,
+                Artist = target.ArtistName,
+                Album = target.Album?.Title,
+                Year = target.Year,
+                TrackNumber = target.TrackNumber,
+                TotalTracks = target.TrackCount,
+                DiscNumber = target.DiscNumber,
+                TotalDiscs = target.DiscCount
+            };
+        }
+
+        var tagEditorVm = App.Services?.GetService<TagEditorViewModel>();
+        if (tagEditorVm == null) return;
+
+        tagEditorVm.InitializeForManualEdit(target, currentTags);
+
+        var dialog = new Dialogs.TagEditorDialog(tagEditorVm)
+        {
+            XamlRoot = App.RootWindow?.Content?.XamlRoot
+        };
+
+        if (dialog.XamlRoot == null) return;
+
+        await dialog.ShowAsync();
+
+        if (tagEditorVm.SaveSucceeded)
+        {
+            await LoadPageAsync(CurrentPage);
+        }
+    }
+
+    [RelayCommand]
     private async Task GoToAlbumAsync(object? parameter)
     {
         if (_isNavigatingToAlbum) return;

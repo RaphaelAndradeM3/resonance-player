@@ -613,6 +613,7 @@ public partial class App : Application
         services.AddSingleton<IMusicBrainzService, MusicBrainzService>();
         services.AddSingleton<IMetadataEnrichmentService, MetadataEnrichmentService>();
         services.AddSingleton<ITagDiffService, TagDiffService>();
+        services.AddSingleton<ITagWriterService, SafeTagWriterService>();
         services.AddSingleton<IFanartTvService, FanartTvService>();
         services.AddSingleton<ITheAudioDbService, TheAudioDbService>();
         services.AddSingleton<INetEaseLyricsService, NetEaseLyricsService>();

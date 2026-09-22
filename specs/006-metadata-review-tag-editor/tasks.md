@@ -53,15 +53,15 @@ Problem: Gravar alterações no arquivo físico sem risco de corrupção em caso
 Definition of Success: O serviço SafeTagWriterService executa o pipeline em 4 etapas: gravação em .tmp no mesmo diretório, escrita via ATL.Track, validação pós-escrita de integridade de áudio, desativação de Read-Only, substituição atômica via File.Replace, coordenação com IMusicPlaybackService para pausa/retomada suave se a música estiver tocando, e atualização imediata do SQLite em < 50ms, garantindo 100% de preservação do arquivo original em caso de erro.
 ```
 
-- [ ] T010 [P] [Slice2] Create `ITagWriterService.cs` in `src/Resonance.Core/Services/Abstractions/ITagWriterService.cs` declarando `Task<TagWriteResult> ApplyWritePlanAsync(TagWritePlan plan, CancellationToken cancellationToken = default)` e `Task<bool> ValidateAudioFileIntegrityAsync(string filePath, CancellationToken cancellationToken = default)`.
-- [ ] T011 [P] [Slice2] Create unit and integration tests in `tests/Resonance.Core.Tests/Services/SafeTagWriterServiceTests.cs` cobrindo:
+- [X] T010 [P] [Slice2] Create `ITagWriterService.cs` in `src/Resonance.Core/Services/Abstractions/ITagWriterService.cs` declarando `Task<TagWriteResult> ApplyWritePlanAsync(TagWritePlan plan, CancellationToken cancellationToken = default)` e `Task<bool> ValidateAudioFileIntegrityAsync(string filePath, CancellationToken cancellationToken = default)`.
+- [X] T011 [P] [Slice2] Create unit and integration tests in `tests/Resonance.Core.Tests/Services/SafeTagWriterServiceTests.cs` cobrindo:
   - Gravação round-trip de tags em arquivos de teste MP3 e FLAC.
   - Gravação de imagem de capa embutida (PictureInfo Front Cover).
   - Simulação de falha de gravação: verificação de que o arquivo temporário `.tmp` é excluído e o original permanece 100% inalterado.
   - Tratamento de arquivo marcado como Somente-Leitura (*Read-Only*): remoção temporária da flag e sucesso da substituição atômica.
   - Coordenação de playback: verificação de que se o arquivo estiver em reprodução ativa, o stream é pausado e restaurado no mesmo timestamp.
   - Sincronização pós-escrita: verificação de chamada para atualização de metadados na persistência do banco de dados.
-- [ ] T012 [Slice2] Implement `SafeTagWriterService.cs` in `src/Resonance.Core/Services/Implementations/SafeTagWriterService.cs` contendo:
+- [X] T012 [Slice2] Implement `SafeTagWriterService.cs` in `src/Resonance.Core/Services/Implementations/SafeTagWriterService.cs` contendo:
   - Cópia do arquivo original para `<nome>.tmp.<guid>` no mesmo diretório para garantir atomicidade no mesmo volume de disco.
   - Abertura do temporário e gravação das tags selecionadas no `TagWritePlan` via `ATL.Track.Save()`.
   - Embutimento de bytes de capa via `ATL.PictureInfo.fromBinaryData(...)` ou remoção quando solicitado.
@@ -71,8 +71,8 @@ Definition of Success: O serviço SafeTagWriterService executa o pipeline em 4 e
   - Substituição atômica com `File.Replace(tempPath, originalPath, backupPath, ignoreMetadataStoreErrors: true)` com deleção imediata do backup pós-sucesso.
   - Rollback seguro: em qualquer exceção, excluir arquivos temporários e preservar o original.
   - Sincronização de catálogo: reler com `_metadataService.ExtractMetadataAsync` e atualizar SQLite via `_libraryWriter.UpdateSongAsync`.
-- [ ] T013 [Slice2] Register `ITagWriterService` singleton in `src/Resonance.WinUI/App.xaml.cs`.
-- [ ] T014 [Slice2] Gate Slice 2: Validate build and test execution of the safe tag writer engine:
+- [X] T013 [Slice2] Register `ITagWriterService` singleton in `src/Resonance.WinUI/App.xaml.cs`.
+- [X] T014 [Slice2] Gate Slice 2: Validate build and test execution of the safe tag writer engine:
   ```powershell
   dotnet test tests/Resonance.Core.Tests --filter FullyQualifiedName~SafeTagWriterServiceTests
   ```

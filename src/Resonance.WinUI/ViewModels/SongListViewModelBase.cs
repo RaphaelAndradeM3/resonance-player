@@ -653,7 +653,15 @@ public abstract partial class SongListViewModelBase : PagedListViewModelBase<Son
 
         if (dialog.XamlRoot == null) return;
 
-        await dialog.ShowAsync();
+        try
+        {
+            await dialog.ShowAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogWarning(ex, "Falha ao exibir o TagEditorDialog.");
+            return;
+        }
 
         if (tagEditorVm.SaveSucceeded)
         {

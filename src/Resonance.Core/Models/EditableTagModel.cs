@@ -11,11 +11,11 @@ public partial class EditableTagModel : ObservableObject
     [ObservableProperty] private string? _artist;
     [ObservableProperty] private string? _album;
     [ObservableProperty] private string? _albumArtist;
-    [ObservableProperty] private uint? _year;
-    [ObservableProperty] private uint? _trackNumber;
-    [ObservableProperty] private uint? _trackTotal;
-    [ObservableProperty] private uint? _discNumber;
-    [ObservableProperty] private uint? _discTotal;
+    [ObservableProperty] private string? _year;
+    [ObservableProperty] private string? _trackNumber;
+    [ObservableProperty] private string? _trackTotal;
+    [ObservableProperty] private string? _discNumber;
+    [ObservableProperty] private string? _discTotal;
     [ObservableProperty] private string? _genre;
     [ObservableProperty] private string? _comment;
     [ObservableProperty] private byte[]? _pictureBytes;
@@ -34,11 +34,11 @@ public partial class EditableTagModel : ObservableObject
             Artist = tags.Artist,
             Album = tags.Album,
             AlbumArtist = tags.AlbumArtist,
-            Year = tags.Year > 0 ? (uint)tags.Year.Value : null,
-            TrackNumber = tags.TrackNumber > 0 ? (uint)tags.TrackNumber.Value : null,
-            TrackTotal = tags.TotalTracks > 0 ? (uint)tags.TotalTracks.Value : null,
-            DiscNumber = tags.DiscNumber > 0 ? (uint)tags.DiscNumber.Value : null,
-            DiscTotal = tags.TotalDiscs > 0 ? (uint)tags.TotalDiscs.Value : null,
+            Year = tags.Year > 0 ? tags.Year.Value.ToString() : null,
+            TrackNumber = tags.TrackNumber > 0 ? tags.TrackNumber.Value.ToString() : null,
+            TrackTotal = tags.TotalTracks > 0 ? tags.TotalTracks.Value.ToString() : null,
+            DiscNumber = tags.DiscNumber > 0 ? tags.DiscNumber.Value.ToString() : null,
+            DiscTotal = tags.TotalDiscs > 0 ? tags.TotalDiscs.Value.ToString() : null,
             Genre = tags.Genre,
             Comment = tags.Comment
         };

@@ -935,13 +935,28 @@ public partial class App : Application
         {
             await Log.CloseAndFlushAsync();
 
-            if (Services is IAsyncDisposable asyncDisposableServices)
-                await asyncDisposableServices.DisposeAsync();
-            else if (Services is IDisposable disposableServices)
-                disposableServices.Dispose();
+            try
+            {
+                if (Services is IAsyncDisposable asyncDisposableServices)
+                    await asyncDisposableServices.DisposeAsync();
+                else if (Services is IDisposable disposableServices)
+                    disposableServices.Dispose();
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogWarning(ex, "Error while disposing services on exit.");
+            }
+
+            try
+            {
+                Current.Exit();
+            }
+            catch
+            {
+                // Best-effort XAML exit; process termination follows
+            }
 
             // Force process exit to ensure all threads (like VLC) are terminated.
-            Current.Exit();
             Process.GetCurrentProcess().Kill();
         }
     }

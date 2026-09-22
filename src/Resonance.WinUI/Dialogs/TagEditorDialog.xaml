@@ -42,16 +42,18 @@
                     CornerRadius="6"
                     Padding="3">
                 <StackPanel Orientation="Horizontal" Spacing="2">
-                    <ToggleButton Content="Revisão de Sugestões"
-                                  IsChecked="{x:Bind ViewModel.IsReviewMode, Mode=TwoWay}"
-                                  Padding="10,4"
-                                  CornerRadius="4"
-                                  FontSize="12" />
-                    <ToggleButton Content="Edição Manual"
-                                  IsChecked="{x:Bind ViewModel.IsReviewMode, Mode=TwoWay, Converter={StaticResource BooleanToInverseBooleanConverter}}"
-                                  Padding="10,4"
-                                  CornerRadius="4"
-                                  FontSize="12" />
+                    <Button Content="Revisão de Sugestões"
+                            Click="OnReviewModeClick"
+                            Background="{x:Bind GetReviewButtonBackground(ViewModel.IsReviewMode), Mode=OneWay}"
+                            Padding="10,4"
+                            CornerRadius="4"
+                            FontSize="12" />
+                    <Button Content="Edição Manual"
+                            Click="OnManualModeClick"
+                            Background="{x:Bind GetManualButtonBackground(ViewModel.IsReviewMode), Mode=OneWay}"
+                            Padding="10,4"
+                            CornerRadius="4"
+                            FontSize="12" />
                 </StackPanel>
             </Border>
         </Grid>

@@ -41,4 +41,16 @@ public interface ITrackInspectorViewModel
     IAsyncRelayCommand ReidentifyTrackCommand { get; }
     IAsyncRelayCommand<RecognitionCandidate> SelectCandidateCommand { get; }
     IRelayCommand DiscardCandidatesCommand { get; }
+
+    // Online Metadata Enrichment State (Feature 005)
+    bool IsEnriching { get; }
+    string EnrichmentStatusText { get; }
+    EnrichmentProposal? CurrentProposal { get; }
+    bool HasEnrichmentProposal { get; }
+    string EnrichmentButtonText { get; }
+
+    // Online Metadata Enrichment Commands (Feature 005)
+    IAsyncRelayCommand FetchMetadataCommand { get; }
+    IAsyncRelayCommand AdvanceToTagReviewCommand { get; }
+    IRelayCommand ClearProposalCommand { get; }
 }

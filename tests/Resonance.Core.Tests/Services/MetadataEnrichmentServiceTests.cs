@@ -326,4 +326,40 @@ public class MetadataEnrichmentServiceTests
         proposal.Proposals.First(p => p.FieldKey == "Artist").Status.Should().Be(FieldProposalStatus.Unchanged);
         proposal.Proposals.First(p => p.FieldKey == "Year").Status.Should().Be(FieldProposalStatus.Unchanged);
     }
+
+    [Fact]
+    public void InteractiveSelection_ToggleUpdatesSelectedCount()
+    {
+        // Arrange
+        var local = new TrackAudioTags { Title = "Climbing Up the Walls" };
+        var remote = new MusicBrainzRecordingDetail
+        {
+            RecordingId = "rec-walls",
+            Title = "Climbing Up the Walls",
+            Artist = "Radiohead", // NewValue (Selected)
+            Album = "OK Computer", // NewValue (Selected)
+            Year = 1997 // NewValue (Selected)
+        };
+
+        var proposal = _service.CreateProposal("C:\\Music\\walls.mp3", local, remote);
+        var initialSelected = proposal.SelectedCount;
+        initialSelected.Should().Be(3);
+
+        // Act - User unchecks Artist and Album
+        var artistProposal = proposal.Proposals.First(p => p.FieldKey == "Artist");
+        artistProposal.IsSelected = false;
+
+        var albumProposal = proposal.Proposals.First(p => p.FieldKey == "Album");
+        albumProposal.IsSelected = false;
+
+        // Assert - SelectedCount dynamically drops
+        proposal.SelectedCount.Should().Be(1);
+
+        // Act - User checks an unselected item
+        var titleProposal = proposal.Proposals.First(p => p.FieldKey == "Title");
+        titleProposal.IsSelected = true;
+
+        // Assert - SelectedCount dynamically increases
+        proposal.SelectedCount.Should().Be(2);
+    }
 }

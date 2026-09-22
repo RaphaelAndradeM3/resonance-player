@@ -1,10 +1,12 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace Resonance.Core.Models;
 
 /// <summary>
 ///     Encapsulates a proposed change for an individual metadata field,
 ///     supporting interactive selection per FR-012.
 /// </summary>
-public class FieldProposal
+public partial class FieldProposal : ObservableObject
 {
     /// <summary>Gets the display name of the field (e.g. "Título", "Artista", "Álbum", "Ano").</summary>
     public string FieldName { get; init; } = string.Empty;
@@ -25,5 +27,37 @@ public class FieldProposal
     public MetadataProvenance Provenance { get; init; }
 
     /// <summary>Gets or sets whether this proposal is selected by the user to be carried over to staging/review.</summary>
-    public bool IsSelected { get; set; }
+    [ObservableProperty]
+    public partial bool IsSelected { get; set; }
+
+    /// <summary>Gets the localized display label for the status badge.</summary>
+    public string StatusDisplay => Status switch
+    {
+        FieldProposalStatus.NewValue => "Novo",
+        FieldProposalStatus.Updated => "Atualizado",
+        FieldProposalStatus.Conflict => "Conflito",
+        _ => "Inalterado"
+    };
+
+    /// <summary>Gets the display label for the provenance badge.</summary>
+    public string ProvenanceDisplay => Provenance switch
+    {
+        MetadataProvenance.MusicBrainz => "MusicBrainz",
+        MetadataProvenance.CoverArtArchive => "Cover Art Archive",
+        MetadataProvenance.UserOverride => "Manual",
+        _ => "Local"
+    };
+
+    /// <summary>Gets whether the proposal status is NewValue.</summary>
+    public bool IsNewValue => Status == FieldProposalStatus.NewValue;
+
+    /// <summary>Gets whether the proposal status is Updated.</summary>
+    public bool IsUpdated => Status == FieldProposalStatus.Updated;
+
+    /// <summary>Gets whether the proposal status is Conflict.</summary>
+    public bool IsConflict => Status == FieldProposalStatus.Conflict;
+
+    /// <summary>Gets whether the proposal status is Unchanged.</summary>
+    public bool IsUnchanged => Status == FieldProposalStatus.Unchanged;
 }
+

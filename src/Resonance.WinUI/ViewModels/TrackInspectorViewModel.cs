@@ -720,7 +720,15 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
             return;
         }
 
-        await dialog.ShowAsync();
+        try
+        {
+            await dialog.ShowAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Falha ao exibir o TagEditorDialog.");
+            return;
+        }
 
         if (tagEditorVm.SaveSucceeded)
         {

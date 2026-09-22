@@ -121,8 +121,8 @@ public class TagEditorViewModelTests
         vm.EditableTags.Title.Should().Be("Local Title");
         vm.EditableTags.Artist.Should().Be("Local Artist");
         vm.EditableTags.Album.Should().Be("Local Album");
-        vm.EditableTags.Year.Should().Be(2018);
-        vm.EditableTags.TrackNumber.Should().Be(4);
+        vm.EditableTags.Year.Should().Be("2018");
+        vm.EditableTags.TrackNumber.Should().Be("4");
         vm.DiffRecords.Should().BeEmpty();
         vm.HasCurrentCover.Should().BeTrue();
         vm.HasProposedCover.Should().BeFalse();

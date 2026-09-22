@@ -15,9 +15,10 @@ public sealed partial class TagEditorDialog : ContentDialog
 {
     public TagEditorDialog(TagEditorViewModel viewModel)
     {
-        InitializeComponent();
         ViewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
         DataContext = ViewModel;
+
+        InitializeComponent();
 
         DialogThemeHelper.ApplyThemeOverrides(this);
 
@@ -28,18 +29,39 @@ public sealed partial class TagEditorDialog : ContentDialog
 
     private void OnViewModelRequestClose(bool saved)
     {
-        Hide();
+        if (!saved)
+        {
+            Hide();
+        }
     }
 
     private async void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
     {
-        // Cancel the immediate closing of the dialog so asynchronous save and validation can occur
-        args.Cancel = true;
+        var deferral = args.GetDeferral();
+        try
+        {
+            if (ViewModel.IsSaving)
+            {
+                args.Cancel = true;
+                return;
+            }
 
-        if (ViewModel.IsSaving)
-            return;
+            await ViewModel.SaveAsync();
 
-        await ViewModel.SaveAsync();
+            // If saving was not successful, prevent dialog from closing so the user can review the error
+            if (!ViewModel.SaveSucceeded)
+            {
+                args.Cancel = true;
+            }
+        }
+        catch
+        {
+            args.Cancel = true;
+        }
+        finally
+        {
+            deferral.Complete();
+        }
     }
 
     private void OnCloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -56,14 +78,41 @@ public sealed partial class TagEditorDialog : ContentDialog
         return "Modo de Edição Manual Direta";
     }
 
-    private bool GetAreAllSelected(int selectedCount, int totalDiffCount)
+    private bool? GetAreAllSelected(int selectedCount, int totalDiffCount)
     {
-        return totalDiffCount > 0 && selectedCount == totalDiffCount;
+        if (totalDiffCount == 0) return false;
+        if (selectedCount == totalDiffCount) return true;
+        if (selectedCount > 0) return null;
+        return false;
     }
 
     private string GetCounterText(int selectedCount, int totalDiffCount)
     {
         return $"{selectedCount} de {totalDiffCount} selecionados";
+    }
+
+    private void OnReviewModeClick(object sender, RoutedEventArgs e)
+    {
+        ViewModel.IsReviewMode = true;
+    }
+
+    private void OnManualModeClick(object sender, RoutedEventArgs e)
+    {
+        ViewModel.IsReviewMode = false;
+    }
+
+    private Brush GetReviewButtonBackground(bool isReviewMode)
+    {
+        return isReviewMode
+            ? (Application.Current.Resources.TryGetValue("CardBackgroundFillColorDefaultBrush", out var b) && b is Brush brush ? brush : new SolidColorBrush(Colors.DimGray))
+            : new SolidColorBrush(Colors.Transparent);
+    }
+
+    private Brush GetManualButtonBackground(bool isReviewMode)
+    {
+        return !isReviewMode
+            ? (Application.Current.Resources.TryGetValue("CardBackgroundFillColorDefaultBrush", out var b) && b is Brush brush ? brush : new SolidColorBrush(Colors.DimGray))
+            : new SolidColorBrush(Colors.Transparent);
     }
 
     private Visibility GetStatusVisibility(string? statusMessage, bool isSaving)

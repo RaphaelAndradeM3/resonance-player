@@ -43,7 +43,22 @@ public partial class TagEditorViewModel : ObservableObject
 
     [ObservableProperty] public partial Song? CurrentSong { get; set; }
     [ObservableProperty] public partial string FilePath { get; set; } = string.Empty;
-    [ObservableProperty] public partial bool IsReviewMode { get; set; }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsManualMode))]
+    public partial bool IsReviewMode { get; set; }
+
+    public bool IsManualMode
+    {
+        get => !IsReviewMode;
+        set => IsReviewMode = !value;
+    }
+
+    [RelayCommand]
+    public void SwitchToReviewMode() => IsReviewMode = true;
+
+    [RelayCommand]
+    public void SwitchToManualMode() => IsReviewMode = false;
+
     [ObservableProperty] public partial bool IsSaving { get; set; }
     [ObservableProperty] public partial string? StatusMessage { get; set; }
     [ObservableProperty] public partial bool HasStatusError { get; set; }

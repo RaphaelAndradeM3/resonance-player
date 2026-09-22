@@ -77,11 +77,11 @@ public class TagDiffService : ITagDiffService
             CompareField("Artist", "Artista", originalTags.Artist, editedModel.Artist),
             CompareField("Album", "Álbum", originalTags.Album, editedModel.Album),
             CompareField("AlbumArtist", "Artista do Álbum", originalTags.AlbumArtist, editedModel.AlbumArtist),
-            CompareField("Year", "Ano", originalTags.Year?.ToString(CultureInfo.InvariantCulture), editedModel.Year?.ToString(CultureInfo.InvariantCulture)),
-            CompareField("TrackNumber", "Faixa", originalTags.TrackNumber?.ToString(CultureInfo.InvariantCulture), editedModel.TrackNumber?.ToString(CultureInfo.InvariantCulture)),
-            CompareField("TrackTotal", "Total de Faixas", originalTags.TotalTracks?.ToString(CultureInfo.InvariantCulture), editedModel.TrackTotal?.ToString(CultureInfo.InvariantCulture)),
-            CompareField("DiscNumber", "Disco", originalTags.DiscNumber?.ToString(CultureInfo.InvariantCulture), editedModel.DiscNumber?.ToString(CultureInfo.InvariantCulture)),
-            CompareField("DiscTotal", "Total de Discos", originalTags.TotalDiscs?.ToString(CultureInfo.InvariantCulture), editedModel.DiscTotal?.ToString(CultureInfo.InvariantCulture)),
+            CompareField("Year", "Ano", originalTags.Year?.ToString(CultureInfo.InvariantCulture), editedModel.Year),
+            CompareField("TrackNumber", "Faixa", originalTags.TrackNumber?.ToString(CultureInfo.InvariantCulture), editedModel.TrackNumber),
+            CompareField("TrackTotal", "Total de Faixas", originalTags.TotalTracks?.ToString(CultureInfo.InvariantCulture), editedModel.TrackTotal),
+            CompareField("DiscNumber", "Disco", originalTags.DiscNumber?.ToString(CultureInfo.InvariantCulture), editedModel.DiscNumber),
+            CompareField("DiscTotal", "Total de Discos", originalTags.TotalDiscs?.ToString(CultureInfo.InvariantCulture), editedModel.DiscTotal),
             CompareField("Genre", "Gênero", originalTags.Genre, editedModel.Genre),
             CompareField("Comment", "Comentário", originalTags.Comment, editedModel.Comment)
         };

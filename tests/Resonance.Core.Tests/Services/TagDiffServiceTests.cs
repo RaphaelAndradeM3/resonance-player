@@ -101,7 +101,7 @@ public class TagDiffServiceTests
             Title = "Song A",         // Unchanged
             Artist = "Artist B",       // Updated
             Album = "New Album",       // NewValue
-            Year = 2010                // Unchanged
+            Year = "2010"              // Unchanged
         };
 
         // Act

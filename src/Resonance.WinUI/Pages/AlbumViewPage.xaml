@@ -302,6 +302,14 @@
                                                 <FontIcon Glyph="&#xE95B;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
+                                        <MenuFlyoutItem
+                                            Command="{Binding DataContext.FetchOnlineMetadataCommand, ElementName=pageRoot}"
+                                            CommandParameter="{x:Bind}"
+                                            Text="Buscar Metadados Online">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE753;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
                                     </MenuFlyout>
                                 </Grid.ContextFlyout>
                                 <Grid.ColumnDefinitions>
@@ -381,6 +389,14 @@
                                     Text="Identificar Música via Áudio">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE95B;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem
+                                    Command="{Binding DataContext.FetchOnlineMetadataCommand, ElementName=pageRoot}"
+                                    CommandParameter="{x:Bind}"
+                                    Text="Buscar Metadados Online">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE753;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                             </MenuFlyout>

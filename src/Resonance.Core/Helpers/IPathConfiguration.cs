@@ -1,4 +1,4 @@
-﻿namespace Resonance.Core.Helpers;
+namespace Resonance.Core.Helpers;
 
 /// <summary>
 ///     Defines the contract for a centralized source of application data paths.
@@ -41,6 +41,11 @@ public interface IPathConfiguration
     ///     Gets the full path to the directory for caching .lrc files extracted from metadata.
     /// </summary>
     string LrcCachePath { get; }
+
+    /// <summary>
+    ///     Gets the full path to the directory for caching online metadata JSON responses.
+    /// </summary>
+    string MetadataCachePath { get; }
 
     /// <summary>
     ///     Gets the full path to the directory where optional romanization data packs are installed.

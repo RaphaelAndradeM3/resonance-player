@@ -611,6 +611,7 @@ public partial class App : Application
         services.AddSingleton<ILastFmMetadataService, LastFmMetadataService>();
         services.AddSingleton<ILastFmAuthService, LastFmAuthService>();
         services.AddSingleton<IMusicBrainzService, MusicBrainzService>();
+        services.AddSingleton<IMetadataEnrichmentService, MetadataEnrichmentService>();
         services.AddSingleton<IFanartTvService, FanartTvService>();
         services.AddSingleton<ITheAudioDbService, TheAudioDbService>();
         services.AddSingleton<INetEaseLyricsService, NetEaseLyricsService>();

@@ -1,6 +1,6 @@
 # FEATURE SPEC: 005 — Online Metadata Enrichment
 
-**Feature Branch**: `005-online-metadata`  
+**Feature Branch**: `005-online-metadata-enrichment`  
 **Created**: 2026-09-20  
 **Status**: Draft  
 **Input**: Baseado em `FEATURES_SUGERIDAS_SPEC_KIT.md` (Feature 005)

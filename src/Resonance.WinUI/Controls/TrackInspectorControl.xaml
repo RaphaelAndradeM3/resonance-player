@@ -836,6 +836,212 @@
                     </StackPanel>
                 </Border>
 
+                <!-- Online Metadata Enrichment Card (Feature 005) -->
+                <Expander Header="Enriquecimento de Metadados Online"
+                          IsExpanded="True"
+                          HorizontalAlignment="Stretch"
+                          HorizontalContentAlignment="Stretch">
+                    <Expander.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                <FontIcon Glyph="&#xE753;" FontSize="14" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                <TextBlock Text="Enriquecimento de Metadados Online" FontWeight="SemiBold" FontSize="13" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </Expander.HeaderTemplate>
+
+                    <StackPanel Spacing="12" Padding="0,8,0,0">
+                        <!-- Search Trigger & Clear Buttons -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="0"
+                                    HorizontalAlignment="Stretch"
+                                    Command="{x:Bind ViewModel.FetchMetadataCommand}"
+                                    IsEnabled="{x:Bind ViewModel.IsEnriching, Mode=OneWay, Converter={StaticResource BooleanToInverseBooleanConverter}}"
+                                    Style="{ThemeResource AccentButtonStyle}">
+                                <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                                    <ProgressRing IsActive="{x:Bind ViewModel.IsEnriching, Mode=OneWay}"
+                                                  Width="16" Height="16"
+                                                  Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                                                  Visibility="{x:Bind ViewModel.IsEnriching, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    <FontIcon Glyph="&#xE721;" FontSize="12"
+                                              Visibility="{x:Bind ViewModel.IsEnriching, Mode=OneWay, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
+                                    <TextBlock Text="{x:Bind ViewModel.EnrichmentButtonText, Mode=OneWay}" FontSize="12" />
+                                </StackPanel>
+                            </Button>
+
+                            <Button Grid.Column="1"
+                                    Margin="8,0,0,0"
+                                    Command="{x:Bind ViewModel.ClearProposalCommand}"
+                                    Visibility="{x:Bind ViewModel.HasEnrichmentProposal, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                    ToolTipService.ToolTip="Limpar proposta">
+                                <FontIcon Glyph="&#xE711;" FontSize="11" />
+                            </Button>
+                        </Grid>
+
+                        <!-- Status text feedback -->
+                        <TextBlock Text="{x:Bind ViewModel.EnrichmentStatusText, Mode=OneWay}"
+                                   FontSize="11"
+                                   TextWrapping="Wrap"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Visibility="{x:Bind ViewModel.EnrichmentStatusText, Mode=OneWay, Converter={StaticResource NullOrEmptyStringToVisibilityConverter}}" />
+
+                        <!-- Proposal Details (Shown when a proposal has been generated) -->
+                        <StackPanel Spacing="12"
+                                    Visibility="{x:Bind ViewModel.HasEnrichmentProposal, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                            <!-- Side-by-side Cover Art Preview -->
+                            <Border Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="6"
+                                    Padding="10"
+                                    Visibility="{x:Bind ViewModel.CurrentProposal.ProposedCoverUrl, Mode=OneWay, Converter={StaticResource NullOrEmptyStringToVisibilityConverter}}">
+                                <StackPanel Spacing="8">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <FontIcon Glyph="&#xEB9F;" FontSize="12" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                        <TextBlock Text="Capa Oficial (Cover Art Archive)" FontSize="11" FontWeight="SemiBold" />
+                                    </StackPanel>
+
+                                    <Grid ColumnSpacing="12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Local Cover -->
+                                        <StackPanel Grid.Column="0" Spacing="4" HorizontalAlignment="Center">
+                                            <TextBlock Text="Capa Local" FontSize="10" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Center" />
+                                            <Border Width="88" Height="88" CornerRadius="4" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
+                                                <Image Source="{x:Bind ViewModel.CurrentData.Artwork.CoverArtUri, Mode=OneWay}"
+                                                       Stretch="UniformToFill" />
+                                            </Border>
+                                        </StackPanel>
+
+                                        <!-- Proposed CAA Cover -->
+                                        <StackPanel Grid.Column="1" Spacing="4" HorizontalAlignment="Center">
+                                            <TextBlock Text="Sugerida (CAA 500px)" FontSize="10" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Center" />
+                                            <Border Width="88" Height="88" CornerRadius="4" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
+                                                <Image Source="{x:Bind ViewModel.CurrentProposal.ProposedCoverUrl, Mode=OneWay}"
+                                                       Stretch="UniformToFill" />
+                                            </Border>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Field-by-field Proposals List -->
+                            <TextBlock Text="Campos Sugeridos" FontSize="12" FontWeight="SemiBold" Margin="0,4,0,0" />
+
+                            <ItemsControl ItemsSource="{x:Bind ViewModel.CurrentProposal.Proposals, Mode=OneWay}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="models:FieldProposal">
+                                        <Border Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="6"
+                                                Padding="8"
+                                                Margin="0,0,0,6">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- Selection Checkbox (TwoWay per FR-012) -->
+                                                <CheckBox Grid.Column="0"
+                                                          IsChecked="{x:Bind IsSelected, Mode=TwoWay}"
+                                                          MinWidth="28"
+                                                          Margin="0,0,4,0"
+                                                          VerticalAlignment="Center" />
+
+                                                <!-- Field Name & Values -->
+                                                <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                                    <TextBlock Text="{x:Bind FieldName}"
+                                                               FontSize="11"
+                                                               FontWeight="SemiBold" />
+
+                                                    <!-- Proposed Value -->
+                                                    <TextBlock Text="{x:Bind ProposedValue}"
+                                                               FontSize="11"
+                                                               FontWeight="Medium"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
+
+                                                    <!-- Current (Local) Value -->
+                                                    <TextBlock FontSize="10"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               Foreground="{ThemeResource TextFillColorTertiaryBrush}">
+                                                        <Run Text="Local: " />
+                                                        <Run Text="{x:Bind CurrentValue}" />
+                                                    </TextBlock>
+                                                </StackPanel>
+
+                                                <!-- Status & Provenance Badges -->
+                                                <StackPanel Grid.Column="2" Spacing="4" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                    <!-- NewValue Badge (Green) -->
+                                                    <Border Visibility="{x:Bind IsNewValue, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                            Background="#2E7D32"
+                                                            CornerRadius="4"
+                                                            Padding="6,1">
+                                                        <TextBlock Text="Novo" FontSize="10" FontWeight="Bold" Foreground="White" />
+                                                    </Border>
+
+                                                    <!-- Updated Badge (Amber) -->
+                                                    <Border Visibility="{x:Bind IsUpdated, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                            Background="#F57F17"
+                                                            CornerRadius="4"
+                                                            Padding="6,1">
+                                                        <TextBlock Text="Atualizado" FontSize="10" FontWeight="Bold" Foreground="White" />
+                                                    </Border>
+
+                                                    <!-- Conflict Badge (Red) -->
+                                                    <Border Visibility="{x:Bind IsConflict, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                            Background="#D32F2F"
+                                                            CornerRadius="4"
+                                                            Padding="6,1">
+                                                        <TextBlock Text="Conflito" FontSize="10" FontWeight="Bold" Foreground="White" />
+                                                    </Border>
+
+                                                    <!-- Unchanged Badge (Subtle) -->
+                                                    <Border Visibility="{x:Bind IsUnchanged, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                            Background="{ThemeResource SubtleFillColorTertiaryBrush}"
+                                                            CornerRadius="4"
+                                                            Padding="6,1">
+                                                        <TextBlock Text="Inalterado" FontSize="10" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                    </Border>
+
+                                                    <!-- Provenance Label -->
+                                                    <TextBlock Text="{x:Bind ProvenanceDisplay}"
+                                                               FontSize="9"
+                                                               HorizontalAlignment="Right"
+                                                               Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- Advance Button (Safe transition, zero bytes written per Princípio VII) -->
+                            <Button HorizontalAlignment="Stretch"
+                                    Command="{x:Bind ViewModel.AdvanceToTagReviewCommand}"
+                                    Style="{ThemeResource AccentButtonStyle}"
+                                    Margin="0,4,0,0">
+                                <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+                                    <FontIcon Glyph="&#xE70F;" FontSize="12" />
+                                    <TextBlock Text="Avançar para Revisão de Tags" FontSize="12" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </Expander>
+
             </StackPanel>
         </ScrollViewer>
     </Grid>

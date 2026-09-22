@@ -31,6 +31,8 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
     private readonly IAcoustIdService _acoustIdService;
     private readonly IDbContextFactory<MusicDbContext> _dbContextFactory;
     private readonly ILogger<TrackInspectorViewModel> _logger;
+    private readonly IMusicBrainzService _musicBrainzService;
+    private readonly IMetadataEnrichmentService _enrichmentService;
 
     private IReadOnlyList<Song> _selectedSongs = Array.Empty<Song>();
     private int _currentSongIndex;
@@ -47,7 +49,9 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
         IFingerprintService fingerprintService,
         IAcoustIdService acoustIdService,
         IDbContextFactory<MusicDbContext> dbContextFactory,
-        ILogger<TrackInspectorViewModel> logger)
+        ILogger<TrackInspectorViewModel> logger,
+        IMusicBrainzService musicBrainzService,
+        IMetadataEnrichmentService enrichmentService)
     {
         _metadataService = metadataService ?? throw new ArgumentNullException(nameof(metadataService));
         _playbackService = playbackService ?? throw new ArgumentNullException(nameof(playbackService));
@@ -58,6 +62,8 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
         _acoustIdService = acoustIdService ?? throw new ArgumentNullException(nameof(acoustIdService));
         _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException(nameof(dbContextFactory));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _musicBrainzService = musicBrainzService ?? throw new ArgumentNullException(nameof(musicBrainzService));
+        _enrichmentService = enrichmentService ?? throw new ArgumentNullException(nameof(enrichmentService));
 
         _playbackService.TrackChanged += OnPlaybackTrackChanged;
     }
@@ -100,6 +106,21 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
 
     [ObservableProperty]
     public partial bool IsAlreadyIdentified { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsEnriching { get; set; }
+
+    [ObservableProperty]
+    public partial string EnrichmentStatusText { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial EnrichmentProposal? CurrentProposal { get; set; }
+
+    [ObservableProperty]
+    public partial bool HasEnrichmentProposal { get; set; }
+
+    [ObservableProperty]
+    public partial string EnrichmentButtonText { get; set; } = "Buscar Metadados Canônicos";
 
     partial void OnIsOpenChanged(bool value)
     {
@@ -228,6 +249,13 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
                 RecognitionCandidates = Array.Empty<RecognitionCandidate>();
                 RecognitionStatusText = string.Empty;
                 IsRecognizing = false;
+                CurrentProposal = null;
+                HasEnrichmentProposal = false;
+                EnrichmentStatusText = string.Empty;
+                IsEnriching = false;
+                EnrichmentButtonText = !string.IsNullOrEmpty(data.ExternalIds.MusicBrainzTrackId ?? song.MusicBrainzTrackId)
+                    ? "Buscar Metadados Canônicos"
+                    : "Buscar por Artista e Título";
                 IsLoading = false;
             });
         }
@@ -514,6 +542,119 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
             await _uiService.ShowMessageDialogAsync("Exportar Capa", "Falha ao salvar a imagem na pasta selecionada.");
         }
     }
+
+    #region Online Metadata Enrichment (Feature 005)
+
+    [RelayCommand]
+    public async Task FetchMetadataAsync()
+    {
+        if (IsEnriching || CurrentData == null || _currentSong == null)
+            return;
+
+        IsEnriching = true;
+        EnrichmentStatusText = "Consultando MusicBrainz...";
+
+        try
+        {
+            var mbid = CurrentData.ExternalIds.MusicBrainzTrackId ?? _currentSong.MusicBrainzTrackId;
+            MusicBrainzRecordingDetail? detail = null;
+
+            if (!string.IsNullOrWhiteSpace(mbid))
+            {
+                EnrichmentStatusText = "Buscando metadados canônicos por MBID...";
+                detail = await _musicBrainzService.GetRecordingMetadataAsync(
+                    mbid,
+                    preferredAlbum: CurrentData.Tags.Album).ConfigureAwait(false);
+            }
+
+            if (detail == null)
+            {
+                var artist = CurrentData.Tags.ArtistsFormatted != "—" ? CurrentData.Tags.ArtistsFormatted : _currentSong.ArtistName;
+                var title = !string.IsNullOrWhiteSpace(CurrentData.Tags.Title) ? CurrentData.Tags.Title : _currentSong.Title;
+
+                if (string.IsNullOrWhiteSpace(artist) || string.IsNullOrWhiteSpace(title))
+                {
+                    _dispatcherService.TryEnqueue(() =>
+                    {
+                        EnrichmentStatusText = "Artista e título necessários para busca textual.";
+                        IsEnriching = false;
+                    });
+                    return;
+                }
+
+                EnrichmentStatusText = $"Buscando gravação para '{artist} - {title}'...";
+                detail = await _musicBrainzService.SearchRecordingAsync(
+                    artist,
+                    title,
+                    preferredAlbum: CurrentData.Tags.Album).ConfigureAwait(false);
+            }
+
+            if (detail == null)
+            {
+                _dispatcherService.TryEnqueue(() =>
+                {
+                    EnrichmentStatusText = "Nenhuma gravação correspondente encontrada no MusicBrainz.";
+                    IsEnriching = false;
+                });
+                return;
+            }
+
+            string? coverUrl = null;
+            if (!string.IsNullOrWhiteSpace(detail.ReleaseId))
+            {
+                EnrichmentStatusText = "Verificando capa oficial no Cover Art Archive...";
+                coverUrl = await _musicBrainzService.GetCoverArtUrlAsync(detail.ReleaseId).ConfigureAwait(false);
+            }
+
+            EnrichmentStatusText = "Gerando proposta de enriquecimento...";
+            var proposal = _enrichmentService.CreateProposal(
+                _currentSong.FilePath,
+                CurrentData.Tags,
+                detail,
+                coverArtUrl: coverUrl,
+                songId: _currentSong.Id,
+                originalCoverPath: CurrentData.Artwork.CoverArtUri ?? _currentSong.AlbumArtUriFromTrack);
+
+            _dispatcherService.TryEnqueue(() =>
+            {
+                CurrentProposal = proposal;
+                HasEnrichmentProposal = true;
+                EnrichmentStatusText = $"Metadados encontrados! {proposal.SelectedCount} alterações sugeridas.";
+                IsEnriching = false;
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to enrich metadata for {FilePath}", _currentSong.FilePath);
+            _dispatcherService.TryEnqueue(() =>
+            {
+                EnrichmentStatusText = "Falha ao conectar com o serviço online. Verifique sua conexão.";
+                IsEnriching = false;
+            });
+        }
+    }
+
+    [RelayCommand]
+    public async Task AdvanceToTagReviewAsync()
+    {
+        if (CurrentProposal == null)
+            return;
+
+        var count = CurrentProposal.SelectedCount;
+        await _uiService.ShowMessageDialogAsync(
+            "Revisão de Tags",
+            $"Proposta com {count} alterações pronta para a etapa de revisão e gravação de tags (Feature 006).");
+    }
+
+    [RelayCommand]
+    public void ClearProposal()
+    {
+        CurrentProposal = null;
+        HasEnrichmentProposal = false;
+        EnrichmentStatusText = string.Empty;
+    }
+
+    #endregion
 
     public void Dispose()
     {

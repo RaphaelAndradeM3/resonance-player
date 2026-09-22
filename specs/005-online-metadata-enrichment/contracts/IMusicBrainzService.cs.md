@@ -1,9 +1,17 @@
+# Contract: `IMusicBrainzService`
+
+**Namespace**: `Resonance.Core.Services.Abstractions`  
+**Implements**: MusicBrainz Web Service v2 Client with Rate Limiting & Resilience  
+
+---
+
+```csharp
 using Resonance.Core.Models;
 
 namespace Resonance.Core.Services.Abstractions;
 
 /// <summary>
-///     Service for resolving artist identities, recording details, and release artwork via the MusicBrainz and Cover Art Archive databases.
+///     Service for resolving artist, recording and release metadata via the MusicBrainz database.
 /// </summary>
 public interface IMusicBrainzService
 {
@@ -44,10 +52,11 @@ public interface IMusicBrainzService
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    ///     Resolves the Cover Art Archive URL for a given release MBID (500px front cover with 250px fallback).
+    ///     Resolves the Cover Art Archive URL for a given release MBID.
     /// </summary>
     /// <param name="releaseMbid">The MusicBrainz Release MBID.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The primary front cover image URL (500px), or null if not available.</returns>
     Task<string?> GetCoverArtUrlAsync(string releaseMbid, CancellationToken cancellationToken = default);
 }
+```

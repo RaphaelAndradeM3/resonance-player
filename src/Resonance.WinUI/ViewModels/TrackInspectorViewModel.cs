@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Resonance.Core.Data;
 using Resonance.Core.Models;
@@ -684,13 +685,48 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
     [RelayCommand]
     public async Task AdvanceToTagReviewAsync()
     {
-        if (CurrentProposal == null)
+        if (CurrentProposal == null || CurrentData == null || _currentSong == null)
             return;
 
-        var count = CurrentProposal.SelectedCount;
-        await _uiService.ShowMessageDialogAsync(
-            "Revisão de Tags",
-            $"Proposta com {count} alterações pronta para a etapa de revisão e gravação de tags (Feature 006).");
+        var tagEditorVm = App.Services?.GetService<TagEditorViewModel>();
+        if (tagEditorVm == null)
+            return;
+
+        var audioTags = new TrackAudioTags
+        {
+            Title = CurrentData.Tags.Title,
+            Artist = CurrentData.Tags.ArtistsFormatted != "—" ? CurrentData.Tags.ArtistsFormatted : (_currentSong.ArtistName ?? string.Empty),
+            Album = CurrentData.Tags.Album,
+            AlbumArtist = CurrentData.Tags.AlbumArtists.Count > 0 ? string.Join(" & ", CurrentData.Tags.AlbumArtists) : null,
+            Year = CurrentData.Tags.Year,
+            TrackNumber = CurrentData.Tags.TrackNumber,
+            TotalTracks = CurrentData.Tags.TrackCount,
+            DiscNumber = CurrentData.Tags.DiscNumber,
+            TotalDiscs = CurrentData.Tags.DiscCount,
+            Genre = CurrentData.Tags.GenresFormatted != "—" ? CurrentData.Tags.GenresFormatted : null,
+            Comment = CurrentData.Tags.Comment
+        };
+
+        tagEditorVm.InitializeFromProposal(CurrentProposal, _currentSong, audioTags);
+
+        var dialog = new Dialogs.TagEditorDialog(tagEditorVm)
+        {
+            XamlRoot = App.RootWindow?.Content?.XamlRoot
+        };
+
+        if (dialog.XamlRoot == null)
+        {
+            _logger.LogWarning("XamlRoot indisponível para exibição do TagEditorDialog.");
+            return;
+        }
+
+        await dialog.ShowAsync();
+
+        if (tagEditorVm.SaveSucceeded)
+        {
+            ClearProposal();
+            await InspectSongAsync(_currentSong);
+        }
     }
 
     [RelayCommand]

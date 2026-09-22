@@ -310,6 +310,14 @@
                                                 <FontIcon Glyph="&#xE753;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
+                                        <MenuFlyoutItem
+                                            Command="{Binding DataContext.EditTagsCommand, ElementName=pageRoot}"
+                                            CommandParameter="{x:Bind}"
+                                            Text="Editar Tags">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE70F;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
                                     </MenuFlyout>
                                 </Grid.ContextFlyout>
                                 <Grid.ColumnDefinitions>
@@ -397,6 +405,14 @@
                                     Text="Buscar Metadados Online">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE753;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem
+                                    Command="{Binding DataContext.EditTagsCommand, ElementName=pageRoot}"
+                                    CommandParameter="{x:Bind}"
+                                    Text="Editar Tags">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE70F;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                             </MenuFlyout>

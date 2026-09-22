@@ -87,23 +87,23 @@ Problem: O usuário precisa de uma interface rica, moderna e clara para revisar 
 Definition of Success: Diálogo unificado TagEditorDialog em WinUI apresenta formulário completo com visão comparativa Antes vs Sugerido quando originado da Feature 005, checkboxes campo a campo, preview de capa, botão "Gravar Alterações" com confirmação explícita, integrado ao Track Inspector e ao menu de contexto da biblioteca, com a Solution inteira compilando e 100% dos testes passando.
 ```
 
-- [ ] T015 [P] [Slice3] Create `TagEditorViewModel.cs` in `src/Resonance.WinUI/ViewModels/TagEditorViewModel.cs` herdando de `ObservableObject` com:
+- [X] T015 [P] [Slice3] Create `TagEditorViewModel.cs` in `src/Resonance.WinUI/ViewModels/TagEditorViewModel.cs` herdando de `ObservableObject` com:
   - Propriedades observáveis para a faixa atual (`Song`, `FilePath`), modelo editável (`EditableTagModel`), coleção de diferenças (`ObservableCollection<TagDiffRecord>`), flag `IsReviewMode` (true quando aberto via proposta online, false quando manual), estado `IsSaving`, mensagem de status e capa sugerida/atual.
   - Comandos: `ToggleSelectAllCommand`, `SaveTagsCommand` (que valida os campos, gera o `TagWritePlan` via `ITagDiffService`, executa via `ITagWriterService` e fecha o diálogo com sucesso), e `CancelCommand`.
-- [ ] T016 [P] [Slice3] Create `TagEditorDialog.xaml` and `TagEditorDialog.xaml.cs` in `src/Resonance.WinUI/Dialogs/TagEditorDialog.xaml` e `.cs`:
+- [X] T016 [P] [Slice3] Create `TagEditorDialog.xaml` and `TagEditorDialog.xaml.cs` in `src/Resonance.WinUI/Dialogs/TagEditorDialog.xaml` e `.cs`:
   - Implementado como `ContentDialog` com `XamlRoot` vinculado à janela principal.
   - Modo Revisão de Diff: visualização comparativa em colunas (Check de inclusão, Nome do Campo, Valor Atual, Sugestão Proposta, Badge de Status).
   - Modo Edição Manual: formulário direto com caixas de texto para Título, Artistas, Álbum, Artista do Álbum, Ano, Faixa/Total, Disco/Total, Gênero e Comentário.
   - Card de pré-visualização de capa de álbum (Capa atual vs Capa proposta) com botão de exclusão ou substituição.
   - Botões primário ("Gravar Alterações") e secundário ("Cancelar") e barra de progresso durante gravação física.
-- [ ] T017 [Slice3] Update `TrackInspectorViewModel.cs` in `src/Resonance.WinUI/ViewModels/TrackInspectorViewModel.cs`:
+- [X] T017 [Slice3] Update `TrackInspectorViewModel.cs` in `src/Resonance.WinUI/ViewModels/TrackInspectorViewModel.cs`:
   - Injetar `IServiceProvider` ou fábrica de diálogos.
   - Implementar o corpo do comando `AdvanceToTagReviewAsync` para instanciar e exibir o `TagEditorDialog` passando o `CurrentProposal` ativo.
   - Após a gravação bem-sucedida, atualizar os dados do inspector chamando `LoadTrackDataAsync`.
-- [ ] T018 [Slice3] Add "Editar Tags" context menu command in `src/Resonance.WinUI/ViewModels/SongListViewModelBase.cs` e vincular nas views (`LibraryPage.xaml`, `AlbumViewPage.xaml`, `PlaylistSongViewPage.xaml`), permitindo abrir o `TagEditorDialog` em modo de edição manual para qualquer faixa da lista.
-- [ ] T019 [P] [Slice3] Create ViewModel and dialog unit tests in `tests/Resonance.Core.Tests/ViewModels/TagEditorViewModelTests.cs` validando comandos de seleção, alternância entre modo de diff e modo manual, e chamada do plano de escrita.
-- [ ] T020 [Slice3] Execute quickstart validation scenarios descritos em `specs/006-metadata-review-tag-editor/quickstart.md` (Cenário 1: Revisão online, Cenário 2: Edição manual, Cenário 3: Resiliência em playback, Cenário 4: Arquivo Read-Only).
-- [ ] T021 [Slice3] Final Solution Gate: Validate whole-solution build and test gates in Release mode:
+- [X] T018 [Slice3] Add "Editar Tags" context menu command in `src/Resonance.WinUI/ViewModels/SongListViewModelBase.cs` e vincular nas views (`LibraryPage.xaml`, `AlbumViewPage.xaml`, `PlaylistSongViewPage.xaml`), permitindo abrir o `TagEditorDialog` em modo de edição manual para qualquer faixa da lista.
+- [X] T019 [P] [Slice3] Create ViewModel and dialog unit tests in `tests/Resonance.Core.Tests/ViewModels/TagEditorViewModelTests.cs` validando comandos de seleção, alternância entre modo de diff e modo manual, e chamada do plano de escrita.
+- [X] T020 [Slice3] Execute quickstart validation scenarios descritos em `specs/006-metadata-review-tag-editor/quickstart.md` (Cenário 1: Revisão online, Cenário 2: Edição manual, Cenário 3: Resiliência em playback, Cenário 4: Arquivo Read-Only).
+- [X] T021 [Slice3] Final Solution Gate: Validate whole-solution build and test gates in Release mode:
   ```powershell
   dotnet restore Resonance.slnx
   dotnet build Resonance.slnx --configuration Release -p:Platform=x64 --warnaserror

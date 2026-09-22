@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Resonance.Core.Services.Abstractions;
 
 namespace Resonance.WinUI.Services.Abstractions;
 
@@ -44,7 +45,7 @@ public enum CrashReportResult
 /// <summary>
 ///     Abstracts UI-related operations like showing dialogs or pickers.
 /// </summary>
-public interface IUIService
+public interface IUIService : IFilePickerService
 {
     /// <summary>
     ///     Shows a confirmation dialog to the user.
@@ -98,12 +99,6 @@ public interface IUIService
     /// <returns>A <see cref="CrashReportResult" /> indicating the user's choice.</returns>
     Task<CrashReportResult> ShowCrashReportDialogAsync(string title, string introduction, string logContent, string githubUrl);
 
-    /// <summary>
-    ///     Opens a file open picker dialog that allows selecting a single file.
-    /// </summary>
-    /// <param name="fileTypes">The file extensions to filter by (e.g., ".zip").</param>
-    /// <returns>The path of the selected file, or null if the user cancelled.</returns>
-    Task<string?> PickSingleFileAsync(IEnumerable<string> fileTypes);
 
     /// <summary>
     ///     Opens a file open picker dialog that allows selecting multiple files.

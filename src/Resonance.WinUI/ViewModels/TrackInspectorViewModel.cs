@@ -81,7 +81,7 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
     public partial TrackInspectorViewData? CurrentData { get; set; }
 
     [ObservableProperty]
-    public partial bool FollowPlayback { get; set; }
+    public partial bool FollowPlayback { get; set; } = true;
 
     [ObservableProperty]
     public partial bool IsLightBoxOpen { get; set; }
@@ -131,6 +131,10 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
         else if (CurrentData == null && _playbackService.CurrentTrack != null)
         {
             _ = InspectSongAsync(_playbackService.CurrentTrack);
+        }
+        else if (CurrentProposal == null && _currentSong != null && !IsEnriching)
+        {
+            _ = FetchMetadataAsync();
         }
     }
 
@@ -258,7 +262,7 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
                     : "Buscar por Artista e Título";
                 IsLoading = false;
 
-                if (FollowPlayback && IsOpen)
+                if (IsOpen)
                 {
                     _ = FetchMetadataAsync();
                 }
@@ -550,14 +554,22 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
 
     #region Online Metadata Enrichment (Feature 005)
 
+    private void SetEnrichmentStatus(string text)
+    {
+        _dispatcherService.TryEnqueue(() => EnrichmentStatusText = text);
+    }
+
     [RelayCommand]
     public async Task FetchMetadataAsync()
     {
         if (IsEnriching || CurrentData == null || _currentSong == null)
             return;
 
-        IsEnriching = true;
-        EnrichmentStatusText = "Consultando MusicBrainz...";
+        _dispatcherService.TryEnqueue(() =>
+        {
+            IsEnriching = true;
+            EnrichmentStatusText = "Consultando MusicBrainz...";
+        });
 
         try
         {
@@ -566,7 +578,7 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
 
             if (!string.IsNullOrWhiteSpace(mbid))
             {
-                EnrichmentStatusText = "Buscando metadados canônicos por MBID...";
+                SetEnrichmentStatus("Buscando metadados canônicos por MBID...");
                 detail = await _musicBrainzService.GetRecordingMetadataAsync(
                     mbid,
                     preferredAlbum: CurrentData.Tags.Album).ConfigureAwait(false);
@@ -579,7 +591,7 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
 
                 if (!string.IsNullOrWhiteSpace(title))
                 {
-                    EnrichmentStatusText = $"Buscando gravação para '{title}'...";
+                    SetEnrichmentStatus($"Buscando gravação para '{title}'...");
                     detail = await _musicBrainzService.SearchRecordingAsync(
                         artist ?? string.Empty,
                         title,
@@ -594,18 +606,25 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
                 var duration = (int)_currentSong.Duration.TotalSeconds;
                 if (!string.IsNullOrEmpty(hash) && duration >= 10)
                 {
-                    _dispatcherService.TryEnqueue(() => EnrichmentStatusText = "Consultando AcoustID por áudio...");
-                    var acoustResult = await _acoustIdService.LookupAsync(new AcousticFingerprint(hash, duration)).ConfigureAwait(false);
-                    if (acoustResult.Status == RecognitionStatus.Success && acoustResult.Candidates.Count > 0)
+                    SetEnrichmentStatus("Consultando AcoustID por áudio...");
+                    try
                     {
-                        var topCandidate = acoustResult.Candidates[0];
-                        if (!string.IsNullOrEmpty(topCandidate.MusicBrainzTrackId))
+                        var acoustResult = await _acoustIdService.LookupAsync(new AcousticFingerprint(hash, duration)).ConfigureAwait(false);
+                        if (acoustResult.Status == RecognitionStatus.Success && acoustResult.Candidates.Count > 0)
                         {
-                            _dispatcherService.TryEnqueue(() => EnrichmentStatusText = "Identificado via AcoustID! Carregando metadados...");
-                            detail = await _musicBrainzService.GetRecordingMetadataAsync(
-                                topCandidate.MusicBrainzTrackId,
-                                preferredAlbum: CurrentData.Tags.Album).ConfigureAwait(false);
+                            var topCandidate = acoustResult.Candidates[0];
+                            if (!string.IsNullOrEmpty(topCandidate.MusicBrainzTrackId))
+                            {
+                                SetEnrichmentStatus("Identificado via AcoustID! Carregando metadados...");
+                                detail = await _musicBrainzService.GetRecordingMetadataAsync(
+                                    topCandidate.MusicBrainzTrackId,
+                                    preferredAlbum: CurrentData.Tags.Album).ConfigureAwait(false);
+                            }
                         }
+                    }
+                    catch (Exception acEx)
+                    {
+                        _logger.LogDebug(acEx, "AcoustID fallback lookup failed gracefully.");
                     }
                 }
             }
@@ -623,11 +642,18 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
             string? coverUrl = null;
             if (!string.IsNullOrWhiteSpace(detail.ReleaseId))
             {
-                EnrichmentStatusText = "Verificando capa oficial no Cover Art Archive...";
-                coverUrl = await _musicBrainzService.GetCoverArtUrlAsync(detail.ReleaseId).ConfigureAwait(false);
+                SetEnrichmentStatus("Verificando capa oficial no Cover Art Archive...");
+                try
+                {
+                    coverUrl = await _musicBrainzService.GetCoverArtUrlAsync(detail.ReleaseId).ConfigureAwait(false);
+                }
+                catch (Exception caEx)
+                {
+                    _logger.LogDebug(caEx, "Failed to resolve cover art from Cover Art Archive.");
+                }
             }
 
-            EnrichmentStatusText = "Gerando proposta de enriquecimento...";
+            SetEnrichmentStatus("Gerando proposta de enriquecimento...");
             var proposal = _enrichmentService.CreateProposal(
                 _currentSong.FilePath,
                 CurrentData.Tags,
@@ -649,7 +675,7 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
             _logger.LogWarning(ex, "Failed to enrich metadata for {FilePath}", _currentSong.FilePath);
             _dispatcherService.TryEnqueue(() =>
             {
-                EnrichmentStatusText = "Falha ao conectar com o serviço online. Verifique sua conexão.";
+                EnrichmentStatusText = $"Falha ao consultar serviço online: {ex.Message}";
                 IsEnriching = false;
             });
         }

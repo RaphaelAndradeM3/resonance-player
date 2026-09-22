@@ -26,18 +26,34 @@ public class ApiKeyService : IApiKeyService, IDisposable
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IProviderPipelineProvider _pipelines;
     private readonly ILogger<ApiKeyService> _logger;
+    private readonly ISettingsService? _settingsService;
     private volatile bool _globalAuthFailed;
 
     public ApiKeyService(
         IHttpClientFactory httpClientFactory,
         IProviderPipelineProvider pipelines,
         IConfiguration configuration,
-        ILogger<ApiKeyService> logger)
+        ILogger<ApiKeyService> logger,
+        ISettingsService? settingsService = null)
     {
         _httpClientFactory = httpClientFactory;
         _pipelines = pipelines;
         _configuration = configuration;
         _logger = logger;
+        _settingsService = settingsService;
+
+        if (_settingsService != null)
+        {
+            _settingsService.LastFmUserApiCredentialsChanged += () =>
+            {
+                _cachedApiKeys.TryRemove(ServiceProviderIds.LastFm, out _);
+                _cachedApiKeys.TryRemove(ServiceProviderIds.LastFmSecret, out _);
+            };
+            _settingsService.AcoustIdUserApiKeyChanged += () =>
+            {
+                _cachedApiKeys.TryRemove(ServiceProviderIds.AcoustId, out _);
+            };
+        }
     }
 
     /// <inheritdoc />
@@ -90,8 +106,8 @@ public class ApiKeyService : IApiKeyService, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    private const string DefaultLastFmApiKey = "b25b959554ed76058ac220b7b2e0a026";
-    private const string DefaultLastFmApiSecret = "425b55011f276e85757e3a80877479e0";
+    private const string DefaultLastFmApiKey = "75d20fb472be99275392aefa2760ea09";
+    private const string DefaultLastFmApiSecret = "d3072b60ae626be12be69448f5c46e70";
     private const string DefaultAcoustIdKey = "8XaBELgH";
 
     /// <summary>
@@ -99,6 +115,25 @@ public class ApiKeyService : IApiKeyService, IDisposable
     /// </summary>
     private async Task<string?> FetchKeyFromServerAsync(string keyName, CancellationToken cancellationToken)
     {
+        if (_settingsService != null)
+        {
+            if (keyName == ServiceProviderIds.LastFm)
+            {
+                var userKey = await _settingsService.GetLastFmUserApiKeyAsync().ConfigureAwait(false);
+                if (!string.IsNullOrWhiteSpace(userKey)) return userKey.Trim();
+            }
+            else if (keyName == ServiceProviderIds.LastFmSecret)
+            {
+                var userSecret = await _settingsService.GetLastFmUserApiSecretAsync().ConfigureAwait(false);
+                if (!string.IsNullOrWhiteSpace(userSecret)) return userSecret.Trim();
+            }
+            else if (keyName == ServiceProviderIds.AcoustId)
+            {
+                var userKey = await _settingsService.GetAcoustIdUserApiKeyAsync().ConfigureAwait(false);
+                if (!string.IsNullOrWhiteSpace(userKey)) return userKey.Trim();
+            }
+        }
+
         var localKey = _configuration[$"ApiKeys:{keyName}"];
         if (!string.IsNullOrEmpty(localKey)) return localKey;
 

@@ -43,6 +43,8 @@ public class SettingsService : IUISettingsService, IDisposable
     private const string ShowCoverArtInTrayFlyoutKey = "ShowCoverArtInTrayFlyout";
     private const string FetchOnlineMetadataKey = "FetchOnlineMetadataEnabled";
     private const string AcoustIdUserApiKeyKey = "AcoustIdUserApiKey";
+    private const string LastFmUserApiKeyKey = "LastFmUserApiKey";
+    private const string LastFmUserApiSecretKey = "LastFmUserApiSecret";
     private const string FetchOnlineLyricsEnabledKey = "FetchOnlineLyricsEnabled";
     private const string LyricsRomanizationEnabledKey = "LyricsRomanizationEnabled";
     private const string DiscordRichPresenceEnabledKey = "DiscordRichPresenceEnabled";
@@ -187,6 +189,7 @@ public class SettingsService : IUISettingsService, IDisposable
     public event Action? GenreSplitCharactersChanged;
     public event Action<bool>? IgnoreLeadingArticlesOnSortEnabledChanged;
     public event Action? AcoustIdUserApiKeyChanged;
+    public event Action? LastFmUserApiCredentialsChanged;
 
     public bool IsTransparencyEffectsEnabled()
     {
@@ -966,6 +969,28 @@ public class SettingsService : IUISettingsService, IDisposable
     {
         await SetValueAsync(AcoustIdUserApiKeyKey, apiKey ?? string.Empty).ConfigureAwait(false);
         AcoustIdUserApiKeyChanged?.Invoke();
+    }
+
+    public Task<string> GetLastFmUserApiKeyAsync()
+    {
+        return Task.FromResult(GetValue(LastFmUserApiKeyKey, string.Empty));
+    }
+
+    public async Task SetLastFmUserApiKeyAsync(string apiKey)
+    {
+        await SetValueAsync(LastFmUserApiKeyKey, apiKey ?? string.Empty).ConfigureAwait(false);
+        LastFmUserApiCredentialsChanged?.Invoke();
+    }
+
+    public Task<string> GetLastFmUserApiSecretAsync()
+    {
+        return Task.FromResult(GetValue(LastFmUserApiSecretKey, string.Empty));
+    }
+
+    public async Task SetLastFmUserApiSecretAsync(string secret)
+    {
+        await SetValueAsync(LastFmUserApiSecretKey, secret ?? string.Empty).ConfigureAwait(false);
+        LastFmUserApiCredentialsChanged?.Invoke();
     }
 
     #endregion

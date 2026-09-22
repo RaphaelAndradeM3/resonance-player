@@ -1,4 +1,4 @@
-﻿namespace Resonance.Core.Services.Abstractions;
+namespace Resonance.Core.Services.Abstractions;
 
 /// <summary>
 ///     Defines a service for handling the Last.fm authentication flow.
@@ -17,4 +17,9 @@ public interface ILastFmAuthService
     /// <param name="token">The temporary token authorized by the user.</param>
     /// <returns>A tuple containing the username and the session key, or null on failure.</returns>
     Task<(string Username, string SessionKey)?> GetSessionAsync(string token);
+
+    /// <summary>
+    ///     Gets the last error message from Last.fm authentication attempts, if any.
+    /// </summary>
+    string? LastErrorMessage { get; }
 }

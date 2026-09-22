@@ -181,27 +181,31 @@ public class MusicBrainzService : IMusicBrainzService
         string? preferredAlbum = null,
         CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(artist) || string.IsNullOrWhiteSpace(title))
+        if (string.IsNullOrWhiteSpace(title))
             return null;
 
-        var cacheKey = $"search_{ComputeHash($"{artist}_{title}_{preferredAlbum ?? ""}")}";
+        var effectiveArtist = (artist ?? string.Empty).Trim();
+
+        var cacheKey = $"search_{ComputeHash($"{effectiveArtist}_{title}_{preferredAlbum ?? ""}")}";
         var cached = TryGetFromCache<MusicBrainzRecordingDetail>(cacheKey);
         if (cached is not null)
         {
-            _logger.LogDebug("Metadata cache hit for search {Artist} - {Title}", artist, title);
+            _logger.LogDebug("Metadata cache hit for search {Artist} - {Title}", effectiveArtist, title);
             return cached;
         }
 
         if (_pipelines.IsCircuitOpen(ServiceProviderIds.MusicBrainz))
         {
-            _logger.LogDebug("MusicBrainz circuit is open; skipping search for {Artist} - {Title}.", artist, title);
+            _logger.LogDebug("MusicBrainz circuit is open; skipping search for {Artist} - {Title}.", effectiveArtist, title);
             return null;
         }
 
         // Strip leading track numbers (e.g. "001 - ") and platform suffixes (e.g. " - YouTube")
         var effectiveTitle = System.Text.RegularExpressions.Regex.Replace(title.Trim(), @"^\d+[\s.-]+", "").Trim();
         effectiveTitle = System.Text.RegularExpressions.Regex.Replace(effectiveTitle, @"\s*-\s*YouTube$", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
-        var effectiveArtist = artist.Trim();
+
+        if (string.IsNullOrWhiteSpace(effectiveTitle))
+            effectiveTitle = title.Trim();
 
         // If artist is unknown or placeholder, check if title has "Artist - Title" format
         if (IsUnknownArtist(effectiveArtist) && effectiveTitle.Contains(" - "))

@@ -432,6 +432,31 @@ public interface ISettingsService
     event Action? AcoustIdUserApiKeyChanged;
 
     /// <summary>
+    ///     Gets the custom user Last.fm API key if configured.
+    /// </summary>
+    Task<string> GetLastFmUserApiKeyAsync();
+
+    /// <summary>
+    ///     Sets the custom user Last.fm API key.
+    /// </summary>
+    Task SetLastFmUserApiKeyAsync(string apiKey);
+
+    /// <summary>
+    ///     Gets the custom user Last.fm API secret if configured.
+    /// </summary>
+    Task<string> GetLastFmUserApiSecretAsync();
+
+    /// <summary>
+    ///     Sets the custom user Last.fm API secret.
+    /// </summary>
+    Task SetLastFmUserApiSecretAsync(string secret);
+
+    /// <summary>
+    ///     Occurs when the Last.fm user API credentials have changed.
+    /// </summary>
+    event Action? LastFmUserApiCredentialsChanged;
+
+    /// <summary>
     ///     Ensures all pending settings changes are written to persistent storage.
     /// </summary>
     Task FlushAsync();

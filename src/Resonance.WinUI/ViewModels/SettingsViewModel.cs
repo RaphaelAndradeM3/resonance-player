@@ -352,6 +352,8 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
     [ObservableProperty] public partial string? ListenBrainzConnectionStatus { get; set; }
     [ObservableProperty] public partial bool ListenBrainzIsConnected { get; set; }
     [ObservableProperty] public partial string AcoustIdUserApiKey { get; set; } = string.Empty;
+    [ObservableProperty] public partial string LastFmApiKey { get; set; } = string.Empty;
+    [ObservableProperty] public partial string LastFmApiSecret { get; set; } = string.Empty;
 
     public ObservableCollection<EqualizerBandViewModel> EqualizerBands { get; } = new();
     public ObservableRangeCollection<PlayerButtonSetting> PlayerButtons { get; } = new();
@@ -548,6 +550,8 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
             var playerMaterialTask = _settingsService.GetPlayerBackgroundMaterialAsync();
             var playerTintTask = _settingsService.GetPlayerTintIntensityAsync();
             var acoustIdKeyTask = _settingsService.GetAcoustIdUserApiKeyAsync();
+            var lastFmApiKeyTask = _settingsService.GetLastFmUserApiKeyAsync();
+            var lastFmApiSecretTask = _settingsService.GetLastFmUserApiSecretAsync();
 
             await Task.WhenAll(
                 navItemsTask, playerButtonsTask, themeTask, backdropTask, dynamicThemingTask,
@@ -558,7 +562,7 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
                 scrobblingTask, nowPlayingTask, accentColorTask, artistSplitTask, genreSplitTask, languageTask, lyricsProvidersTask, metadataProvidersTask,
                 playerMaterialTask, playerTintTask,
                 lbTokenTask, lbScrobblingTask, lbNowPlayingTask, lbServerUrlTask,
-                ignoreArticlesTask, acoustIdKeyTask);
+                ignoreArticlesTask, acoustIdKeyTask, lastFmApiKeyTask, lastFmApiSecretTask);
 
             foreach (var item in navItemsTask.Result)
             {
@@ -600,6 +604,8 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
             SelectedPlayerBackgroundMaterial = playerMaterialTask.Result;
             PlayerTintIntensity = playerTintTask.Result;
             AcoustIdUserApiKey = acoustIdKeyTask.Result;
+            LastFmApiKey = lastFmApiKeyTask.Result;
+            LastFmApiSecret = lastFmApiSecretTask.Result;
 
             var lastFmCredentials = lastFmCredsTask.Result;
             LastFmUsername = lastFmCredentials?.Username;
@@ -932,7 +938,11 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
         }
         else
         {
-            await _uiService.ShowMessageDialogAsync(Resonance.WinUI.Resources.Strings.Settings_LastFm_AuthError_Title, Resonance.WinUI.Resources.Strings.Settings_LastFm_AuthError_Message);
+            var err = _lastFmAuthService.LastErrorMessage;
+            var msg = string.IsNullOrWhiteSpace(err)
+                ? Resonance.WinUI.Resources.Strings.Settings_LastFm_AuthError_Message
+                : $"{Resonance.WinUI.Resources.Strings.Settings_LastFm_AuthError_Message}\n\nDetalhes: {err}";
+            await _uiService.ShowMessageDialogAsync(Resonance.WinUI.Resources.Strings.Settings_LastFm_AuthError_Title, msg);
             IsConnectingToLastFm = false;
         }
     }
@@ -957,8 +967,11 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
         }
         else
         {
-            await _uiService.ShowMessageDialogAsync(Resonance.WinUI.Resources.Strings.Settings_LastFm_FinalizeError_Title,
-                Resonance.WinUI.Resources.Strings.Settings_LastFm_FinalizeError_Message);
+            var err = _lastFmAuthService.LastErrorMessage;
+            var msg = string.IsNullOrWhiteSpace(err)
+                ? Resonance.WinUI.Resources.Strings.Settings_LastFm_FinalizeError_Message
+                : $"{Resonance.WinUI.Resources.Strings.Settings_LastFm_FinalizeError_Message}\n\nDetalhes: {err}";
+            await _uiService.ShowMessageDialogAsync(Resonance.WinUI.Resources.Strings.Settings_LastFm_FinalizeError_Title, msg);
         }
 
         IsConnectingToLastFm = false;
@@ -1749,6 +1762,18 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
     {
         if (_isInitializing) return;
         _ = _settingsService.SetAcoustIdUserApiKeyAsync(value);
+    }
+
+    partial void OnLastFmApiKeyChanged(string value)
+    {
+        if (_isInitializing) return;
+        _ = _settingsService.SetLastFmUserApiKeyAsync(value);
+    }
+
+    partial void OnLastFmApiSecretChanged(string value)
+    {
+        if (_isInitializing) return;
+        _ = _settingsService.SetLastFmUserApiSecretAsync(value);
     }
 
     partial void OnIsIgnoreLeadingArticlesOnSortEnabledChanged(bool value)

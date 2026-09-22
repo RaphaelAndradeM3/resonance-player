@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Resonance.Core.Http.Pipelines;
 using Resonance.Core.Models;
@@ -33,11 +33,16 @@ public class LastFmAuthService : ILastFmAuthService
     }
 
     /// <inheritdoc />
+    public string? LastErrorMessage { get; private set; }
+
+    /// <inheritdoc />
     public async Task<(string Token, string AuthUrl)?> GetAuthenticationTokenAsync()
     {
+        LastErrorMessage = null;
         var credentials = await GetCredentialsAsync().ConfigureAwait(false);
         if (credentials is null)
         {
+            LastErrorMessage = "Chave ou segredo da API do Last.fm não configurados.";
             _logger.LogError("Cannot get Last.fm auth token; API key or secret is unavailable.");
             return null;
         }
@@ -65,6 +70,15 @@ public class LastFmAuthService : ILastFmAuthService
 
                 if (!response.IsSuccessStatusCode)
                 {
+                    try
+                    {
+                        var err = JsonSerializer.Deserialize<Data.LastFmErrorResponse>(content, _jsonOptions);
+                        if (err != null && !string.IsNullOrEmpty(err.Message))
+                            LastErrorMessage = $"Last.fm (Erro {err.ErrorCode}): {err.Message}";
+                    }
+                    catch { }
+                    LastErrorMessage ??= $"HTTP {(int)response.StatusCode}: {content}";
+
                     _logger.LogError("Failed to get Last.fm auth token. Status: {StatusCode}, Response: {ResponseContent}",
                         response.StatusCode, content);
                     return null;
@@ -73,6 +87,7 @@ public class LastFmAuthService : ILastFmAuthService
                 var tokenResponse = JsonSerializer.Deserialize<LastFmTokenResponse>(content, _jsonOptions);
                 if (string.IsNullOrEmpty(tokenResponse?.Token))
                 {
+                    LastErrorMessage = "Não foi possível extrair o token da resposta do Last.fm.";
                     _logger.LogError("Failed to extract token from the Last.fm auth response.");
                     return null;
                 }
@@ -88,9 +103,11 @@ public class LastFmAuthService : ILastFmAuthService
     /// <inheritdoc />
     public async Task<(string Username, string SessionKey)?> GetSessionAsync(string token)
     {
+        LastErrorMessage = null;
         var credentials = await GetCredentialsAsync().ConfigureAwait(false);
         if (credentials is null)
         {
+            LastErrorMessage = "Chave ou segredo da API do Last.fm não configurados.";
             _logger.LogError("Cannot get Last.fm session; API key or secret is unavailable.");
             return null;
         }
@@ -120,6 +137,15 @@ public class LastFmAuthService : ILastFmAuthService
 
                 if (!response.IsSuccessStatusCode)
                 {
+                    try
+                    {
+                        var err = JsonSerializer.Deserialize<Data.LastFmErrorResponse>(content, _jsonOptions);
+                        if (err != null && !string.IsNullOrEmpty(err.Message))
+                            LastErrorMessage = $"Last.fm (Erro {err.ErrorCode}): {err.Message}";
+                    }
+                    catch { }
+                    LastErrorMessage ??= $"HTTP {(int)response.StatusCode}: {content}";
+
                     _logger.LogError("Failed to get Last.fm session. Status: {StatusCode}, Response: {ResponseContent}",
                         response.StatusCode, content);
                     return null;
@@ -134,6 +160,7 @@ public class LastFmAuthService : ILastFmAuthService
                     return (session.Name, session.Key);
                 }
 
+                LastErrorMessage = "Não foi possível extrair a chave de sessão da resposta do Last.fm.";
                 _logger.LogError("Failed to deserialize or extract session details from the Last.fm response.");
                 return null;
             },

@@ -1132,6 +1132,38 @@
                             </controls:SettingsCard.HeaderIcon>
                             <ToggleSwitch IsOn="{x:Bind ViewModel.IsLastFmNowPlayingEnabled, Mode=TwoWay}" />
                         </controls:SettingsCard>
+
+                        <controls:SettingsExpander
+                            Style="{x:Null}"
+                            Header="Credenciais Personalizadas da API (Opcional)"
+                            Description="Chave e segredo de API do Last.fm. Se não informados, o aplicativo utiliza as credenciais integradas padrão."
+                            IsExpanded="False">
+                            <controls:SettingsExpander.HeaderIcon>
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE713;" />
+                            </controls:SettingsExpander.HeaderIcon>
+                            <controls:SettingsExpander.Items>
+                                <controls:SettingsCard Header="API Key">
+                                    <TextBox
+                                        Width="300"
+                                        HorizontalAlignment="Right"
+                                        PlaceholderText="Insira sua API Key do Last.fm"
+                                        Text="{x:Bind ViewModel.LastFmApiKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:SettingsCard>
+                                <controls:SettingsCard Header="API Shared Secret">
+                                    <PasswordBox
+                                        Width="300"
+                                        HorizontalAlignment="Right"
+                                        PlaceholderText="Insira seu Shared Secret do Last.fm"
+                                        Password="{x:Bind ViewModel.LastFmApiSecret, Mode=TwoWay}" />
+                                </controls:SettingsCard>
+                                <controls:SettingsCard ContentAlignment="Left">
+                                    <HyperlinkButton
+                                        Content="Obter chave da API no Last.fm"
+                                        Style="{StaticResource AnimatedHyperlinkButtonStyle}"
+                                        NavigateUri="https://www.last.fm/api/account/create" />
+                                </controls:SettingsCard>
+                            </controls:SettingsExpander.Items>
+                        </controls:SettingsExpander>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 

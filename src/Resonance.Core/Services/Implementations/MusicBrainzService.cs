@@ -198,10 +198,34 @@ public class MusicBrainzService : IMusicBrainzService
             return null;
         }
 
+        // Strip leading track numbers (e.g. "001 - ") and platform suffixes (e.g. " - YouTube")
+        var effectiveTitle = System.Text.RegularExpressions.Regex.Replace(title.Trim(), @"^\d+[\s.-]+", "").Trim();
+        effectiveTitle = System.Text.RegularExpressions.Regex.Replace(effectiveTitle, @"\s*-\s*YouTube$", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
+        var effectiveArtist = artist.Trim();
+
+        // If artist is unknown or placeholder, check if title has "Artist - Title" format
+        if (IsUnknownArtist(effectiveArtist) && effectiveTitle.Contains(" - "))
+        {
+            var parts = effectiveTitle.Split(new[] { " - " }, 2, StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length == 2 && !string.IsNullOrWhiteSpace(parts[0]) && !string.IsNullOrWhiteSpace(parts[1]))
+            {
+                effectiveArtist = parts[0].Trim();
+                effectiveTitle = parts[1].Trim();
+            }
+        }
+
         // Escape Lucene special characters
-        var cleanTitle = EscapeLucene(title);
-        var cleanArtist = EscapeLucene(artist);
-        var query = $"recording:\"{cleanTitle}\" AND artist:\"{cleanArtist}\"";
+        var cleanTitle = EscapeLucene(effectiveTitle);
+        string query;
+        if (IsUnknownArtist(effectiveArtist))
+        {
+            query = $"recording:\"{cleanTitle}\"";
+        }
+        else
+        {
+            var cleanArtist = EscapeLucene(effectiveArtist);
+            query = $"recording:\"{cleanTitle}\" AND artist:\"{cleanArtist}\"";
+        }
         var url = $"{BaseUrl}/recording?query={Uri.EscapeDataString(query)}&limit=5&fmt=json";
 
         return await _pipelines.ExecuteWithFallbackAsync<MusicBrainzRecordingDetail?>(
@@ -588,6 +612,24 @@ public class MusicBrainzService : IMusicBrainzService
     {
         var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(input));
         return Convert.ToHexString(bytes)[..16].ToLowerInvariant();
+    }
+
+    private static readonly HashSet<string> UnknownArtistNames = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Desconhecido Artista",
+        "Artista Desconhecido",
+        "Desconhecido",
+        "Unknown Artist",
+        "Unknown",
+        "—",
+        "-",
+        "Various Artists",
+        "Vários Artistas"
+    };
+
+    private static bool IsUnknownArtist(string? artist)
+    {
+        return string.IsNullOrWhiteSpace(artist) || UnknownArtistNames.Contains(artist.Trim());
     }
 
     #endregion

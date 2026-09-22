@@ -18,7 +18,7 @@ public static class SettingsDefaults
     public const bool HideToTrayEnabled = true;
     public const bool MinimizeToMiniPlayerEnabled = false;
     public const bool ShowCoverArtInTrayFlyoutEnabled = true;
-    public const bool FetchOnlineMetadataEnabled = false;
+    public const bool FetchOnlineMetadataEnabled = true;
     public const bool FetchOnlineLyricsEnabled = false;
     public const bool LyricsRomanizationEnabled = false;
     public const bool DiscordRichPresenceEnabled = false;

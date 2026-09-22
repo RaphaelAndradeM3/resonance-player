@@ -90,11 +90,34 @@ public class ApiKeyService : IApiKeyService, IDisposable
         GC.SuppressFinalize(this);
     }
 
+    private const string DefaultLastFmApiKey = "b25b959554ed76058ac220b7b2e0a026";
+    private const string DefaultLastFmApiSecret = "425b55011f276e85757e3a80877479e0";
+    private const string DefaultAcoustIdKey = "8XaBELgH";
+
     /// <summary>
     ///     Performs the HTTP request to fetch an API key from the configured server.
     /// </summary>
     private async Task<string?> FetchKeyFromServerAsync(string keyName, CancellationToken cancellationToken)
     {
+        var localKey = _configuration[$"ApiKeys:{keyName}"];
+        if (!string.IsNullOrEmpty(localKey)) return localKey;
+
+        if (keyName == ServiceProviderIds.LastFm)
+        {
+            var k = _configuration["LastFm:ApiKey"];
+            if (!string.IsNullOrEmpty(k)) return k;
+        }
+        else if (keyName == ServiceProviderIds.LastFmSecret)
+        {
+            var k = _configuration["LastFm:ApiSecret"];
+            if (!string.IsNullOrEmpty(k)) return k;
+        }
+        else if (keyName == ServiceProviderIds.AcoustId)
+        {
+            var k = _configuration["AcoustId:ApiKey"];
+            if (!string.IsNullOrEmpty(k)) return k;
+        }
+
         var serverUrl = _configuration["ResonanceApiServer:Url"];
         if (string.IsNullOrEmpty(serverUrl)) serverUrl = _configuration["NagiApiServer:Url"];
 
@@ -106,6 +129,10 @@ public class ApiKeyService : IApiKeyService, IDisposable
 
         if (string.IsNullOrEmpty(serverUrl) || string.IsNullOrEmpty(serverKey))
         {
+            if (keyName == ServiceProviderIds.LastFm) return DefaultLastFmApiKey;
+            if (keyName == ServiceProviderIds.LastFmSecret) return DefaultLastFmApiSecret;
+            if (keyName == ServiceProviderIds.AcoustId) return DefaultAcoustIdKey;
+
             _logger.LogCritical("Resonance API Server URL or ApiKey is not configured. API key retrieval will fail.");
             return null;
         }

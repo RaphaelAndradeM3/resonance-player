@@ -909,7 +909,26 @@ public partial class SettingsViewModel : ObservableObject, IDisposable
         if (authData is { Token: not null, AuthUrl: not null })
         {
             await _settingsService.SaveLastFmAuthTokenAsync(authData.Value.Token);
-            await Launcher.LaunchUriAsync(new Uri(authData.Value.AuthUrl));
+            try
+            {
+                var launched = await Launcher.LaunchUriAsync(new Uri(authData.Value.AuthUrl));
+                if (!launched)
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(authData.Value.AuthUrl) { UseShellExecute = true });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Launcher.LaunchUriAsync failed; attempting Process.Start.");
+                try
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(authData.Value.AuthUrl) { UseShellExecute = true });
+                }
+                catch (Exception pEx)
+                {
+                    _logger.LogError(pEx, "Failed to launch Last.fm auth URL in default browser.");
+                }
+            }
         }
         else
         {

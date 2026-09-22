@@ -257,6 +257,11 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
                     ? "Buscar Metadados Canônicos"
                     : "Buscar por Artista e Título";
                 IsLoading = false;
+
+                if (FollowPlayback && IsOpen)
+                {
+                    _ = FetchMetadataAsync();
+                }
             });
         }
         catch (OperationCanceledException)
@@ -572,21 +577,37 @@ public partial class TrackInspectorViewModel : ObservableObject, ITrackInspector
                 var artist = CurrentData.Tags.ArtistsFormatted != "—" ? CurrentData.Tags.ArtistsFormatted : _currentSong.ArtistName;
                 var title = !string.IsNullOrWhiteSpace(CurrentData.Tags.Title) ? CurrentData.Tags.Title : _currentSong.Title;
 
-                if (string.IsNullOrWhiteSpace(artist) || string.IsNullOrWhiteSpace(title))
+                if (!string.IsNullOrWhiteSpace(title))
                 {
-                    _dispatcherService.TryEnqueue(() =>
-                    {
-                        EnrichmentStatusText = "Artista e título necessários para busca textual.";
-                        IsEnriching = false;
-                    });
-                    return;
+                    EnrichmentStatusText = $"Buscando gravação para '{title}'...";
+                    detail = await _musicBrainzService.SearchRecordingAsync(
+                        artist ?? string.Empty,
+                        title,
+                        preferredAlbum: CurrentData.Tags.Album).ConfigureAwait(false);
                 }
+            }
 
-                EnrichmentStatusText = $"Buscando gravação para '{artist} - {title}'...";
-                detail = await _musicBrainzService.SearchRecordingAsync(
-                    artist,
-                    title,
-                    preferredAlbum: CurrentData.Tags.Album).ConfigureAwait(false);
+            // Fallback: If not found via text, query AcoustID via acoustic fingerprint
+            if (detail == null)
+            {
+                var hash = FingerprintHash ?? _currentSong.AcousticFingerprint;
+                var duration = (int)_currentSong.Duration.TotalSeconds;
+                if (!string.IsNullOrEmpty(hash) && duration >= 10)
+                {
+                    _dispatcherService.TryEnqueue(() => EnrichmentStatusText = "Consultando AcoustID por áudio...");
+                    var acoustResult = await _acoustIdService.LookupAsync(new AcousticFingerprint(hash, duration)).ConfigureAwait(false);
+                    if (acoustResult.Status == RecognitionStatus.Success && acoustResult.Candidates.Count > 0)
+                    {
+                        var topCandidate = acoustResult.Candidates[0];
+                        if (!string.IsNullOrEmpty(topCandidate.MusicBrainzTrackId))
+                        {
+                            _dispatcherService.TryEnqueue(() => EnrichmentStatusText = "Identificado via AcoustID! Carregando metadados...");
+                            detail = await _musicBrainzService.GetRecordingMetadataAsync(
+                                topCandidate.MusicBrainzTrackId,
+                                preferredAlbum: CurrentData.Tags.Album).ConfigureAwait(false);
+                        }
+                    }
+                }
             }
 
             if (detail == null)

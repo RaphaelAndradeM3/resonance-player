@@ -1,4 +1,4 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
@@ -535,6 +535,7 @@ public sealed class RomanizationPackTests : IDisposable
             ArtistImageCachePath = Path.Combine(root, "ArtistImages");
             PlaylistImageCachePath = Path.Combine(root, "PlaylistImages");
             LrcCachePath = Path.Combine(root, "LrcCache");
+            MetadataCachePath = Path.Combine(root, "MetadataCache");
             RomanizationPacksPath = Path.Combine(root, "RomanizationPacks");
             DatabasePath = Path.Combine(root, "resonance.db");
             LogsDirectory = Path.Combine(root, "Logs");
@@ -547,6 +548,7 @@ public sealed class RomanizationPackTests : IDisposable
         public string ArtistImageCachePath { get; }
         public string PlaylistImageCachePath { get; }
         public string LrcCachePath { get; }
+        public string MetadataCachePath { get; }
         public string RomanizationPacksPath { get; }
         public string DatabasePath { get; }
         public string LogsDirectory { get; }

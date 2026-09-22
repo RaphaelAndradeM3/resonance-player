@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Windows.ApplicationModel;
 using Windows.Storage;
@@ -33,6 +33,7 @@ public class PathConfiguration : IPathConfiguration
         ArtistImageCachePath = Path.Combine(AppDataRoot, "ArtistImages");
         PlaylistImageCachePath = Path.Combine(AppDataRoot, "PlaylistImages");
         LrcCachePath = Path.Combine(AppDataRoot, "LrcCache");
+        MetadataCachePath = Path.Combine(AppDataRoot, "MetadataCache");
         RomanizationPacksPath = Path.Combine(AppDataRoot, "RomanizationPacks");
         DatabasePath = Path.Combine(AppDataRoot, "resonance.db");
         LogsDirectory = Path.Combine(AppDataRoot, "Logs");
@@ -43,6 +44,7 @@ public class PathConfiguration : IPathConfiguration
         Directory.CreateDirectory(ArtistImageCachePath);
         Directory.CreateDirectory(PlaylistImageCachePath);
         Directory.CreateDirectory(LrcCachePath);
+        Directory.CreateDirectory(MetadataCachePath);
         Directory.CreateDirectory(RomanizationPacksPath);
         Directory.CreateDirectory(LogsDirectory);
     }
@@ -67,6 +69,9 @@ public class PathConfiguration : IPathConfiguration
 
     /// <inheritdoc />
     public string LrcCachePath { get; }
+
+    /// <inheritdoc />
+    public string MetadataCachePath { get; }
 
     /// <inheritdoc />
     public string RomanizationPacksPath { get; }

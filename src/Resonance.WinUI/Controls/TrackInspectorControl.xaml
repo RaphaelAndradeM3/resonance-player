@@ -1042,6 +1042,9 @@
                     </StackPanel>
                 </Expander>
 
+                <!-- Espaçamento inferior (10 a 12 linhas em branco) para facilitar a rolagem e visualização completa acima da barra do player flutuante -->
+                <Border Height="200" Background="Transparent" />
+
             </StackPanel>
         </ScrollViewer>
     </Grid>

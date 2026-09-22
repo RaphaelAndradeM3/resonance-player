@@ -17,6 +17,18 @@
 
 ---
 
+## Clarifications
+
+### Session 2026-09-21
+
+- Q: Como o sistema deve selecionar o lançamento (álbum) canônico quando uma gravação no MusicBrainz estiver vinculada a múltiplos lançamentos diferentes? (FR-009) → A: Heurística canônica: priorizar lançamentos do tipo primário "Album" e status "Official", selecionando a data de lançamento mais antiga para preservar o ano original e arte da primeira tiragem, priorizando correspondência de título se o álbum local já estiver preenchido.
+- Q: Qual resolução de imagem do Cover Art Archive deve ser obtida como padrão para a capa oficial sugerida na proposta de enriquecimento? (FR-010) → A: Resolução padrão front-500 (500x500 pixels), oferecendo nitidez ideal em telas modernas e excelente equilíbrio de desempenho e consumo de dados.
+- Q: Onde e como o cache persistente de respostas do MusicBrainz e metadados online deve ser armazenado localmente? (FR-011) → A: Cache baseado em arquivos JSON em disco no diretório da aplicação (IAppInfoService.CachePath/metadata/), desacoplado do banco de dados da biblioteca, com invalidação automática por data de expiração (7 dias).
+- Q: Como o usuário deve interagir com os campos sugeridos na proposta de enriquecimento dentro do Track Inspector? (FR-012) → A: Tabela interativa com checkbox individual por campo (selecionados por padrão), permitindo ao usuário escolher quais sugestões deseja manter na proposta antes de enviá-la para a revisão/edição de tags.
+- Q: Como o motor de mesclagem deve tratar o campo de Gênero quando a música local já possui um gênero e o MusicBrainz retorna tags de gêneros comunitários adicionais? (FR-013) → A: Fusão inteligente com deduplicação: manter o gênero local existente e propor adicionar as tags de maior relevância do MusicBrainz separadas por ponto-e-vírgula (;).
+
+---
+
 ## 2. CONTRATOS & LIMITES DA ARQUITETURA
 
 * **Projetos Afetados na Solution (`Resonance.slnx`):**
@@ -157,6 +169,7 @@ Como usuário que escuta música em viagens ou conexões móveis instáveis, que
 
 ### Edge Cases
 
+- **Múltiplos Lançamentos para a Mesma Gravação**: Resolução determinística priorizando álbum oficial de estúdio com data mais antiga, ou correspondência exata de título se o álbum local já estiver preenchido.
 - **Lançamentos Multi-Disco (Box Sets)**: Tratamento correto de numeração de disco (ex.: Disco 2 de 3, Faixa 4) mapeada a partir da mídia do lançamento no MusicBrainz.
 - **Gravações com Múltiplos Artistas (Feat. / Colaborações)**: Desserialização limpa de artist credits complexos (ex.: "Artist A feat. Artist B").
 - **Caracteres Unicode e Acentuação**: Preservação estrita de caracteres não-latinos (japonês, cirílico, acentos em português) sem corrupção de encoding UTF-8.
@@ -176,11 +189,16 @@ Como usuário que escuta música em viagens ou conexões móveis instáveis, que
 - **FR-006**: O sistema DEVE associar a cada campo sugerido seu status de divergência (`Unchanged`, `Updated`, `NewValue`, `Conflict`) e sua proveniência de origem (`LocalTag`, `MusicBrainz`, `CoverArtArchive`).
 - **FR-007**: O sistema DEVE exibir a proposta de enriquecimento no Track Inspector com visualização tabular clara, badges informativos e pré-visualização da capa.
 - **FR-008**: O sistema NÃO DEVE gravar nenhuma tag ou arquivo fisicamente no disco durante esta feature, mantendo a responsabilidade de escrita confinada à Feature 006.
+- **FR-009**: O sistema DEVE aplicar heurística canônica de seleção de lançamento para gravações com múltiplos lançamentos no MusicBrainz: priorizar status "Official" e tipo "Album" com a data de lançamento mais antiga, ou correspondência de título se o álbum local já estiver preenchido, evitando coletâneas/álbuns ao vivo a menos que explicitamente correspondentes.
+- **FR-010**: O sistema DEVE resolver a URL de arte de capa do Cover Art Archive utilizando a resolução padrão "front-500" (500x500 pixels) como equilíbrio entre fidelidade visual e uso de banda, aplicando fallback para "front-250" se a imagem de 500px não estiver disponível.
+- **FR-011**: O sistema DEVE persistir o cache de metadados em arquivos JSON indexados por hash no diretório de cache da aplicação (`IAppInfoService.CachePath/metadata/`), preservando o banco de dados SQLite leve e sem necessidade de migrações estruturais adicionais.
+- **FR-012**: O sistema DEVE fornecer seleção individual via checkbox para cada campo sugerido na tabela do Track Inspector (com valor padrão marcado para novos/atualizados e desmarcado para conflitos críticos), permitindo ao usuário ajustar a proposta em memória antes de encaminhar à Feature 006.
+- **FR-013**: O sistema DEVE aplicar fusão com deduplicação no campo de Gênero: preservar o valor local preenchido e propor complementação com as tags mais relevantes do MusicBrainz separadas por ponto-e-vírgula (';'), classificando o status como "Updated" quando novos termos forem sugeridos.
 
 ### Key Entities
 
 - **EnrichmentProposal**: Modelo agregado contendo a lista de `FieldProposal` para todos os campos musicais analisados, além da referência da faixa e carimbo de data/hora.
-- **FieldProposal**: Representação de um campo individual contendo Nome, Valor Atual, Valor Sugerido, Status e Proveniência.
+- **FieldProposal**: Representação de um campo individual contendo Nome, Valor Atual, Valor Sugerido, Status, Proveniência e flag reativa `IsSelected`.
 - **MetadataProvenance**: Enumeração identificando a origem do metadado (`LocalTag`, `MusicBrainz`, `CoverArtArchive`, `UserOverride`).
 - **FieldProposalStatus**: Enumeração identificando o resultado da comparação (`Unchanged`, `Updated`, `NewValue`, `Conflict`).
 - **MusicBrainzRecordingDetail**: Modelo com os atributos consolidados extraídos do XML/JSON da API do MusicBrainz.

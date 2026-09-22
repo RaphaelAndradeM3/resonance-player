@@ -14,7 +14,7 @@
 ## Requirement Completeness
 
 - [x] No [NEEDS CLARIFICATION] markers remain
-- [x] Requirements are testable and unambiguous (FR-001 to FR-008)
+- [x] Requirements are testable and unambiguous (FR-001 to FR-013)
 - [x] Success criteria are measurable (SC-001 to SC-004)
 - [x] Success criteria are technology-agnostic (no framework-specific leakage)
 - [x] All acceptance scenarios are defined (Given-When-Then for US1, US2, US3)

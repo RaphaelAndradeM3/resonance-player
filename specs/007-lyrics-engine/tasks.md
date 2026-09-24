@@ -76,13 +76,13 @@ Problem: Renderizar as letras na tela com destaque sincronizado da linha ativa, 
 Definition of Success: A página de letras (LyricsPage) exibe em tempo real o texto correto com rolagem suave, permite ajustar o offset no momento da reprodução memorizando a calibração, e exibe estados vazios e de texto puro com clareza, com a solution inteira compilando e 100% dos testes passando.
 ```
 
-- [ ] T019 [P] [US1] Update `LyricsPageViewModel.cs` in `src/Resonance.WinUI/ViewModels/LyricsPageViewModel.cs` adding observable properties: `ProvenanceLabel` (string), `IsSynced` (bool), `IsPlain` (bool), `IsInstrumental` (bool), `CurrentOffsetMs` (int), `CanExportLrc` (bool), and commands `AdjustOffsetCommand`, `ResetOffsetCommand`, and `ExportSidecarLrcCommand`.
-- [ ] T020 [US1] Update `UpdateForTrack` in `src/Resonance.WinUI/ViewModels/LyricsPageViewModel.cs` to call `ResolveLyricsAsync`, apply saved `LyricsOffsetMs` from `Song`, and populate synced vs unsynced line collections with provenance badges.
-- [ ] T021 [US1] Implement live offset calibration logic in `src/Resonance.WinUI/ViewModels/LyricsPageViewModel.cs` shifting active playback time during highlight calculation and persisting calibrated offset via `ILrcService.SetLyricsOffsetAsync`.
-- [ ] T022 [US1] Implement `ExportSidecarLrcCommand` in `src/Resonance.WinUI/ViewModels/LyricsPageViewModel.cs` invoking `ILrcService.ExportSidecarLrcAsync` and triggering visual confirmation.
-- [ ] T023 [P] [US1] Update `LyricsPage.xaml` in `src/Resonance.WinUI/Pages/LyricsPage.xaml` adding provenance badge in header, `[Não Sincronizada]` indicator on plain view, instrumental empty state panel (`♫ Faixa Instrumental`), offset adjustment controls (`-500ms`, `-100ms`, `+100ms`, `+500ms`, `Zerar`), and "Exportar como .lrc" button.
-- [ ] T024 [US1] Update `LyricsPage.xaml.cs` in `src/Resonance.WinUI/Pages/LyricsPage.xaml.cs` ensuring smooth auto-scrolling respects offset calibration and plain text ListView disables seek taps.
-- [ ] T025 [US1] Whole-Solution Regression Gate: Validate entire solution build, packaging, analyzers, and all tests passing:
+- [x] T019 [P] [US1] Update `LyricsPageViewModel.cs` in `src/Resonance.WinUI/ViewModels/LyricsPageViewModel.cs` adding observable properties: `ProvenanceLabel` (string), `IsSynced` (bool), `IsPlain` (bool), `IsInstrumental` (bool), `CurrentOffsetMs` (int), `CanExportLrc` (bool), and commands `AdjustOffsetCommand`, `ResetOffsetCommand`, and `ExportSidecarLrcCommand`.
+- [x] T020 [US1] Update `UpdateForTrack` in `src/Resonance.WinUI/ViewModels/LyricsPageViewModel.cs` to call `ResolveLyricsAsync`, apply saved `LyricsOffsetMs` from `Song`, and populate synced vs unsynced line collections with provenance badges.
+- [x] T021 [US1] Implement live offset calibration logic in `src/Resonance.WinUI/ViewModels/LyricsPageViewModel.cs` shifting active playback time during highlight calculation and persisting calibrated offset via `ILrcService.SetLyricsOffsetAsync`.
+- [x] T022 [US1] Implement `ExportSidecarLrcCommand` in `src/Resonance.WinUI/ViewModels/LyricsPageViewModel.cs` invoking `ILrcService.ExportSidecarLrcAsync` and triggering visual confirmation.
+- [x] T023 [P] [US1] Update `LyricsPage.xaml` in `src/Resonance.WinUI/Pages/LyricsPage.xaml` adding provenance badge in header, `[Não Sincronizada]` indicator on plain view, instrumental empty state panel (`♫ Faixa Instrumental`), offset adjustment controls (`-500ms`, `-100ms`, `+100ms`, `+500ms`, `Zerar`), and "Exportar como .lrc" button.
+- [x] T024 [US1] Update `LyricsPage.xaml.cs` in `src/Resonance.WinUI/Pages/LyricsPage.xaml.cs` ensuring smooth auto-scrolling respects offset calibration and plain text ListView disables seek taps.
+- [x] T025 [US1] Whole-Solution Regression Gate: Validate entire solution build, packaging, analyzers, and all tests passing:
   ```powershell
   dotnet build Resonance.slnx --configuration Release -p:Platform=x64 --warnaserror
   dotnet test Resonance.slnx --configuration Release -p:Platform=x64 --no-build

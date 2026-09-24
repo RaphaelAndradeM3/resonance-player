@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -108,6 +108,24 @@ public partial class LyricsPageViewModel : ObservableObject, IDisposable
     [ObservableProperty] public partial bool CanEditLyrics { get; set; }
     [ObservableProperty] public partial bool CanRemoveLyrics { get; set; }
     [ObservableProperty] public partial string EditableLyrics { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasProvenanceLabel))]
+    public partial string ProvenanceLabel { get; set; } = string.Empty;
+
+    public bool HasProvenanceLabel => !string.IsNullOrWhiteSpace(ProvenanceLabel);
+
+    [ObservableProperty] public partial bool IsSynced { get; set; }
+    [ObservableProperty] public partial bool IsPlain { get; set; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowNoLyricsMessage))]
+    public partial bool IsInstrumental { get; set; }
+
+    [ObservableProperty] public partial int CurrentOffsetMs { get; set; }
+    [ObservableProperty] public partial string FormattedOffset { get; set; } = "Offset: 0 ms";
+    [ObservableProperty] public partial bool CanExportLrc { get; set; }
+
     public Guid? CurrentSongId => _currentSong?.Id;
 
     /// <summary>
@@ -117,9 +135,9 @@ public partial class LyricsPageViewModel : ObservableObject, IDisposable
 
     /// <summary>
     ///     True when the "No lyrics found" message should be displayed.
-    ///     This is only when we are not loading and have no lyrics of either type.
+    ///     This is only when we are not loading, not instrumental, and have no lyrics of either type.
     /// </summary>
-    public bool ShowNoLyricsMessage => !HasLyrics && !HasUnsyncedLyrics && !IsLoading;
+    public bool ShowNoLyricsMessage => !HasLyrics && !HasUnsyncedLyrics && !IsInstrumental && !IsLoading;
 
     public ObservableRangeCollection<LyricLine> LyricLines { get; } = new();
 
@@ -154,17 +172,78 @@ public partial class LyricsPageViewModel : ObservableObject, IDisposable
     [RelayCommand]
     public async Task SeekToLineAsync(LyricLine? line)
     {
-        if (line is null) return;
+        if (line is null || !IsSynced) return;
 
-        var targetTime = line.StartTime - _seekTimeOffset;
+        var targetTime = line.StartTime - TimeSpan.FromMilliseconds(CurrentOffsetMs) - _seekTimeOffset;
         if (targetTime < TimeSpan.Zero) targetTime = TimeSpan.Zero;
 
-        _logger.LogDebug("Seeking lyrics to line with start time {StartTime}", line.StartTime);
+        _logger.LogDebug("Seeking lyrics to line with start time {StartTime} (offset: {Offset}ms)", line.StartTime, CurrentOffsetMs);
         _optimisticallySetLine = line;
         _optimisticSetTimestamp = DateTime.UtcNow;
         UpdateCurrentLineFromPosition(targetTime);
 
         await _playbackService.SeekAsync(targetTime);
+    }
+
+    [RelayCommand]
+    public async Task AdjustOffsetAsync(object? parameter)
+    {
+        var delta = 0;
+        if (parameter is int intVal) delta = intVal;
+        else if (parameter is string strVal && int.TryParse(strVal, out var parsed)) delta = parsed;
+
+        if (delta == 0 || _currentSong == null) return;
+
+        CurrentOffsetMs += delta;
+        FormattedOffset = CurrentOffsetMs >= 0 ? $"Offset: +{CurrentOffsetMs} ms" : $"Offset: {CurrentOffsetMs} ms";
+
+        await _lrcService.SetLyricsOffsetAsync(_currentSong, CurrentOffsetMs).ConfigureAwait(false);
+        UpdateCurrentLineFromPosition(_playbackService.CurrentPosition);
+    }
+
+    [RelayCommand]
+    public async Task ResetOffsetAsync()
+    {
+        if (_currentSong == null || CurrentOffsetMs == 0) return;
+
+        CurrentOffsetMs = 0;
+        FormattedOffset = "Offset: 0 ms";
+
+        await _lrcService.SetLyricsOffsetAsync(_currentSong, 0).ConfigureAwait(false);
+        UpdateCurrentLineFromPosition(_playbackService.CurrentPosition);
+    }
+
+    [RelayCommand]
+    public async Task ExportSidecarLrcAsync()
+    {
+        if (_currentSong == null || string.IsNullOrWhiteSpace(_currentSong.FilePath)) return;
+
+        string? contentToExport = null;
+        if (_parsedLrc != null && !_parsedLrc.IsEmpty)
+        {
+            var sb = new System.Text.StringBuilder();
+            foreach (var line in _parsedLrc.Lines)
+            {
+                sb.AppendLine($"[{line.StartTime:mm\\:ss\\.ff}]{line.Text}");
+            }
+            contentToExport = sb.ToString();
+        }
+        else if (!string.IsNullOrWhiteSpace(EditableLyrics))
+        {
+            contentToExport = EditableLyrics;
+        }
+
+        if (string.IsNullOrWhiteSpace(contentToExport)) return;
+
+        var success = await _lrcService.ExportSidecarLrcAsync(_currentSong, contentToExport).ConfigureAwait(false);
+        if (success)
+        {
+            _dispatcherService.TryEnqueue(() =>
+            {
+                CanExportLrc = false;
+                ProvenanceLabel = "Arquivo .lrc (Exportado)";
+            });
+        }
     }
 
     public async Task SaveLyricsAsync(Guid songId, string lyrics)
@@ -195,13 +274,16 @@ public partial class LyricsPageViewModel : ObservableObject, IDisposable
 
     private void UpdateCurrentLineFromPosition(TimeSpan position)
     {
-        if (_parsedLrc is null || !HasLyrics) return;
+        if (_parsedLrc is null || !HasLyrics || !IsSynced) return;
+
+        var effectivePosition = position + TimeSpan.FromMilliseconds(CurrentOffsetMs);
+        if (effectivePosition < TimeSpan.Zero) effectivePosition = TimeSpan.Zero;
 
         _dispatcherService.TryEnqueue(() =>
         {
             if (_isDisposed || _parsedLrc is null) return;
             CurrentPosition = position;
-            var newCurrentLine = _lrcService.GetCurrentLine(_parsedLrc, position, ref _lrcSearchHint);
+            var newCurrentLine = _lrcService.GetCurrentLine(_parsedLrc, effectivePosition, ref _lrcSearchHint);
 
             if (_optimisticallySetLine != null)
             {
@@ -259,6 +341,11 @@ public partial class LyricsPageViewModel : ObservableObject, IDisposable
             CurrentPosition = TimeSpan.Zero;
             HasLyrics = false;
             HasUnsyncedLyrics = false;
+            IsSynced = false;
+            IsPlain = false;
+            IsInstrumental = false;
+            ProvenanceLabel = string.Empty;
+            CanExportLrc = false;
             CanEditLyrics = false;
             CanRemoveLyrics = song is not null && _lrcService.HasCachedLyrics(song);
             EditableLyrics = string.Empty;
@@ -268,6 +355,8 @@ public partial class LyricsPageViewModel : ObservableObject, IDisposable
                 _logger.LogDebug("Clearing lyrics view as playback stopped");
                 SongTitle = Resonance.WinUI.Resources.Strings.Lyrics_NoSongSelected;
                 IsLoading = false;
+                CurrentOffsetMs = 0;
+                FormattedOffset = "Offset: 0 ms";
             }
             else
             {
@@ -276,6 +365,8 @@ public partial class LyricsPageViewModel : ObservableObject, IDisposable
                     : song.Title;
                 SongDuration = _playbackService.Duration;
                 IsLoading = true;
+                CurrentOffsetMs = song.LyricsOffsetMs ?? 0;
+                FormattedOffset = CurrentOffsetMs >= 0 ? $"Offset: +{CurrentOffsetMs} ms" : $"Offset: {CurrentOffsetMs} ms";
             }
         });
 
@@ -288,125 +379,107 @@ public partial class LyricsPageViewModel : ObservableObject, IDisposable
 
         try
         {
-            // Fetch full song data in parallel with .lrc check since both are local/fast
-            var fullSongTask = _libraryReader.GetSongWithFullDataAsync(song.Id);
-            var localLrcTask = !string.IsNullOrWhiteSpace(song.LrcFilePath)
-                ? _lrcService.GetLyricsAsync(song.LrcFilePath)
-                : Task.FromResult<ParsedLrc?>(null);
-
-            await Task.WhenAll(fullSongTask, localLrcTask).ConfigureAwait(false);
+            var fullSong = await _libraryReader.GetSongWithFullDataAsync(song.Id).ConfigureAwait(false) ?? song;
             if (cancellationToken.IsCancellationRequested) return;
 
-            var fullSong = fullSongTask.Result ?? song;
-            var localLrc = localLrcTask.Result;
-
-            // Priority 1: Local .lrc sidecar (synced lyrics)
-            if (localLrc is not null && !localLrc.IsEmpty)
+            CurrentOffsetMs = fullSong.LyricsOffsetMs ?? 0;
+            _dispatcherService.TryEnqueue(() =>
             {
-                _logger.LogDebug("Using local .lrc for track '{SongTitle}'", song.Title);
-                var displayLrc = await ApplyRomanizationAsync(localLrc, cancellationToken).ConfigureAwait(false);
+                if (cancellationToken.IsCancellationRequested || _isDisposed) return;
+                FormattedOffset = CurrentOffsetMs >= 0 ? $"Offset: +{CurrentOffsetMs} ms" : $"Offset: {CurrentOffsetMs} ms";
+            });
+
+            var doc = await _lrcService.ResolveLyricsAsync(fullSong, cancellationToken).ConfigureAwait(false);
+            if (cancellationToken.IsCancellationRequested) return;
+
+            if (doc is null || doc.IsEmpty || doc.Type == LyricsType.None)
+            {
+                _logger.LogDebug("No lyrics found for track '{SongTitle}'", fullSong.Title);
                 _dispatcherService.TryEnqueue(() =>
                 {
                     if (cancellationToken.IsCancellationRequested || _isDisposed) return;
-                    _parsedLrc = displayLrc;
-                    EditableLyrics = localLrc.RawUnsyncedLyrics ?? string.Empty;
                     CanEditLyrics = true;
-                    CanRemoveLyrics = _lrcService.HasCachedLyrics(song);
-                    LyricLines.AddRange(displayLrc.Lines);
-                    HasLyrics = true;
                     IsLoading = false;
-                    UpdateCurrentLineFromPosition(_playbackService.CurrentPosition);
                 });
                 return;
             }
 
-            // Priority 2: Embedded lyrics tag (skip network)
-            if (fullSong is not null && !string.IsNullOrWhiteSpace(fullSong.Lyrics))
-            {
-                _logger.LogDebug("Using embedded lyrics for track '{SongTitle}'", song.Title);
-                var parsedEmbedded = _lrcService.ParseLyrics(fullSong.Lyrics);
+            var provenanceStr = GetProvenanceLabel(doc.Provenance);
 
-                if (parsedEmbedded is not null && !parsedEmbedded.IsEmpty)
+            if (doc.Type == LyricsType.Instrumental || doc.IsInstrumental)
+            {
+                _logger.LogDebug("Track '{SongTitle}' is instrumental", fullSong.Title);
+                _dispatcherService.TryEnqueue(() =>
                 {
-                    var displayLrc = await ApplyRomanizationAsync(parsedEmbedded, cancellationToken).ConfigureAwait(false);
-                    _dispatcherService.TryEnqueue(() =>
-                    {
-                        if (cancellationToken.IsCancellationRequested || _isDisposed) return;
-                        _parsedLrc = displayLrc;
-                        EditableLyrics = fullSong.Lyrics;
-                        CanEditLyrics = true;
-                        CanRemoveLyrics = _lrcService.HasCachedLyrics(song);
-                        LyricLines.AddRange(displayLrc.Lines);
-                        HasLyrics = true;
-                        IsLoading = false;
-                        UpdateCurrentLineFromPosition(_playbackService.CurrentPosition);
-                    });
-                    return;
+                    if (cancellationToken.IsCancellationRequested || _isDisposed) return;
+                    IsInstrumental = true;
+                    ProvenanceLabel = !string.IsNullOrEmpty(provenanceStr) ? provenanceStr : "Instrumental";
+                    IsLoading = false;
+                    CanEditLyrics = true;
+                });
+                return;
+            }
+
+            if (doc.Type == LyricsType.Synced && doc.Lines.Count > 0)
+            {
+                _logger.LogDebug("Resolved synced lyrics ({Provenance}) for track '{SongTitle}'", doc.Provenance, fullSong.Title);
+                var parsed = new ParsedLrc(doc.Lines, doc.RawUnsyncedLyrics);
+                var displayLrc = await ApplyRomanizationAsync(parsed, cancellationToken).ConfigureAwait(false);
+
+                var sb = new System.Text.StringBuilder();
+                foreach (var line in doc.Lines)
+                {
+                    sb.AppendLine($"[{line.StartTime:mm\\:ss\\.ff}]{line.Text}");
                 }
-                var embeddedLines = await ApplyRomanizationAsync(
-                    ParseUnsyncedLyricsToLines(parsedEmbedded?.RawUnsyncedLyrics ?? fullSong.Lyrics),
+                var rawEditable = sb.ToString();
+
+                _dispatcherService.TryEnqueue(() =>
+                {
+                    if (cancellationToken.IsCancellationRequested || _isDisposed) return;
+                    _parsedLrc = displayLrc;
+                    EditableLyrics = rawEditable;
+                    CanEditLyrics = true;
+                    CanRemoveLyrics = _lrcService.HasCachedLyrics(fullSong);
+                    CanExportLrc = doc.Provenance != LyricsProvenance.LocalFileLrc;
+                    ProvenanceLabel = provenanceStr;
+                    IsSynced = true;
+                    LyricLines.AddRange(displayLrc.Lines);
+                    HasLyrics = true;
+                    IsLoading = false;
+                    UpdateCurrentLineFromPosition(_playbackService.CurrentPosition);
+                });
+                return;
+            }
+
+            if (doc.Type == LyricsType.Plain && !string.IsNullOrWhiteSpace(doc.RawUnsyncedLyrics))
+            {
+                _logger.LogDebug("Resolved plain lyrics ({Provenance}) for track '{SongTitle}'", doc.Provenance, fullSong.Title);
+                var plainLines = await ApplyRomanizationAsync(
+                    ParseUnsyncedLyricsToLines(doc.RawUnsyncedLyrics),
                     cancellationToken).ConfigureAwait(false);
                 _dispatcherService.TryEnqueue(() =>
                 {
                     if (cancellationToken.IsCancellationRequested || _isDisposed) return;
-                    UnsyncedLyricLines.AddRange(embeddedLines);
-                    EditableLyrics = fullSong.Lyrics;
+                    UnsyncedLyricLines.AddRange(plainLines);
+                    EditableLyrics = doc.RawUnsyncedLyrics;
                     CanEditLyrics = true;
-                    CanRemoveLyrics = _lrcService.HasCachedLyrics(song);
+                    CanRemoveLyrics = _lrcService.HasCachedLyrics(fullSong);
+                    CanExportLrc = false;
+                    ProvenanceLabel = provenanceStr;
+                    IsPlain = true;
                     HasUnsyncedLyrics = true;
                     IsLoading = false;
                 });
                 return;
             }
 
-            // Priority 3: Network/cache (only when no local lyrics exist)
-            var parsedLrc = await _lrcService.GetLyricsAsync(song, cancellationToken).ConfigureAwait(false);
-            if (cancellationToken.IsCancellationRequested) return;
-
-            if (parsedLrc is not null && !parsedLrc.IsEmpty)
+            _logger.LogDebug("No lyrics found for track '{SongTitle}'", fullSong.Title);
+            _dispatcherService.TryEnqueue(() =>
             {
-                _logger.LogDebug("Fetched synced lyrics for track '{SongTitle}'", song.Title);
-                var displayLrc = await ApplyRomanizationAsync(parsedLrc, cancellationToken).ConfigureAwait(false);
-                _dispatcherService.TryEnqueue(() =>
-                {
-                    if (cancellationToken.IsCancellationRequested || _isDisposed) return;
-                    _parsedLrc = displayLrc;
-                    EditableLyrics = parsedLrc.RawUnsyncedLyrics ?? string.Empty;
-                    CanEditLyrics = true;
-                    CanRemoveLyrics = _lrcService.HasCachedLyrics(song);
-                    LyricLines.AddRange(displayLrc.Lines);
-                    HasLyrics = true;
-                    IsLoading = false;
-                    UpdateCurrentLineFromPosition(_playbackService.CurrentPosition);
-                });
-            }
-            else if (parsedLrc is not null && !string.IsNullOrWhiteSpace(parsedLrc.RawUnsyncedLyrics))
-            {
-                _logger.LogDebug("Fetched unsynced lyrics for track '{SongTitle}'", song.Title);
-                var unsyncedLines = await ApplyRomanizationAsync(
-                    ParseUnsyncedLyricsToLines(parsedLrc.RawUnsyncedLyrics),
-                    cancellationToken).ConfigureAwait(false);
-                _dispatcherService.TryEnqueue(() =>
-                {
-                    if (cancellationToken.IsCancellationRequested || _isDisposed) return;
-                    UnsyncedLyricLines.AddRange(unsyncedLines);
-                    EditableLyrics = parsedLrc.RawUnsyncedLyrics;
-                    CanEditLyrics = true;
-                    CanRemoveLyrics = _lrcService.HasCachedLyrics(song);
-                    HasUnsyncedLyrics = true;
-                    IsLoading = false;
-                });
-            }
-            else
-            {
-                _logger.LogDebug("No lyrics found for track '{SongTitle}'", song.Title);
-                _dispatcherService.TryEnqueue(() =>
-                {
-                    if (cancellationToken.IsCancellationRequested || _isDisposed) return;
-                    CanEditLyrics = true;
-                    IsLoading = false;
-                });
-            }
+                if (cancellationToken.IsCancellationRequested || _isDisposed) return;
+                CanEditLyrics = true;
+                IsLoading = false;
+            });
         }
         catch (OperationCanceledException)
         {
@@ -423,6 +496,18 @@ public partial class LyricsPageViewModel : ObservableObject, IDisposable
             });
         }
     }
+
+    private static string GetProvenanceLabel(LyricsProvenance provenance) => provenance switch
+    {
+        LyricsProvenance.LocalFileLrc => "Arquivo .lrc",
+        LyricsProvenance.LocalFileTxt => "Arquivo .txt",
+        LyricsProvenance.EmbeddedSynced => "Tag Embutida",
+        LyricsProvenance.EmbeddedPlain => "Tag Embutida",
+        LyricsProvenance.LocalCache => "Cache Local",
+        LyricsProvenance.RemoteLrcLib => "LRCLIB",
+        LyricsProvenance.RemoteNetEase => "NetEase",
+        _ => string.Empty
+    };
 
     private async Task<ParsedLrc> ApplyRomanizationAsync(ParsedLrc parsedLrc, CancellationToken cancellationToken)
     {

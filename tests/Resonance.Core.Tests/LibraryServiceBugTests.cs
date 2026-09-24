@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -610,8 +610,15 @@ public class LibraryServiceBugTests : IDisposable
         var fetchTask = _libraryService.StartArtistMetadataBackgroundFetchAsync();
 
         // Give the loop time to process the 15 items and flush.
-        // The throttling is Task.Delay(50) per item, so 15 items * 50ms = 750ms minimum.
-        await Task.Delay(2000);
+        // Poll for completion up to 5 seconds to avoid flakiness under heavy parallel test runner load.
+        var deadline = DateTime.UtcNow.AddSeconds(5);
+        while (DateTime.UtcNow < deadline)
+        {
+            await Task.Delay(100);
+            await using var checkContext = _dbHelper.ContextFactory.CreateDbContext();
+            var count = await checkContext.Artists.CountAsync(a => a.MetadataLastCheckedUtc != null);
+            if (count >= 15) break;
+        }
 
         // Cancel the background fetch loop
         _libraryService.Dispose();

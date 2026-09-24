@@ -1,4 +1,4 @@
-﻿using Resonance.Core.Models;
+using Resonance.Core.Models;
 
 namespace Resonance.Core.Services.Abstractions;
 
@@ -19,6 +19,8 @@ public interface ILibraryWriter
     Task<bool> UpdateSongLyricsAsync(Guid songId, string? lyrics);
     Task<bool> UpdateSongLrcPathAsync(Guid songId, string? lrcPath);
     Task<bool> UpdateSongLyricsLastCheckedAsync(Guid songId);
+    Task<bool> UpdateSongLyricsOffsetAsync(Guid songId, int? offsetMs);
+    Task<bool> UpdateSongInstrumentalAsync(Guid songId, bool isInstrumental);
     Task<bool> UpdateArtistImageAsync(Guid artistId, string localFilePath);
     Task<bool> RemoveArtistImageAsync(Guid artistId);
     Task<long?> StartListenSessionAsync(Guid songId, PlaybackContext context);

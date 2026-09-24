@@ -1658,6 +1658,18 @@ public class LibraryService : ILibraryService, ILibraryReader, IDisposable
         return UpdateSongPropertyAsync(songId, s => s.LyricsLastCheckedUtc = DateTime.UtcNow);
     }
 
+    /// <inheritdoc />
+    public Task<bool> UpdateSongLyricsOffsetAsync(Guid songId, int? offsetMs)
+    {
+        return UpdateSongPropertyAsync(songId, s => s.LyricsOffsetMs = offsetMs);
+    }
+
+    /// <inheritdoc />
+    public Task<bool> UpdateSongInstrumentalAsync(Guid songId, bool isInstrumental)
+    {
+        return UpdateSongPropertyAsync(songId, s => s.IsInstrumental = isInstrumental);
+    }
+
     #endregion
 
     #region Artist Management

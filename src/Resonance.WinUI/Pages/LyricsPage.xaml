@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="Resonance.WinUI.Pages.LyricsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -38,36 +38,141 @@
         <Grid
             Grid.Row="0"
             Margin="24,32,24,8">
-            <TextBlock
-                Style="{StaticResource TitleTextBlockStyle}"
-                Text="{x:Bind ViewModel.SongTitle, Mode=OneWay}"
-                Foreground="{StaticResource AppPrimaryColorBrush}"
-                FontWeight="SemiBold"
+            <StackPanel
                 HorizontalAlignment="Center"
-                TextTrimming="CharacterEllipsis"
-                TextWrapping="NoWrap"
-                MaxLines="1"
-                MaxWidth="1200" />
-            <Button
-                x:Name="EditLyricsButton"
+                Spacing="6">
+                <TextBlock
+                    Style="{StaticResource TitleTextBlockStyle}"
+                    Text="{x:Bind ViewModel.SongTitle, Mode=OneWay}"
+                    Foreground="{StaticResource AppPrimaryColorBrush}"
+                    FontWeight="SemiBold"
+                    HorizontalAlignment="Center"
+                    TextTrimming="CharacterEllipsis"
+                    TextWrapping="NoWrap"
+                    MaxLines="1"
+                    MaxWidth="1000" />
+                <!-- Provenance & Status Badges -->
+                <StackPanel
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Spacing="8"
+                    Visibility="{x:Bind ViewModel.HasProvenanceLabel, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Border
+                        Background="{ThemeResource LayerFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="8,2">
+                        <TextBlock
+                            Text="{x:Bind ViewModel.ProvenanceLabel, Mode=OneWay}"
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </Border>
+                    <Border
+                        Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                        CornerRadius="4"
+                        Padding="8,2"
+                        Visibility="{x:Bind ViewModel.IsPlain, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <TextBlock
+                            Text="Não Sincronizada"
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Actions (Top Right) -->
+            <StackPanel
+                Orientation="Horizontal"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                Style="{StaticResource SubtleButtonStyle}"
-                IsEnabled="{x:Bind ViewModel.CanEditLyrics, Mode=OneWay}"
-                Click="EditLyricsButton_Click"
-                AutomationProperties.Name="{x:Bind resources:Strings.LyricsPage_EditLyrics_ToolTip, Mode=OneTime}"
-                ToolTipService.ToolTip="{x:Bind resources:Strings.LyricsPage_EditLyrics_ToolTip, Mode=OneTime}">
-                <FontIcon Glyph="&#xE70F;" />
-            </Button>
+                Spacing="8">
+                <Button
+                    x:Name="ExportLrcButton"
+                    Style="{StaticResource SubtleButtonStyle}"
+                    Command="{x:Bind ViewModel.ExportSidecarLrcCommand}"
+                    Visibility="{x:Bind ViewModel.CanExportLrc, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    AutomationProperties.Name="Exportar como .lrc"
+                    ToolTipService.ToolTip="Exportar como .lrc">
+                    <FontIcon Glyph="&#xEDE1;" />
+                </Button>
+                <Button
+                    x:Name="EditLyricsButton"
+                    Style="{StaticResource SubtleButtonStyle}"
+                    IsEnabled="{x:Bind ViewModel.CanEditLyrics, Mode=OneWay}"
+                    Click="EditLyricsButton_Click"
+                    AutomationProperties.Name="{x:Bind resources:Strings.LyricsPage_EditLyrics_ToolTip, Mode=OneTime}"
+                    ToolTipService.ToolTip="{x:Bind resources:Strings.LyricsPage_EditLyrics_ToolTip, Mode=OneTime}">
+                    <FontIcon Glyph="&#xE70F;" />
+                </Button>
+            </StackPanel>
         </Grid>
 
-        <ProgressBar
-            x:Name="LyricsProgressBar"
+        <!-- Progress bar and Offset calibration controls -->
+        <StackPanel
             Grid.Row="1"
-            Style="{StaticResource LyricsProgressBarStyle}"
-            Margin="100,16,100,12"
-            Visibility="{x:Bind ViewModel.ShowTimedLyrics, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
-            MaxWidth="600" />
+            Margin="24,8,24,12"
+            Spacing="8"
+            Visibility="{x:Bind ViewModel.ShowTimedLyrics, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ProgressBar
+                x:Name="LyricsProgressBar"
+                Style="{StaticResource LyricsProgressBarStyle}"
+                HorizontalAlignment="Center"
+                Width="500" />
+
+            <!-- Offset calibration toolbar -->
+            <StackPanel
+                Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Spacing="6">
+                <Button
+                    Content="-500ms"
+                    Style="{StaticResource SubtleButtonStyle}"
+                    Padding="6,2"
+                    FontSize="11"
+                    Command="{x:Bind ViewModel.AdjustOffsetCommand}"
+                    CommandParameter="-500"
+                    ToolTipService.ToolTip="Atrasar letras em 500 ms" />
+                <Button
+                    Content="-100ms"
+                    Style="{StaticResource SubtleButtonStyle}"
+                    Padding="6,2"
+                    FontSize="11"
+                    Command="{x:Bind ViewModel.AdjustOffsetCommand}"
+                    CommandParameter="-100"
+                    ToolTipService.ToolTip="Atrasar letras em 100 ms" />
+                <TextBlock
+                    Text="{x:Bind ViewModel.FormattedOffset, Mode=OneWay}"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Margin="4,0" />
+                <Button
+                    Content="+100ms"
+                    Style="{StaticResource SubtleButtonStyle}"
+                    Padding="6,2"
+                    FontSize="11"
+                    Command="{x:Bind ViewModel.AdjustOffsetCommand}"
+                    CommandParameter="100"
+                    ToolTipService.ToolTip="Adiantar letras em 100 ms" />
+                <Button
+                    Content="+500ms"
+                    Style="{StaticResource SubtleButtonStyle}"
+                    Padding="6,2"
+                    FontSize="11"
+                    Command="{x:Bind ViewModel.AdjustOffsetCommand}"
+                    CommandParameter="500"
+                    ToolTipService.ToolTip="Adiantar letras em 500 ms" />
+                <Button
+                    Content="Zerar"
+                    Style="{StaticResource SubtleButtonStyle}"
+                    Padding="6,2"
+                    FontSize="11"
+                    Command="{x:Bind ViewModel.ResetOffsetCommand}"
+                    ToolTipService.ToolTip="Redefinir offset para 0 ms" />
+            </StackPanel>
+        </StackPanel>
 
         <!-- Synchronized (timed) lyrics display -->
         <ScrollViewer
@@ -139,6 +244,22 @@
             HorizontalContentAlignment="Stretch"
             ItemContainerStyle="{StaticResource LyricsListViewItemStyle}"
             Visibility="{x:Bind ViewModel.HasUnsyncedLyrics, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ListView.Header>
+                <Border
+                    HorizontalAlignment="Center"
+                    Margin="0,8,0,16"
+                    Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                    CornerRadius="4"
+                    Padding="12,4">
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <FontIcon Glyph="&#xE8D2;" FontSize="12" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                        <TextBlock
+                            Text="Letras não sincronizadas"
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                    </StackPanel>
+                </Border>
+            </ListView.Header>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="core:LyricLine">
                     <StackPanel>
@@ -154,6 +275,35 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+
+        <!-- Instrumental message -->
+        <StackPanel
+            Grid.Row="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Spacing="16"
+            Visibility="{x:Bind ViewModel.IsInstrumental, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition FromVerticalOffset="20" />
+                </TransitionCollection>
+            </StackPanel.ChildrenTransitions>
+            <FontIcon
+                Glyph="&#xEC4F;"
+                FontSize="48"
+                Margin="0,0,0,12"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                HorizontalAlignment="Center" />
+            <TextBlock
+                Style="{StaticResource TitleTextBlockStyle}"
+                Text="♫ Faixa Instrumental"
+                HorizontalAlignment="Center" />
+            <TextBlock
+                Style="{StaticResource SubtitleTextBlockStyle}"
+                Text="Esta faixa foi identificada como instrumental."
+                HorizontalAlignment="Center"
+                Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+        </StackPanel>
 
         <!-- No lyrics message -->
         <StackPanel

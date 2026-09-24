@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Numerics;
 using Microsoft.Extensions.DependencyInjection;
@@ -546,7 +546,8 @@ public sealed partial class LyricsPage : Page
             return;
         }
 
-        var positionInLine = ViewModel.CurrentPosition - currentLine.StartTime;
+        var effectivePosition = ViewModel.CurrentPosition + TimeSpan.FromMilliseconds(ViewModel.CurrentOffsetMs);
+        var positionInLine = effectivePosition - currentLine.StartTime;
         if (positionInLine < TimeSpan.Zero) positionInLine = TimeSpan.Zero;
 
         var startValue = positionInLine.TotalMilliseconds / lineDuration.TotalMilliseconds * 100;

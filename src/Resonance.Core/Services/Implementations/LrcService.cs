@@ -1,4 +1,5 @@
-﻿using System.Linq;
+using System.Linq;
+using ATL;
 using Microsoft.Extensions.Logging;
 using ModernLrc;
 using ModernLrc.Model;
@@ -45,6 +46,160 @@ public class LrcService : ILrcService, IDisposable
         _libraryWriter = libraryWriter;
         _logger = logger;
         _settingsService.FetchOnlineLyricsEnabledChanged += OnFetchOnlineLyricsEnabledChanged;
+    }
+
+    /// <inheritdoc />
+    public async Task<LyricsDocument?> ResolveLyricsAsync(Song song, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(song);
+
+        if (cancellationToken.IsCancellationRequested)
+            return null;
+
+        // Stage 1 & 2: Embedded Lyrics via ATL
+        if (!string.IsNullOrWhiteSpace(song.FilePath))
+        {
+            var (syncedLyrics, unsyncedLyrics) = ExtractEmbeddedLyrics(song.FilePath);
+
+            // Stage 1: Embedded Synced
+            if (syncedLyrics != null && syncedLyrics.Count > 0)
+            {
+                var lines = new List<LyricLine>();
+                foreach (var phase in syncedLyrics.OrderBy(p => p.TimestampStart))
+                {
+                    var text = ArtistNameHelper.NormalizeStringCore(phase.Text);
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        lines.Add(new LyricLine(TimeSpan.FromMilliseconds(phase.TimestampStart), text));
+                    }
+                }
+
+                if (lines.Count > 0)
+                {
+                    _logger.LogDebug("Resolved embedded synced lyrics for song {SongId} ({Count} lines)", song.Id, lines.Count);
+                    return new LyricsDocument(
+                        lines,
+                        unsyncedLyrics,
+                        LyricsType.Synced,
+                        LyricsProvenance.EmbeddedSynced,
+                        song.FilePath,
+                        TimeSpan.Zero);
+                }
+            }
+
+            // Stage 2: Embedded Plain
+            if (!string.IsNullOrWhiteSpace(unsyncedLyrics))
+            {
+                _logger.LogDebug("Resolved embedded plain lyrics for song {SongId}", song.Id);
+                return new LyricsDocument(
+                    Enumerable.Empty<LyricLine>(),
+                    unsyncedLyrics.Trim(),
+                    LyricsType.Plain,
+                    LyricsProvenance.EmbeddedPlain,
+                    song.FilePath,
+                    TimeSpan.Zero);
+            }
+
+            // Stage 3: Sidecar .lrc
+            var lrcSidecar = FindLocalSidecarPath(song.FilePath, ".lrc", song.PrimaryArtistName, song.Title);
+            if (!string.IsNullOrWhiteSpace(lrcSidecar) && _fileSystemService.FileExists(lrcSidecar))
+            {
+                try
+                {
+                    var content = await _fileSystemService.ReadAllTextAsync(lrcSidecar).ConfigureAwait(false);
+                    if (!string.IsNullOrWhiteSpace(content))
+                    {
+                        var parsed = ParseLyrics(content);
+                        if (!parsed.IsEmpty)
+                        {
+                            _logger.LogDebug("Resolved sidecar .lrc for song {SongId} from {Path}", song.Id, lrcSidecar);
+                            return new LyricsDocument(
+                                parsed.Lines,
+                                parsed.RawUnsyncedLyrics,
+                                LyricsType.Synced,
+                                LyricsProvenance.LocalFileLrc,
+                                lrcSidecar,
+                                TimeSpan.Zero);
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(parsed.RawUnsyncedLyrics))
+                        {
+                            _logger.LogDebug("Resolved sidecar .lrc as plain text for song {SongId} from {Path}", song.Id, lrcSidecar);
+                            return new LyricsDocument(
+                                Enumerable.Empty<LyricLine>(),
+                                parsed.RawUnsyncedLyrics.Trim(),
+                                LyricsType.Plain,
+                                LyricsProvenance.LocalFileLrc,
+                                lrcSidecar,
+                                TimeSpan.Zero);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to read sidecar .lrc at {Path} for song {SongId}", lrcSidecar, song.Id);
+                }
+            }
+
+            // Stage 4: Sidecar .txt
+            var txtSidecar = FindLocalSidecarPath(song.FilePath, ".txt", song.PrimaryArtistName, song.Title);
+            if (!string.IsNullOrWhiteSpace(txtSidecar) && _fileSystemService.FileExists(txtSidecar))
+            {
+                try
+                {
+                    var txtContent = await _fileSystemService.ReadAllTextAsync(txtSidecar).ConfigureAwait(false);
+                    if (!string.IsNullOrWhiteSpace(txtContent))
+                    {
+                        _logger.LogDebug("Resolved sidecar .txt for song {SongId} from {Path}", song.Id, txtSidecar);
+                        return new LyricsDocument(
+                            Enumerable.Empty<LyricLine>(),
+                            txtContent.Trim(),
+                            LyricsType.Plain,
+                            LyricsProvenance.LocalFileTxt,
+                            txtSidecar,
+                            TimeSpan.Zero);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to read sidecar .txt at {Path} for song {SongId}", txtSidecar, song.Id);
+                }
+            }
+        }
+
+        // Stages 5 and 6 (Cache & Remote Providers) are added in Slice 2
+        return null;
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> ExportSidecarLrcAsync(Song song, string lrcContent)
+    {
+        ArgumentNullException.ThrowIfNull(song);
+        if (string.IsNullOrWhiteSpace(song.FilePath) || string.IsNullOrWhiteSpace(lrcContent)) return false;
+
+        try
+        {
+            var dir = _fileSystemService.GetDirectoryName(song.FilePath);
+            var baseName = _fileSystemService.GetFileNameWithoutExtension(song.FilePath);
+            if (string.IsNullOrWhiteSpace(dir) || string.IsNullOrWhiteSpace(baseName)) return false;
+
+            var targetPath = _fileSystemService.Combine(dir, $"{baseName}.lrc");
+            await _fileSystemService.WriteAllTextAsync(targetPath, lrcContent).ConfigureAwait(false);
+            _logger.LogInformation("Exported sidecar LRC for song {SongId} to {Path}", song.Id, targetPath);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to export sidecar LRC for song {SongId} to {FilePath}", song.Id, song.FilePath);
+            return false;
+        }
+    }
+
+    /// <inheritdoc />
+    public Task SetLyricsOffsetAsync(Song song, int offsetMs)
+    {
+        ArgumentNullException.ThrowIfNull(song);
+        return Task.CompletedTask;
     }
 
     /// <inheritdoc />
@@ -293,7 +448,25 @@ public class LrcService : ILrcService, IDisposable
         return candidate.StartsWith(cacheRoot, StringComparison.OrdinalIgnoreCase);
     }
 
-    private string? FindExternalLyricsPath(string audioFilePath)
+    protected internal virtual (IList<LyricsInfo.LyricsPhrase>? SyncedLyrics, string? UnsyncedLyrics) ExtractEmbeddedLyrics(string audioFilePath)
+    {
+        if (string.IsNullOrWhiteSpace(audioFilePath) || !_fileSystemService.FileExists(audioFilePath))
+            return (null, null);
+
+        try
+        {
+            var track = new Track(audioFilePath);
+            var lyricsInfo = track.Lyrics?.FirstOrDefault();
+            return (lyricsInfo?.SynchronizedLyrics, lyricsInfo?.UnsynchronizedLyrics);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to extract embedded lyrics from {AudioFilePath}.", audioFilePath);
+            return (null, null);
+        }
+    }
+
+    private string? FindLocalSidecarPath(string audioFilePath, string extension, string? artist, string? title)
     {
         if (string.IsNullOrWhiteSpace(audioFilePath)) return null;
 
@@ -303,18 +476,48 @@ public class LrcService : ILrcService, IDisposable
             if (string.IsNullOrWhiteSpace(directory)) return null;
 
             var audioName = _fileSystemService.GetFileNameWithoutExtension(audioFilePath);
-            return _fileSystemService.GetFiles(directory, "*.lrc")
-                       .FirstOrDefault(path => _fileSystemService.GetFileNameWithoutExtension(path)
-                           .Equals(audioName, StringComparison.OrdinalIgnoreCase))
-                   ?? _fileSystemService.GetFiles(directory, "*.txt")
-                       .FirstOrDefault(path => _fileSystemService.GetFileNameWithoutExtension(path)
-                           .Equals(audioName, StringComparison.OrdinalIgnoreCase));
+
+            // 1. Direct check for exact base name first
+            var exactCandidate = _fileSystemService.Combine(directory, $"{audioName}{extension}");
+            if (_fileSystemService.FileExists(exactCandidate)) return exactCandidate;
+
+            var searchPattern = $"*{extension}";
+            var candidateFiles = _fileSystemService.GetFiles(directory, searchPattern);
+            if (candidateFiles != null && candidateFiles.Length > 0)
+            {
+                var exactMatch = candidateFiles.FirstOrDefault(p =>
+                    _fileSystemService.GetFileNameWithoutExtension(p).Equals(audioName, StringComparison.OrdinalIgnoreCase));
+                if (exactMatch != null) return exactMatch;
+
+                if (!string.IsNullOrWhiteSpace(artist) && !string.IsNullOrWhiteSpace(title))
+                {
+                    var artistTitlePattern = $"{artist.Trim()} - {title.Trim()}";
+                    var artistTitleMatch = candidateFiles.FirstOrDefault(p =>
+                        _fileSystemService.GetFileNameWithoutExtension(p).Equals(artistTitlePattern, StringComparison.OrdinalIgnoreCase));
+                    if (artistTitleMatch != null) return artistTitleMatch;
+                }
+            }
+
+            // 2. Fallback direct file check
+            if (!string.IsNullOrWhiteSpace(artist) && !string.IsNullOrWhiteSpace(title))
+            {
+                var fallbackCandidate = _fileSystemService.Combine(directory, $"{artist.Trim()} - {title.Trim()}{extension}");
+                if (_fileSystemService.FileExists(fallbackCandidate)) return fallbackCandidate;
+            }
+
+            return null;
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Failed to find external lyrics for {AudioFilePath}.", audioFilePath);
+            _logger.LogWarning(ex, "Failed to find local sidecar {Extension} for {AudioFilePath}.", extension, audioFilePath);
             return null;
         }
+    }
+
+    private string? FindExternalLyricsPath(string audioFilePath)
+    {
+        return FindLocalSidecarPath(audioFilePath, ".lrc", null, null)
+               ?? FindLocalSidecarPath(audioFilePath, ".txt", null, null);
     }
 
     private Task<string?> LogUnknownProviderAndReturnNull(string providerId)

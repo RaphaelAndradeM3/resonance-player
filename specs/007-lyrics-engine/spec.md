@@ -17,6 +17,17 @@
 
 ---
 
+## Clarifications
+
+### Session 2026-09-23
+- Q: Como o mecanismo de resolução deve identificar os arquivos locais de letra (*sidecar* `.lrc` e `.txt`) na pasta do arquivo de áudio? → A: Casamento por nome base (`<NomeDoAudio>.lrc` / `<NomeDoAudio>.txt`, case-insensitive) com fallback para `<Artista> - <Título>.lrc` / `.txt` no mesmo diretório.
+- Q: Como a interface de letras deve se comportar quando a letra resolvida for de texto puro / não sincronizada (ex.: arquivo `.txt` ou tag embutida não sincronizada)? → A: Renderizar o texto estático completo com rolagem manual livre, desabilitar clique para seek e exibir indicador de status `[Não Sincronizada]`.
+- Q: Ao obter letras com sucesso de provedores online (ex.: LRCLIB), como o sistema deve persistir esses dados em disco para uso offline futuro? → A: Salvar exclusivamente no cache interno da aplicação (`%LocalAppData%`), disponibilizando um botão manual na interface para exportar/salvar como `.lrc` local na pasta da música se o usuário desejar.
+- Q: Como o sistema deve tratar músicas instrumentais ou faixas para as quais nenhum provedor local ou remoto encontrou letra? → A: Persistir o status verificado (com timestamp `LyricsLastCheckedUtc` e sinalização instrumental) no banco de dados local para evitar requisições repetidas, exibindo na UI mensagem contextual amigável ("♫ Faixa Instrumental" ou "Nenhuma letra disponível").
+- Q: A interface de letras sincronizadas deve permitir ao usuário aplicar e persistir ajustes de offset de sincronização (adiantar ou atrasar timestamps) para compensar descompassos de tempo entre o áudio e a letra? → A: Permitir ajuste fino de offset temporal em tempo real na interface (botões `+` / `-` com granularidade de 100ms/500ms), persistindo o valor de compensação da faixa no banco/cache local para reproduções futuras.
+
+---
+
 ## 2. CONTRATOS & LIMITES DA ARQUITETURA
 
 * **Projetos Afetados na Solution (.sln):**
@@ -28,8 +39,8 @@
 * **Ordem Canônica Obrigatória de Resolução de Letras:**
   1. Letras sincronizadas embutidas no arquivo (Embedded Synced).
   2. Letras de texto puro embutidas no arquivo (Embedded Plain).
-  3. Arquivo `.lrc` na mesma pasta do arquivo de áudio.
-  4. Arquivo `.txt` na mesma pasta do arquivo de áudio.
+  3. Arquivo `.lrc` na mesma pasta do arquivo de áudio (prioridade: `<NomeDoAudio>.lrc`, fallback: `<Artista> - <Título>.lrc`).
+  4. Arquivo `.txt` na mesma pasta do arquivo de áudio (prioridade: `<NomeDoAudio>.txt`, fallback: `<Artista> - <Título>.txt`).
   5. Cache local de buscas anteriores.
   6. Provedor remoto (ex.: LRCLIB), se habilitado pelo usuário.
 * **Convenções Obrigatórias:**
@@ -51,14 +62,14 @@
 
 ### Slice 2: Remote Provider & Cache Layer
 - **Meta Imutável repetida:** Consultar provedor remoto opcional (ex.: LRCLIB) somente quando não houver letra local, mantendo cache e isolamento de falhas.
-- **Escopo ponta a ponta:** Integrar cliente de letras online com busca por artista, título, álbum e duração; implementar cache local de letras em disco com registro da procedência; respeitar modo offline.
+- **Escopo ponta a ponta:** Integrar cliente de letras online com busca por artista, título, álbum e duração; implementar cache local de letras em `%LocalAppData%` com registro da procedência; fornecer comando para exportação explícita como sidecar `.lrc` na pasta da faixa; respeitar modo offline.
 - **Reutilização obrigatória:** Cliente HTTP e sistema de configurações de provedores.
 - **Teste obrigatório:** Testes com respostas mockadas do LRCLIB, verificação de cache e comportamento sem conexão.
 - **Validação Local:** `dotnet build` + testes de integração de rede/cache.
 
 ### Slice 3: Synchronized Lyrics UI & Regressão
-- **Meta Imutável repetida:** Renderizar as letras na tela com destaque na linha atual, rolagem suave conforme a música toca e suporte a letras estáticas.
-- **Escopo ponta a ponta:** Desenvolver componente de visualização de letras (Lyrics View) sincronizado aos ticks de tempo do player, permitindo clicar em uma linha para pular o áudio para aquele timestamp (karaokê/seek).
+- **Meta Imutável repetida:** Renderizar as letras na tela com destaque na linha atual, rolagem suave conforme a música toca, suporte a letras estáticas e calibração de offset.
+- **Escopo ponta a ponta:** Desenvolver componente de visualização de letras (Lyrics View) sincronizado aos ticks de tempo do player, permitindo clicar em uma linha para pular o áudio para aquele timestamp (karaokê/seek); incluir controles de ajuste fino de offset temporal (+/- ms) e persistência do offset calibrado.
 - **Reutilização obrigatória:** Controles de áudio e eventos de playback do player.
 - **Teste obrigatório:** Teste de interface verificando destaque de linha no avanço do tempo e comportamento em modo offline.
 - **Validação Final:** Solution inteira compilando e testes passando.
@@ -120,7 +131,7 @@ Como usuário com músicas sem letras locais, quero que o player busque letras d
 
 ### Edge Cases
 - Arquivos `.lrc` com formatos de tempo atípicos (ex.: vírgula em vez de ponto, horas completas `[hh:mm:ss]`).
-- Músicas instrumentais sem letra (o provedor retorna sinalizador instrumental ou vazio).
+- Músicas instrumentais sem letra (provedor retorna sinalizador instrumental `instrumental: true` ou ausência de letra); o sistema armazena a checagem no banco para não reconsultar e exibe estado vazio claro.
 - Variações de fuso e diferença sutil de duração entre versão da web e arquivo local.
 
 ---
@@ -130,15 +141,19 @@ Como usuário com músicas sem letras locais, quero que o player busque letras d
 ### Functional Requirements
 
 - **FR-001**: O sistema DEVE resolver letras obedecendo estritamente à ordem canônica de 6 etapas.
-- **FR-002**: O sistema DEVE suportar formatos de letra sincronizada (.lrc) e texto puro (.txt).
-- **FR-003**: O sistema DEVE atualizar o destaque da linha ativa com base no tempo de reprodução com precisão mínima de 100ms.
-- **FR-004**: O sistema DEVE permitir salto no áudio (seek) ao clicar diretamente em uma linha da letra sincronizada.
-- **FR-005**: O sistema DEVE armazenar em cache local as letras obtidas de provedores externos.
+- **FR-002**: O sistema DEVE suportar formatos de letra sincronizada (.lrc) e texto puro (.txt), localizando arquivos locais adjacentes prioritariamente por `<NomeDoAudio>.lrc/.txt` e, secundariamente, por `<Artista> - <Título>.lrc/.txt` no mesmo diretório (case-insensitive).
+- **FR-003**: O sistema DEVE atualizar o destaque da linha ativa com base no tempo de reprodução com precisão mínima de 100ms para letras sincronizadas.
+- **FR-004**: O sistema DEVE permitir salto no áudio (seek) ao clicar diretamente em uma linha da letra sincronizada, desabilitando essa interação caso a letra seja estática.
+- **FR-005**: O sistema DEVE armazenar em cache interno local (`%LocalAppData%`) as letras obtidas de provedores externos, prevenindo requisições repetidas e garantindo uso offline sem modificar o diretório do usuário.
 - **FR-006**: O sistema DEVE exibir a origem da letra (local vs remoto) de maneira visível ao usuário.
+- **FR-007**: Quando a letra resolvida for não-sincronizada (plain text), o sistema DEVE renderizar o texto com rolagem manual livre e exibir o indicador `[Não Sincronizada]`.
+- **FR-008**: O sistema DEVE disponibilizar ação explícita na UI permitindo ao usuário exportar/salvar a letra exibida como arquivo sidecar `.lrc` na pasta da música.
+- **FR-009**: O sistema DEVE registrar a data da verificação (`LyricsLastCheckedUtc`) e flag instrumental para faixas sem letra ou instrumentais, exibindo na UI mensagem de estado apropriada ("♫ Faixa Instrumental" ou "Nenhuma letra disponível").
+- **FR-010**: O sistema DEVE disponibilizar controles na UI para ajuste fino de offset de sincronização em tempo real (adiantar/atrasar em passos de 100ms/500ms), persistindo o valor de calibração para a faixa no banco/cache local para manter a sincronia em reproduções futuras.
 
 ### Key Entities
 
-- **LyricsDocument**: Conjunto de linhas de letra com indicação de tipo (sincronizada ou texto puro), proveniência e metadados.
+- **LyricsDocument**: Conjunto de linhas de letra com indicação de tipo (sincronizada ou texto puro), proveniência, offset de sincronização calibrado e metadados.
 - **LyricLine**: Timestamp de início e texto da estrofe/verso.
 
 ---

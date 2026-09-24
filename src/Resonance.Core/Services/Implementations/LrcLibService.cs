@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Resonance.Core.Helpers;
 using Resonance.Core.Http.Pipelines;
 using Resonance.Core.Models;
+using Resonance.Core.Models.Lyrics;
 using Resonance.Core.Services.Abstractions;
 
 namespace Resonance.Core.Services.Implementations;
@@ -38,6 +39,15 @@ public class LrcLibService : IOnlineLyricsService
     /// <inheritdoc />
     public async Task<string?> GetLyricsAsync(string trackName, string? artistName, string? albumName, TimeSpan duration, CancellationToken cancellationToken = default)
     {
+        var result = await GetLyricsResultAsync(trackName, artistName, albumName, duration, cancellationToken).ConfigureAwait(false);
+        return !string.IsNullOrEmpty(result?.SyncedLyrics)
+            ? result.SyncedLyrics
+            : result?.PlainLyrics;
+    }
+
+    /// <inheritdoc />
+    public async Task<OnlineLyricsResult?> GetLyricsResultAsync(string trackName, string? artistName, string? albumName, TimeSpan duration, CancellationToken cancellationToken = default)
+    {
         if (string.IsNullOrWhiteSpace(trackName))
             return null;
 
@@ -58,9 +68,9 @@ public class LrcLibService : IOnlineLyricsService
             // if strict misses — saves a round-trip + a rate-limit permit on the happy path.
             if (hasValidArtist && hasValidAlbum)
             {
-                var strictResult = await TryStrictLookupAsync(trackName, artistName!, albumName!, duration, cancellationToken)
+                var strictResult = await TryStrictLookupResultAsync(trackName, artistName!, albumName!, duration, cancellationToken)
                     .ConfigureAwait(false);
-                if (!string.IsNullOrEmpty(strictResult))
+                if (strictResult != null)
                     return strictResult;
             }
             else
@@ -68,7 +78,7 @@ public class LrcLibService : IOnlineLyricsService
                 _logger.LogDebug("Strict lookup skipped (missing artist or album). Using search for: {Track}", trackName);
             }
 
-            return await SearchLyricsAsync(trackName, artistName, albumName, duration, cancellationToken).ConfigureAwait(false);
+            return await SearchLyricsResultAsync(trackName, artistName, albumName, duration, cancellationToken).ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {
@@ -77,12 +87,12 @@ public class LrcLibService : IOnlineLyricsService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to fetch lyrics from LRCLIB for {Artist} - {Track}", artistName, trackName);
+            _logger.LogError(ex, "Failed to fetch lyrics result from LRCLIB for {Artist} - {Track}", artistName, trackName);
             return null;
         }
     }
 
-    private async Task<string?> TryStrictLookupAsync(string trackName, string artistName, string albumName, TimeSpan duration, CancellationToken cancellationToken)
+    private async Task<OnlineLyricsResult?> TryStrictLookupResultAsync(string trackName, string artistName, string albumName, TimeSpan duration, CancellationToken cancellationToken)
     {
         var normalizedTrack = ArtistNameHelper.NormalizeStringCore(trackName) ?? trackName;
         var normalizedArtist = ArtistNameHelper.NormalizeStringCore(artistName) ?? artistName;
@@ -96,7 +106,7 @@ public class LrcLibService : IOnlineLyricsService
 
         var requestUrl = $"{BaseUrl}?{query}";
 
-        return await _pipelines.ExecuteWithFallbackAsync<string?>(
+        return await _pipelines.ExecuteWithFallbackAsync<OnlineLyricsResult?>(
             ServiceProviderIds.LrcLib,
             async ct =>
             {
@@ -109,7 +119,25 @@ public class LrcLibService : IOnlineLyricsService
                 {
                     var content = await response.Content.ReadAsStringAsync(ct).ConfigureAwait(false);
                     var lrcResponse = JsonSerializer.Deserialize<LrcLibResponse>(content, _jsonOptions);
-                    return !string.IsNullOrEmpty(lrcResponse?.SyncedLyrics) ? lrcResponse.SyncedLyrics : null;
+                    if (lrcResponse == null) return null;
+
+                    if (lrcResponse.Instrumental)
+                    {
+                        _logger.LogDebug("LRCLIB strict lookup identified instrumental track for: {Artist} - {Track}", artistName, trackName);
+                        return new OnlineLyricsResult { IsInstrumental = true };
+                    }
+
+                    if (!string.IsNullOrEmpty(lrcResponse.SyncedLyrics) || !string.IsNullOrEmpty(lrcResponse.PlainLyrics))
+                    {
+                        return new OnlineLyricsResult
+                        {
+                            SyncedLyrics = lrcResponse.SyncedLyrics,
+                            PlainLyrics = lrcResponse.PlainLyrics,
+                            IsInstrumental = false
+                        };
+                    }
+
+                    return null;
                 }
 
                 if (response.StatusCode == HttpStatusCode.NotFound)
@@ -124,7 +152,7 @@ public class LrcLibService : IOnlineLyricsService
             cancellationToken).ConfigureAwait(false);
     }
 
-    private async Task<string?> SearchLyricsAsync(string trackName, string? artistName, string? albumName, TimeSpan duration, CancellationToken cancellationToken)
+    private async Task<OnlineLyricsResult?> SearchLyricsResultAsync(string trackName, string? artistName, string? albumName, TimeSpan duration, CancellationToken cancellationToken)
     {
         var normalizedTrack = ArtistNameHelper.NormalizeStringCore(trackName) ?? trackName;
         var normalizedArtist = ArtistNameHelper.NormalizeStringCore(artistName) ?? artistName;
@@ -132,11 +160,10 @@ public class LrcLibService : IOnlineLyricsService
         var query = HttpUtility.ParseQueryString(string.Empty);
         query["track_name"] = normalizedTrack;
         query["artist_name"] = normalizedArtist;
-        // Not sending album_name to search to be more permissive; filter locally below.
 
         var requestUrl = $"{SearchUrl}?{query}";
 
-        return await _pipelines.ExecuteWithFallbackAsync<string?>(
+        return await _pipelines.ExecuteWithFallbackAsync<OnlineLyricsResult?>(
             ServiceProviderIds.LrcLib,
             async ct =>
             {
@@ -160,25 +187,31 @@ public class LrcLibService : IOnlineLyricsService
                     return null;
                 }
 
-                // Client-side filtering: must have synced lyrics, ±30s duration tolerance, prefer
-                // album match, closest duration tie-breaker.
                 var targetDurationSeconds = duration.TotalSeconds;
-                var bestMatch = searchResults
-                    .Where(r => !string.IsNullOrEmpty(r.SyncedLyrics))
-                    .Where(r => Math.Abs(r.Duration - targetDurationSeconds) <= 30)
+                var candidates = searchResults
+                    .Where(r => r.Instrumental || !string.IsNullOrEmpty(r.SyncedLyrics) || !string.IsNullOrEmpty(r.PlainLyrics))
+                    .Where(r => Math.Abs(r.Duration - targetDurationSeconds) <= 30);
+
+                var bestMatch = candidates
                     .OrderBy(r =>
                     {
                         if (string.IsNullOrWhiteSpace(albumName) || string.IsNullOrWhiteSpace(r.AlbumName))
                             return 1;
                         return string.Equals(r.AlbumName, albumName, StringComparison.OrdinalIgnoreCase) ? 0 : 1;
                     })
+                    .ThenByDescending(r => !string.IsNullOrEmpty(r.SyncedLyrics))
                     .ThenBy(r => Math.Abs(r.Duration - targetDurationSeconds))
                     .FirstOrDefault();
 
                 if (bestMatch != null)
                 {
-                    _logger.LogDebug("Found fallback lyrics via search for: {Artist} - {Track}", artistName, trackName);
-                    return bestMatch.SyncedLyrics;
+                    _logger.LogDebug("Found fallback lyrics via search for: {Artist} - {Track} (Instrumental: {IsInst})", artistName, trackName, bestMatch.Instrumental);
+                    return new OnlineLyricsResult
+                    {
+                        SyncedLyrics = bestMatch.SyncedLyrics,
+                        PlainLyrics = bestMatch.PlainLyrics,
+                        IsInstrumental = bestMatch.Instrumental
+                    };
                 }
 
                 _logger.LogDebug("Search results found but none matched criteria for: {Artist} - {Track}", artistName, trackName);

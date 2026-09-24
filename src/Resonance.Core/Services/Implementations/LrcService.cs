@@ -167,7 +167,145 @@ public class LrcService : ILrcService, IDisposable
             }
         }
 
-        // Stages 5 and 6 (Cache & Remote Providers) are added in Slice 2
+        // Stage 5: Local Cache in %LocalAppData% or Known Instrumental
+        if (song.IsInstrumental == true)
+        {
+            _logger.LogDebug("Song {SongId} is flagged as instrumental in local database", song.Id);
+            return LyricsDocument.CreateInstrumental(LyricsProvenance.LocalCache);
+        }
+
+        if (!string.IsNullOrWhiteSpace(song.LrcFilePath) && IsCachePath(song.LrcFilePath) && _fileSystemService.FileExists(song.LrcFilePath))
+        {
+            try
+            {
+                var cachedContent = await _fileSystemService.ReadAllTextAsync(song.LrcFilePath).ConfigureAwait(false);
+                if (!string.IsNullOrWhiteSpace(cachedContent))
+                {
+                    var parsed = ParseLyrics(cachedContent);
+                    if (!parsed.IsEmpty)
+                    {
+                        _logger.LogDebug("Resolved cached lyrics for song {SongId} from {Path}", song.Id, song.LrcFilePath);
+                        return new LyricsDocument(
+                            parsed.Lines,
+                            parsed.RawUnsyncedLyrics,
+                            LyricsType.Synced,
+                            LyricsProvenance.LocalCache,
+                            song.LrcFilePath,
+                            TimeSpan.FromMilliseconds(song.LyricsOffsetMs ?? 0));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(parsed.RawUnsyncedLyrics))
+                    {
+                        _logger.LogDebug("Resolved cached plain lyrics for song {SongId} from {Path}", song.Id, song.LrcFilePath);
+                        return new LyricsDocument(
+                            Enumerable.Empty<LyricLine>(),
+                            parsed.RawUnsyncedLyrics.Trim(),
+                            LyricsType.Plain,
+                            LyricsProvenance.LocalCache,
+                            song.LrcFilePath,
+                            TimeSpan.Zero);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to read cached lyrics at {Path} for song {SongId}", song.LrcFilePath, song.Id);
+            }
+        }
+
+        // Stage 6: Remote Providers
+        if (song.LyricsLastCheckedUtc != null || !await _settingsService.GetFetchOnlineLyricsEnabledAsync().ConfigureAwait(false))
+            return null;
+
+        CancellationToken settingsToken;
+        lock (_ctsLock)
+        {
+            if (_disposed) return null;
+            settingsToken = _settingsCts.Token;
+        }
+
+        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, settingsToken);
+        var token = linkedCts.Token;
+        if (token.IsCancellationRequested) return null;
+
+        var enabledProviders = await _settingsService.GetEnabledServiceProvidersAsync(ServiceCategory.Lyrics).ConfigureAwait(false);
+        if (enabledProviders.Count == 0) return null;
+
+        foreach (var provider in enabledProviders.OrderBy(p => p.Order))
+        {
+            if (token.IsCancellationRequested) break;
+
+            if (provider.Id == ServiceProviderIds.LrcLib)
+            {
+                var lrcLibResult = await _onlineLyricsService.GetLyricsResultAsync(
+                    song.Title, song.PrimaryArtistName, song.Album?.Title, song.Duration, token).ConfigureAwait(false);
+
+                if (lrcLibResult != null)
+                {
+                    if (lrcLibResult.IsInstrumental)
+                    {
+                        song.IsInstrumental = true;
+                        song.LyricsLastCheckedUtc = DateTime.UtcNow;
+                        await _libraryWriter.UpdateSongInstrumentalAsync(song.Id, true).ConfigureAwait(false);
+                        await _libraryWriter.UpdateSongLyricsLastCheckedAsync(song.Id).ConfigureAwait(false);
+                        return LyricsDocument.CreateInstrumental(LyricsProvenance.RemoteLrcLib);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(lrcLibResult.SyncedLyrics))
+                    {
+                        await CacheLyricsAsync(song, lrcLibResult.SyncedLyrics).ConfigureAwait(false);
+                        song.LyricsLastCheckedUtc = DateTime.UtcNow;
+                        await _libraryWriter.UpdateSongLyricsLastCheckedAsync(song.Id).ConfigureAwait(false);
+                        var parsed = ParseLyrics(lrcLibResult.SyncedLyrics);
+                        return new LyricsDocument(
+                            parsed.Lines,
+                            parsed.RawUnsyncedLyrics,
+                            LyricsType.Synced,
+                            LyricsProvenance.RemoteLrcLib,
+                            song.LrcFilePath,
+                            TimeSpan.FromMilliseconds(song.LyricsOffsetMs ?? 0));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(lrcLibResult.PlainLyrics))
+                    {
+                        await CacheLyricsAsync(song, lrcLibResult.PlainLyrics).ConfigureAwait(false);
+                        song.LyricsLastCheckedUtc = DateTime.UtcNow;
+                        await _libraryWriter.UpdateSongLyricsLastCheckedAsync(song.Id).ConfigureAwait(false);
+                        return new LyricsDocument(
+                            Enumerable.Empty<LyricLine>(),
+                            lrcLibResult.PlainLyrics.Trim(),
+                            LyricsType.Plain,
+                            LyricsProvenance.RemoteLrcLib,
+                            song.LrcFilePath,
+                            TimeSpan.Zero);
+                    }
+                }
+            }
+            else if (provider.Id == ServiceProviderIds.NetEase)
+            {
+                var netEaseLyrics = await _netEaseLyricsService.SearchLyricsAsync(
+                    song.Title, song.PrimaryArtistName, token).ConfigureAwait(false);
+
+                if (!string.IsNullOrWhiteSpace(netEaseLyrics))
+                {
+                    await CacheLyricsAsync(song, netEaseLyrics).ConfigureAwait(false);
+                    song.LyricsLastCheckedUtc = DateTime.UtcNow;
+                    await _libraryWriter.UpdateSongLyricsLastCheckedAsync(song.Id).ConfigureAwait(false);
+                    var parsed = ParseLyrics(netEaseLyrics);
+                    return new LyricsDocument(
+                        parsed.Lines,
+                        parsed.RawUnsyncedLyrics,
+                        parsed.IsEmpty ? LyricsType.Plain : LyricsType.Synced,
+                        LyricsProvenance.RemoteNetEase,
+                        song.LrcFilePath,
+                        TimeSpan.FromMilliseconds(song.LyricsOffsetMs ?? 0));
+                }
+            }
+        }
+
+        // If no provider succeeded, record check to avoid redundant repeat lookups
+        song.LyricsLastCheckedUtc = DateTime.UtcNow;
+        await _libraryWriter.UpdateSongLyricsLastCheckedAsync(song.Id).ConfigureAwait(false);
         return null;
     }
 
@@ -196,10 +334,11 @@ public class LrcService : ILrcService, IDisposable
     }
 
     /// <inheritdoc />
-    public Task SetLyricsOffsetAsync(Song song, int offsetMs)
+    public async Task SetLyricsOffsetAsync(Song song, int offsetMs)
     {
         ArgumentNullException.ThrowIfNull(song);
-        return Task.CompletedTask;
+        song.LyricsOffsetMs = offsetMs;
+        await _libraryWriter.UpdateSongLyricsOffsetAsync(song.Id, offsetMs).ConfigureAwait(false);
     }
 
     /// <inheritdoc />

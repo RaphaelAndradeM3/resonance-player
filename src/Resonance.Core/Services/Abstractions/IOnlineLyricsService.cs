@@ -1,4 +1,6 @@
-﻿namespace Resonance.Core.Services.Abstractions;
+using Resonance.Core.Models.Lyrics;
+
+namespace Resonance.Core.Services.Abstractions;
 
 /// <summary>
 ///     Defines a service for fetching lyrics from an online source.
@@ -12,6 +14,12 @@ public interface IOnlineLyricsService
     /// <param name="artistName">The artist of the track.</param>
     /// <param name="albumName">The album regarding the track.</param>
     /// <param name="duration">The duration of the track.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The raw LRC string content if found; otherwise, null.</returns>
     Task<string?> GetLyricsAsync(string trackName, string? artistName, string? albumName, TimeSpan duration, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Fetches lyrics result with metadata (synced, plain, or instrumental) for a track.
+    /// </summary>
+    Task<OnlineLyricsResult?> GetLyricsResultAsync(string trackName, string? artistName, string? albumName, TimeSpan duration, CancellationToken cancellationToken = default) => Task.FromResult<OnlineLyricsResult?>(null);
 }

@@ -53,15 +53,15 @@ Problem: Consultar provedores online opcionais somente quando não houver letra 
 Definition of Success: Faixas sem letra consultam LRCLIB/NetEase de forma assíncrona; cache armazena letras com hash de identidade; faixas instrumentais registram flag no banco; ação de exportação grava .lrc na pasta do áudio sem poluir arquivos sem autorização do usuário.
 ```
 
-- [ ] T010 [P] [US3] Add `IsInstrumental` (`bool?`) and `LyricsOffsetMs` (`int?`) properties to `Song.cs` in `src/Resonance.Core/Models/Song.cs`.
-- [ ] T011 [P] [US3] Create EF Core migration `AddLyricsInstrumentalAndOffsetToSong` in `src/Resonance.Core/Data/Migrations/` adding `IsInstrumental` and `LyricsOffsetMs` columns to the `Songs` table and updating `MusicDbContextModelSnapshot.cs`.
-- [ ] T012 [P] [US3] Update `ILibraryWriter.cs` in `src/Resonance.Core/Services/Abstractions/ILibraryWriter.cs` declaring `Task UpdateSongLyricsOffsetAsync(Guid songId, int? offsetMs)` and `Task UpdateSongInstrumentalAsync(Guid songId, bool isInstrumental)`.
-- [ ] T013 [US3] Implement `UpdateSongLyricsOffsetAsync` and `UpdateSongInstrumentalAsync` in `src/Resonance.Core/Services/Implementations/LibraryService.cs` updating the SQLite database records.
-- [ ] T014 [US3] Update `LrcLibService.cs` in `src/Resonance.Core/Services/Implementations/LrcLibService.cs` to capture `instrumental: true` from LRCLIB JSON responses and return typed indication of instrumental/plain lyrics.
-- [ ] T015 [US3] Implement stage 5 (internal cache in `%LocalAppData%`) and stage 6 (remote providers with `instrumental: true` handling and persistence of `LyricsLastCheckedUtc` and `IsInstrumental` in SQLite) in `src/Resonance.Core/Services/Implementations/LrcService.cs`.
-- [ ] T016 [US3] Implement `ExportSidecarLrcAsync` in `src/Resonance.Core/Services/Implementations/LrcService.cs` formatting and writing `<NomeDoAudio>.lrc` directly to the song's directory via `IFileSystemService`.
-- [ ] T017 [P] [US3] Create integration tests in `tests/Resonance.Core.Tests/Services/LrcServiceRemoteAndExportTests.cs` testing LRCLIB responses (synced, plain, instrumental), cache persistence in `%LocalAppData%`, avoidance of redundant lookups, and sidecar export.
-- [ ] T018 [US3] Gate Slice 2: Validate build and test execution of remote provider, cache and export engine:
+- [X] T010 [P] [US3] Add `IsInstrumental` (`bool?`) and `LyricsOffsetMs` (`int?`) properties to `Song.cs` in `src/Resonance.Core/Models/Song.cs`.
+- [X] T011 [P] [US3] Create EF Core migration `AddLyricsInstrumentalAndOffsetToSong` in `src/Resonance.Core/Data/Migrations/` adding `IsInstrumental` and `LyricsOffsetMs` columns to the `Songs` table and updating `MusicDbContextModelSnapshot.cs`.
+- [X] T012 [P] [US3] Update `ILibraryWriter.cs` in `src/Resonance.Core/Services/Abstractions/ILibraryWriter.cs` declaring `Task UpdateSongLyricsOffsetAsync(Guid songId, int? offsetMs)` and `Task UpdateSongInstrumentalAsync(Guid songId, bool isInstrumental)`.
+- [X] T013 [US3] Implement `UpdateSongLyricsOffsetAsync` and `UpdateSongInstrumentalAsync` in `src/Resonance.Core/Services/Implementations/LibraryService.cs` updating the SQLite database records.
+- [X] T014 [US3] Update `LrcLibService.cs` in `src/Resonance.Core/Services/Implementations/LrcLibService.cs` to capture `instrumental: true` from LRCLIB JSON responses and return typed indication of instrumental/plain lyrics.
+- [X] T015 [US3] Implement stage 5 (internal cache in `%LocalAppData%`) and stage 6 (remote providers with `instrumental: true` handling and persistence of `LyricsLastCheckedUtc` and `IsInstrumental` in SQLite) in `src/Resonance.Core/Services/Implementations/LrcService.cs`.
+- [X] T016 [US3] Implement `ExportSidecarLrcAsync` in `src/Resonance.Core/Services/Implementations/LrcService.cs` formatting and writing `<NomeDoAudio>.lrc` directly to the song's directory via `IFileSystemService`.
+- [X] T017 [P] [US3] Create integration tests in `tests/Resonance.Core.Tests/Services/LrcServiceRemoteAndExportTests.cs` testing LRCLIB responses (synced, plain, instrumental), cache persistence in `%LocalAppData%`, avoidance of redundant lookups, and sidecar export.
+- [X] T018 [US3] Gate Slice 2: Validate build and test execution of remote provider, cache and export engine:
   ```powershell
   dotnet test tests/Resonance.Core.Tests/Resonance.Core.Tests.csproj --filter "FullyQualifiedName~LrcServiceRemoteAndExportTests|FullyQualifiedName~LrcLibServiceTests"
   ```

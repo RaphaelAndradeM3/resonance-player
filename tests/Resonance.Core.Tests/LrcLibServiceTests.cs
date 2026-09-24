@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Text.Json;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -304,6 +304,45 @@ public class LrcLibServiceTests : IDisposable
         // Assert
         result.Should().Be("[00:01.00]Found It");
         callCount.Should().Be(1); // Only search
+    }
+
+    [Fact]
+    public async Task GetLyricsResultAsync_WhenInstrumentalTrack_ReturnsInstrumentalResult()
+    {
+        // Arrange
+        var lrcResponse = new { instrumental = true, duration = 180.0 };
+        _httpHandler.SendAsyncFunc = (_, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(JsonSerializer.Serialize(lrcResponse))
+        });
+
+        // Act
+        var result = await _service.GetLyricsResultAsync("Cliffs of Dover", "Eric Johnson", "Ah Via Musicom", TimeSpan.FromMinutes(3));
+
+        // Assert
+        result.Should().NotBeNull();
+        result!.IsInstrumental.Should().BeTrue();
+        result.SyncedLyrics.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetLyricsResultAsync_WhenPlainLyricsOnly_ReturnsPlainLyrics()
+    {
+        // Arrange
+        var lrcResponse = new { plainLyrics = "Just plain text", instrumental = false, duration = 180.0 };
+        _httpHandler.SendAsyncFunc = (_, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(JsonSerializer.Serialize(lrcResponse))
+        });
+
+        // Act
+        var result = await _service.GetLyricsResultAsync("Acoustic Song", "Acoustic Artist", "Acoustic Album", TimeSpan.FromMinutes(3));
+
+        // Assert
+        result.Should().NotBeNull();
+        result!.IsInstrumental.Should().BeFalse();
+        result.PlainLyrics.Should().Be("Just plain text");
+        result.SyncedLyrics.Should().BeNull();
     }
 
     #endregion

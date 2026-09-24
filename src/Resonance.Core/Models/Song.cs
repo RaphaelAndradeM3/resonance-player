@@ -124,6 +124,16 @@ public class Song
     public DateTime? LyricsLastCheckedUtc { get; set; }
 
     /// <summary>
+    ///     Indicates whether the track is known to be instrumental (no lyrics exist by definition).
+    /// </summary>
+    public bool? IsInstrumental { get; set; }
+
+    /// <summary>
+    ///     Manual timing calibration offset in milliseconds (+ advances lyrics, - delays lyrics).
+    /// </summary>
+    public int? LyricsOffsetMs { get; set; }
+
+    /// <summary>
     ///     The beats per minute of the track.
     /// </summary>
     public double? Bpm { get; set; }
